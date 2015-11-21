@@ -1,0 +1,7 @@
+Realización de un clon del juego hundir la flota.
+Tareas:
+ - click para seleccionar objeto.
+ - despliege grafico usando ogre3D manual.
+ - exportacion de elementos graficos con Blender.
+ - creacion de overlays para menus.
+ - juego completo con secciones. menu, puntuaciones, juegos, salida, etc.
