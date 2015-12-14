@@ -104,29 +104,36 @@ bool MyFrameListener::frameStarted(const Ogre::FrameEvent& evt) {
 				_sceneManager->getRootSceneNode()->addChild(node1);
 				*/
 				//
+				
+				// [!] tirada del jugador.
+				//_playerNodeBoard[rand()%10][rand()%10]->detachObject((unsigned short)0);
 			}
 		}
-
-		r = setRayQuery(posx, posy, 0);
+		
+		r = setRayQuery(posx, posy, 2);
 		Ogre::RaySceneQueryResult &resultShip = _raySceneQuery->execute();
 		it = resultShip.begin();
 		if (it != resultShip.end())
 		{
 			if (it->movable->getParentSceneNode()->getName() != "nodeG")
 			{
+				
 				Ogre::Vector3 pos = it->movable->getParentSceneNode()->getPosition();
 				it->movable->detachFromParent();
 				
 				// Creacion de otro cubo para cuando haya barco.
 				Ogre::Entity* ent1;
-				ent1 = _sceneManager->createEntity("Cubopam.mesh");
+				ent1 = _sceneManager->createEntity("Cubepam.mesh");
+				ent1->setQueryFlags(4);
 				Ogre::SceneNode* node1 = _sceneManager->createSceneNode();
 				node1->attachObject(ent1);
 				node1->translate(pos.x,pos.y,pos.z);
 				_sceneManager->getRootSceneNode()->addChild(node1);
+				
+				
 			}
 		}
-
+		
 	}
 	
 	return true;
@@ -150,10 +157,15 @@ bool MyFrameListener::createBoard()
 		{
 			Ogre::Entity* ent1;
 			if (myBoard[i][j] == 1)
+			{
 				ent1 = _sceneManager->createEntity("Cube.mesh");
+				ent1->setQueryFlags(2);
+			}
 			else
+			{
 				ent1 = _sceneManager->createEntity("Cubepam.mesh");
-			ent1->setQueryFlags(myBoard[i][j]?0:1);
+				ent1->setQueryFlags(1);
+			}
 
 			Ogre::SceneNode* node1 = _sceneManager->createSceneNode();
 			node1->attachObject(ent1);
@@ -174,12 +186,14 @@ bool MyFrameListener::createBoard()
 				ent1 = _sceneManager->createEntity("Cube.mesh");
 			else
 				ent1 = _sceneManager->createEntity("Cubepam.mesh");
-			ent1->setQueryFlags(6);
+			ent1->setQueryFlags(4);
 
 			Ogre::SceneNode* node1 = _sceneManager->createSceneNode();
 			node1->attachObject(ent1);
 			node1->setPosition(_posXBoardPlayer+(i*2.2),_posYBoardPlayer,_posZBoardPlayer+(j*2.2));
 			
+			// añadir nodo para ir eliminando por parte de la CPU
+			_playerNodeBoard[i][j] = node1;
 			_sceneManager->getRootSceneNode()->addChild(node1);
 		}
 	}
