@@ -4,7 +4,7 @@
 #include <OgreOverlayManager.h>
 #include <OIS/OIS.h>
 #include <windows.h>
-
+#include "GameTimer.h"
 #define _posXBoardPlayer -0.4321
 #define _posYBoardPlayer -3.6799
 #define _posZBoardPlayer -49.9970
@@ -29,6 +29,8 @@ private:
 	//static const double _posZBoardPlayer = -49.9970;
 	
 	Ogre::SceneNode* _playerNodeBoard[_XMAX][_YMAX]; // [!] QUITAR
+
+	GameTimer theGameTimer;
 
 public:
 	MyFrameListener(Ogre::RenderWindow* win, Ogre::Camera* cam, Ogre::SceneNode* node,Ogre::OverlayManager* oveMan,Ogre::SceneManager* sceMan);

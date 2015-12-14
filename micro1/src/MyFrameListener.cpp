@@ -91,19 +91,22 @@ bool MyFrameListener::frameStarted(const Ogre::FrameEvent& evt) {
 		{
 			if (it->movable->getParentSceneNode()->getName() != "nodeG")
 			{
+				//Comprobamos si hay que arrancar el tiempo
+				if( !theGameTimer.getStarted() )
+				{
+					theGameTimer.start();
+				}
 				Ogre::Vector3 pos = it->movable->getParentSceneNode()->getPosition();
 				it->movable->detachFromParent();
 				
-				// Creacion de otro cubo para cuando haya barco.
-				/*
+				// Creacion de otro cubo para cuando haya agua.
 				Ogre::Entity* ent1;
-				ent1 = _sceneManager->createEntity("cube.mesh");
+				ent1 = _sceneManager->createEntity("CuboAgua.mesh");
+				ent1->setQueryFlags(4);
 				Ogre::SceneNode* node1 = _sceneManager->createSceneNode();
 				node1->attachObject(ent1);
 				node1->translate(pos.x,pos.y,pos.z);
 				_sceneManager->getRootSceneNode()->addChild(node1);
-				*/
-				//
 				
 				// [!] tirada del jugador.
 				//_playerNodeBoard[rand()%10][rand()%10]->detachObject((unsigned short)0);
@@ -118,12 +121,18 @@ bool MyFrameListener::frameStarted(const Ogre::FrameEvent& evt) {
 			if (it->movable->getParentSceneNode()->getName() != "nodeG")
 			{
 				
+				//Comprobamos si hay que arrancar el tiempo
+				if( !theGameTimer.getStarted() )
+				{
+					theGameTimer.start();
+				}
+
 				Ogre::Vector3 pos = it->movable->getParentSceneNode()->getPosition();
 				it->movable->detachFromParent();
 				
 				// Creacion de otro cubo para cuando haya barco.
 				Ogre::Entity* ent1;
-				ent1 = _sceneManager->createEntity("Cubepam.mesh");
+				ent1 = _sceneManager->createEntity("CuboBarco.mesh");
 				ent1->setQueryFlags(4);
 				Ogre::SceneNode* node1 = _sceneManager->createSceneNode();
 				node1->attachObject(ent1);
@@ -158,12 +167,12 @@ bool MyFrameListener::createBoard()
 			Ogre::Entity* ent1;
 			if (myBoard[i][j] == 1)
 			{
-				ent1 = _sceneManager->createEntity("Cube.mesh");
+				ent1 = _sceneManager->createEntity("CuboBarco.mesh");
 				ent1->setQueryFlags(2);
 			}
 			else
 			{
-				ent1 = _sceneManager->createEntity("Cubepam.mesh");
+				ent1 = _sceneManager->createEntity("CuboNiebla.mesh");
 				ent1->setQueryFlags(1);
 			}
 
