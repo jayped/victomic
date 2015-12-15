@@ -18,9 +18,6 @@ Info
 {
     zorder 500
 
-    container Panel(panelInfo) 
-    {
-    
     container Panel(cursor) 
     {
 	      metrics_mode pixels
@@ -32,5 +29,58 @@ Info
         horz_align left
         material pointer
     }	  
+
+}
+Title
+{
+    zorder 500
+
+    container Panel(panTitle) 
+    {
+	    metrics_mode pixels
+        left -200
+        top -250
+        width 400
+        height 500
+        vert_align center
+        horz_align center
+        material matTitle
+    }
+
+}
+
+Win
+{
+    zorder 500
+
+    container Panel(panWin) 
+    {
+	    metrics_mode pixels
+        left -200
+        top -300
+        width 400
+        height 120
+        vert_align center
+        horz_align center
+        material matWin
+    }
+
+}
+
+Lose
+{
+    zorder 500
+
+    container Panel(panLose) 
+    {
+	    metrics_mode pixels
+        left -200
+        top -300
+        width 400
+        height 120
+        vert_align center
+        horz_align center
+        material matLose
+    }
 
 }

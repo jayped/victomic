@@ -13,15 +13,46 @@ material panelInfoM
  }
 }
 
-material matUCLM 
+material matTitle 
 {
  technique 
  {
    pass 
    {
+   scene_blend src_alpha one_minus_src_alpha
      texture_unit 
      {
-       texture logouclm.jpg
+       texture title.png
+     }
+   }
+ }
+}
+
+material matWin
+{
+ technique 
+ {
+   pass 
+   {
+   scene_blend src_alpha one_minus_src_alpha
+     texture_unit 
+     {
+       texture win.png
+     }
+   }
+ }
+}
+
+material matLose
+{
+ technique 
+ {
+   pass 
+   {
+   scene_blend src_alpha one_minus_src_alpha
+     texture_unit 
+     {
+       texture lose.png
      }
    }
  }
