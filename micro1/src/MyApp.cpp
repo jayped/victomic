@@ -122,5 +122,9 @@ void MyApp::createScene() {
 void MyApp::createOverlay() {
 	_overlayManager = Ogre::OverlayManager::getSingletonPtr();
 	Ogre::Overlay *overlay = _overlayManager->getByName("Info");
+	Ogre::Overlay *overlayTitle = _overlayManager->getByName("Title");
+	Ogre::Overlay *overlayWin = _overlayManager->getByName("Win");
+	Ogre::Overlay *overlayLose = _overlayManager->getByName("Lose");
 	overlay->show();
+	overlayTitle->show();
 }

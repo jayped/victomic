@@ -28,7 +28,8 @@ MyFrameListener::MyFrameListener(Ogre::RenderWindow* win, Ogre::Camera* cam, Ogr
 	_raySceneQuery = _sceneManager->createRayQuery(Ogre::Ray());
 
 	_gameState = 0; // menu
-	
+	_myWinner = 0; // 0.NO, 1.Player, 2.CPU
+	_maxFires = 0;
 }
 
 MyFrameListener::~MyFrameListener() {
@@ -56,17 +57,28 @@ bool MyFrameListener::frameStarted(const Ogre::FrameEvent& evt) {
 
 	_keyboard->capture();
 	if(_keyboard->isKeyDown(OIS::KC_ESCAPE)) return false;
-	if(_keyboard->isKeyDown(OIS::KC_0)) return false;
-	if(_keyboard->isKeyDown(OIS::KC_1))
+	if(_keyboard->isKeyDown(OIS::KC_0)) // reset
+	{
+		if (_gameState == 1)
+		{
+			_gameState = 0;
+			deleteBoard();
+			_overlayManager->getByName("Title")->show();
+		}
+	}
+	if(_keyboard->isKeyDown(OIS::KC_1)) // jugar
 	{
 		if (_gameState == 0)
 		{
 			_gameState = 1;
 			createBoard();
+			_overlayManager->getByName("Title")->hide();
+			_overlayManager->getByName("Win")->hide();
+			_overlayManager->getByName("Lose")->hide();
 		}
 	}
 
-	if(_keyboard->isKeyDown(OIS::KC_2)) return false;
+	//if(_keyboard->isKeyDown(OIS::KC_2)) return false;
 
 	// Captura del raton
 	_mouse->capture();
@@ -86,33 +98,31 @@ bool MyFrameListener::frameStarted(const Ogre::FrameEvent& evt) {
 		Ogre::RaySceneQueryResult &result = _raySceneQuery->execute();
 		Ogre::RaySceneQueryResult::iterator it;
 		it = result.begin();
-		
+		//AGUA
 		if (it != result.end())
 		{
 			if (it->movable->getParentSceneNode()->getName() != "nodeG")
 			{
-				//Comprobamos si hay que arrancar el tiempo
-				if( !theGameTimer.getStarted() )
-				{
-					theGameTimer.start();
-				}
 				Ogre::Vector3 pos = it->movable->getParentSceneNode()->getPosition();
 				it->movable->detachFromParent();
 				
-				// Creacion de otro cubo para cuando haya agua.
-				Ogre::Entity* ent1;
-				ent1 = _sceneManager->createEntity("CuboAgua.mesh");
-				ent1->setQueryFlags(4);
-				Ogre::SceneNode* node1 = _sceneManager->createSceneNode();
-				node1->attachObject(ent1);
-				node1->translate(pos.x,pos.y,pos.z);
-				_sceneManager->getRootSceneNode()->addChild(node1);
-				
-				// [!] tirada del jugador.
-				//_playerNodeBoard[rand()%10][rand()%10]->detachObject((unsigned short)0);
+				// tirada del CPU.
+				int lResult = 0;
+				do
+				{
+					lResult = playCPU();
+					if (endGame()!=0)
+					{
+						_gameState = 0;
+						deleteBoard();
+						_overlayManager->getByName("Title")->show();
+						_overlayManager->getByName("Lose")->show();
+					}
+				}
+				while ((lResult == 1) && (_gameState==1));
 			}
 		}
-		
+		//TOCADO
 		r = setRayQuery(posx, posy, 2);
 		Ogre::RaySceneQueryResult &resultShip = _raySceneQuery->execute();
 		it = resultShip.begin();
@@ -121,12 +131,6 @@ bool MyFrameListener::frameStarted(const Ogre::FrameEvent& evt) {
 			if (it->movable->getParentSceneNode()->getName() != "nodeG")
 			{
 				
-				//Comprobamos si hay que arrancar el tiempo
-				if( !theGameTimer.getStarted() )
-				{
-					theGameTimer.start();
-				}
-
 				Ogre::Vector3 pos = it->movable->getParentSceneNode()->getPosition();
 				it->movable->detachFromParent();
 				
@@ -139,7 +143,17 @@ bool MyFrameListener::frameStarted(const Ogre::FrameEvent& evt) {
 				node1->translate(pos.x,pos.y,pos.z);
 				_sceneManager->getRootSceneNode()->addChild(node1);
 				
-				
+				_maxFires--;
+				// no tira CPU
+				if (endGame()!=0)
+				{
+					_gameState = 0;
+					deleteBoard();
+					_overlayManager->getByName("Title")->show();
+					_overlayManager->getByName("Win")->show();
+
+				}
+
 			}
 		}
 		
@@ -152,10 +166,14 @@ bool MyFrameListener::createBoard()
 {
 	int myX=0;
 	int myY=0;
-	int myShips[_NUMSHIPS] = {1, 2, 3, 4 ,5};
-	int myBoard[_XMAX][_YMAX];
-	int myBoardPlayer[_XMAX][_YMAX];
 	
+	// iniciar longitud barcos. (1,2,3,4,5)
+	for (int i=0; i<_NUMSHIPS; i++)
+	{
+		myShips[i] = i+1;
+		_maxFires += i+1;
+	}
+
 	// Colocacion de los barcos
 	placeShips(myShips, myBoard);
 	
@@ -167,12 +185,12 @@ bool MyFrameListener::createBoard()
 			Ogre::Entity* ent1;
 			if (myBoard[i][j] == 1)
 			{
-				ent1 = _sceneManager->createEntity("CuboBarco.mesh");
+				ent1 = _sceneManager->createEntity("CuboAgua.mesh");
 				ent1->setQueryFlags(2);
 			}
 			else
 			{
-				ent1 = _sceneManager->createEntity("CuboNiebla.mesh");
+				ent1 = _sceneManager->createEntity("CuboAgua.mesh");
 				ent1->setQueryFlags(1);
 			}
 
@@ -192,9 +210,9 @@ bool MyFrameListener::createBoard()
 		{
 			Ogre::Entity* ent1;
 			if (myBoardPlayer[i][j] == 1)
-				ent1 = _sceneManager->createEntity("Cube.mesh");
+				ent1 = _sceneManager->createEntity("CuboBarco.mesh");
 			else
-				ent1 = _sceneManager->createEntity("Cubepam.mesh");
+				ent1 = _sceneManager->createEntity("CuboAgua.mesh");
 			ent1->setQueryFlags(4);
 
 			Ogre::SceneNode* node1 = _sceneManager->createSceneNode();
@@ -206,6 +224,53 @@ bool MyFrameListener::createBoard()
 			_sceneManager->getRootSceneNode()->addChild(node1);
 		}
 	}
+
+	return true;
+}
+
+bool MyFrameListener::deleteBoard()
+{
+	for (int i=0; i<_XMAX; i++)
+	{
+		for (int j=0; j<_YMAX; j++)
+		{
+			myBoard[i][j]=0;
+		}
+	}
+	for (int i=0; i<_XMAX; i++)
+	{
+		for (int j=0; j<_YMAX; j++)
+		{
+			myBoardPlayer[i][j]=0;
+		}
+	}
+
+	_maxFires=0;
+
+	_sceneManager->getRootSceneNode()->removeAndDestroyAllChildren();
+	_sceneManager->clearScene();
+
+	// Añadir el plano a la escena
+	// Creacion del plano
+	Ogre::Plane pl1(Ogre::Vector3::UNIT_Y,-5);
+	Ogre::MeshManager::getSingleton().createPlane("pl1",
+	Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+	pl1,200,200,1,1,true,1,20,20,Ogre::Vector3::UNIT_Z);
+
+	// Añadir el plano a la escena
+	Ogre::SceneNode* nodeG = _sceneManager->createSceneNode("nodeG");
+	Ogre::Entity* grEnt = _sceneManager->createEntity("pEnt", "pl1");
+	grEnt->setMaterialName("Ground");
+	nodeG->attachObject(grEnt);
+
+	// Sombras
+	_sceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+	Ogre::Light* light = _sceneManager->createLight("light1");
+	light->setType(Ogre::Light::LT_DIRECTIONAL);
+	light->setDirection(Ogre::Vector3(1,-1,0));
+	nodeG->attachObject(light);
+	_sceneManager->getRootSceneNode()->addChild(nodeG);
+
 
 	return true;
 }
@@ -356,3 +421,71 @@ int MyFrameListener::getShipDirection(int aMyX, int aMyY, int aShipLenght, int a
 	
 	return shipDirection;
 }
+
+int MyFrameListener::playCPU()
+{
+	int i=0;
+	int j=0;
+	int result = 0; // 0.agua, 1.impacto
+	do
+	{
+		i=rand()%10;
+		j=rand()%10;
+	}
+	while(myBoardPlayer[i][j]==2);
+				
+	if (myBoardPlayer[i][j]==1) // barco.
+	{
+		Ogre::Vector3 pos = _playerNodeBoard[i][j]->getPosition();
+		_playerNodeBoard[i][j]->detachObject((unsigned short)0);
+
+		// Creacion de otro cubo para cuando haya barco.
+		Ogre::Entity* ent1;
+		ent1 = _sceneManager->createEntity("CuboBarcoRojo.mesh");
+		ent1->setQueryFlags(4);
+		Ogre::SceneNode* node1 = _sceneManager->createSceneNode();
+		node1->attachObject(ent1);
+		node1->translate(pos.x,pos.y,pos.z);
+		_sceneManager->getRootSceneNode()->addChild(node1);
+		result = 1;
+	}
+	else if (myBoardPlayer[i][j]==0) // agua.
+	{
+		_playerNodeBoard[i][j]->detachObject((unsigned short)0);
+	}
+	
+	myBoardPlayer[i][j]=2;
+	return result;
+}
+
+int MyFrameListener::endGame()
+{
+	int lWinner = 0; // 0.no, 1.Player, 2.CPU
+
+	// ganador player?
+	
+	if (_maxFires==0)
+	{
+		lWinner = 1;
+	}
+
+	if (lWinner==0)
+	{
+		// ganador CPU?
+		lWinner = 2;
+		for (int i=0; i<_XMAX; i++)
+		{
+			for (int j=0; j<_YMAX; j++)
+			{
+				if (myBoardPlayer[i][j]==1)
+				{
+					lWinner = 0;
+				}
+			}
+		}
+	}
+	return lWinner;
+
+}
+
+
