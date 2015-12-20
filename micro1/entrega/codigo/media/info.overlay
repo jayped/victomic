@@ -1,0 +1,86 @@
+template element TextArea(MyTemplates/Text)
+{
+    font_name Blue
+		metrics_mode pixels
+		char_height 15
+		colour 1.0 1.0 1.0    
+}
+
+template element TextArea(MyTemplates/SmallText)
+{
+    font_name Blue
+		metrics_mode pixels
+		char_height 12
+		colour 1.0 1.0 1.0    
+}
+
+Info
+{
+    zorder 500
+
+    container Panel(cursor) 
+    {
+	      metrics_mode pixels
+        left 100
+        top 100
+        width 17
+        height 23
+        vert_align top
+        horz_align left
+        material pointer
+    }	  
+
+}
+Title
+{
+    zorder 500
+
+    container Panel(panTitle) 
+    {
+	    metrics_mode pixels
+        left -200
+        top -250
+        width 400
+        height 500
+        vert_align center
+        horz_align center
+        material matTitle
+    }
+
+}
+
+Win
+{
+    zorder 500
+
+    container Panel(panWin) 
+    {
+	    metrics_mode pixels
+        left -200
+        top -300
+        width 400
+        height 120
+        vert_align center
+        horz_align center
+        material matWin
+    }
+
+}
+
+Lose
+{
+    zorder 500
+
+    container Panel(panLose) 
+    {
+	    metrics_mode pixels
+        left -200
+        top -300
+        width 400
+        height 120
+        vert_align center
+        horz_align center
+        material matLose
+    }
+
+}
