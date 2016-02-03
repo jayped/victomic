@@ -1,0 +1,13 @@
+material skyMat
+{
+ technique 
+ {
+   pass 
+   {
+     texture_unit 
+     {
+       texture tilesky.jpg
+     }
+   }
+ }
+}
