@@ -26,6 +26,10 @@
 
 #include "GameState.h"
 
+#define _posCamX 21
+#define _posCamY -21
+#define _posCamZ 50
+
 class PlayState : public Ogre::Singleton<PlayState>, public GameState
 {
 
@@ -47,6 +51,8 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   bool frameStarted (const Ogre::FrameEvent& evt);
   bool frameEnded (const Ogre::FrameEvent& evt);
   void createScene();
+  void createStage();
+  double truncPosition(double aPosition);
 
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
@@ -61,9 +67,9 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Ogre::SceneNode* _nodePlayer;
   Ogre::Vector3 _playerPosition;
   
-  OIS::KeyCode _storeKey;
   enum direction {_stop, _up, _down, _right, _left};
   direction _playerDirection;
+  direction _storeDir;
   
   bool _exitGame;
 };
