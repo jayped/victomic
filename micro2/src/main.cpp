@@ -28,8 +28,12 @@
 #include <iostream>
 
 using namespace std;
-
-int main () {
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+    INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
+#else
+	int main() 
+#endif
+{
 
   GameManager* game = new GameManager();
   IntroState* introState = new IntroState();

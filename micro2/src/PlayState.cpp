@@ -11,6 +11,19 @@ using namespace libxl;
 
 template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
 
+PlayState::PlayState ()
+{
+    //Se inicializa el tablero.
+    for(int i = 0; i < BOARDSIZE; i++ )
+    {
+        for( int j = 0; j < BOARDSIZE; j++ )
+        {
+            _boardInfo[i][j] = EMPTY;
+        }
+    }
+    _boardPosX = -1.0;
+    _boardPosY = -1.0;
+}
 void
 PlayState::enter ()
 {
@@ -74,6 +87,17 @@ PlayState::frameStarted
 	double truncX = truncPosition(_playerPosition.x);
 	double truncY = truncPosition(_playerPosition.y);
 
+    double newPosX = truncX;
+    double newPosY = truncY;
+
+    if( _boardPosX == -1.0 )
+    {
+        _boardPosX=floor(abs(newPosX)/2)-1;
+    }
+    if( _boardPosY == -1.0 )
+    {
+        _boardPosY = abs(ceil(newPosY/2))-1;
+    }
 	switch (_storeDir)
 	{	
 		case _up:
@@ -108,24 +132,46 @@ PlayState::frameStarted
 			break;
 	}
 
+    double boardPosX = _boardPosX;
+    double boardPosY = _boardPosY;
 
 	switch (_playerDirection)
 	{	
 		case _up:
-			_nodePlayer->setPosition(truncX,truncY+0.05,_playerPosition.z);
+            newPosY = truncY+0.05;
+            boardPosY = abs(ceil(newPosY/2))-1;
 			break;
 		case _down:
-			_nodePlayer->setPosition(truncX,truncY-0.05,_playerPosition.z);
+            newPosY = truncY-0.05;
+            boardPosY = abs(floor(newPosY/2))-1;
 			break;
 		case _right:
-			_nodePlayer->setPosition(truncX+0.05,truncY,_playerPosition.z);
+			newPosX = truncX+0.05;
+            boardPosX = ceil(abs(newPosX/2))-1;
 			break;
 		case _left:
-			_nodePlayer->setPosition(truncX-0.05,truncY,_playerPosition.z);
+            newPosX = truncX-0.05;
+            boardPosX = floor(abs(newPosX/2))-1;
 			break;
 		default:
 			break;
 	}
+   
+    if( _playerDirection!=_stop && _boardInfo[(int)boardPosX][(int)boardPosY] != WALL )
+    {
+        //En la nueva posición no encontraremos una pared, actualizamos posición.
+        //Si hubiera pared, paramos hasta nueva pulsación
+        _nodePlayer->setPosition(newPosX,newPosY,_playerPosition.z);
+        //actulizamos valores de _boardPosX y _boardPosY
+        _boardPosX = boardPosX;
+        _boardPosY = boardPosY;
+        if( _boardInfo[(int)_boardPosX][(int)_boardPosY] == BALL )
+        {
+            //la nueva posición tiene una bola, nos la comemos!
+        }
+    }
+ 
+    
 			
 	return true;
 }
@@ -235,7 +281,7 @@ PlayState::createScene()
 	// personaje
 
 	Ogre::Entity* ent1;
-	ent1 = _sceneMgr->createEntity("player.mesh");
+	ent1 = _sceneMgr->createEntity("pacman.mesh");
 	_nodePlayer = _sceneMgr->createSceneNode();
 	_nodePlayer->attachObject(ent1);
 	_nodePlayer->translate(22,-26,0);
@@ -269,29 +315,30 @@ PlayState::createStage()
 					for (int j=1; j<fin; j++)
 					{
 						
-						s = sheet->readStr(j, i, &format);
-						
+						format = sheet->cellFormat(j, i);
 						color = format->patternForegroundColor();
 						if (color == Color::COLOR_OCEANBLUE_CF)
 						{
 							Ogre::Entity* ent1;
-							ent1 = _sceneMgr->createEntity("wall.mesh");
+							ent1 = _sceneMgr->createEntity("Bloque.mesh");
 							Ogre::SceneNode* node1 = _sceneMgr->createSceneNode();
 							node1->attachObject(ent1);
 							//node1->setPosition(-9.4321+(i*2),20.6799-(j*2),-60.9970);
 							node1->setPosition((i*2),-(j*2),0);
 							_sceneMgr->getRootSceneNode()->addChild(node1);
+                            _boardInfo[i-1][j-1] = WALL;
 						}
 						
 						if (color == Color::COLOR_BLACK)
 						{
 							Ogre::Entity* ent1;
-							ent1 = _sceneMgr->createEntity("ball.mesh");
+							ent1 = _sceneMgr->createEntity("bola.mesh");
 							Ogre::SceneNode* node1 = _sceneMgr->createSceneNode();
 							node1->attachObject(ent1);
 							//node1->setPosition(-9.4321+(i*2),20.6799-(j*2),-60.9970);
 							node1->setPosition((i*2),-(j*2),0);
 							_sceneMgr->getRootSceneNode()->addChild(node1);
+                            _boardInfo[i-1][j-1] = BALL;
 						}
 						
 					}

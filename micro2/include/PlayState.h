@@ -29,12 +29,16 @@
 #define _posCamX 21
 #define _posCamY -21
 #define _posCamZ 50
+#define BOARDSIZE 20
+#define WALL 1
+#define BALL 2
+#define EMPTY 0
 
 class PlayState : public Ogre::Singleton<PlayState>, public GameState
 {
 
  public:
-  PlayState () {}
+  PlayState ();
 
   void enter ();
   void exit ();
@@ -72,6 +76,14 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   direction _storeDir;
   
   bool _exitGame;
+private:
+    //Array que contendrá la información del tablero:
+    // WALL -- bloque
+    // BALL -- bola
+    // EMPTY -- nada
+    int _boardInfo[BOARDSIZE][BOARDSIZE];
+    double _boardPosX;
+    double _boardPosY;
 };
 
 #endif
