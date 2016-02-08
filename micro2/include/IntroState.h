@@ -55,6 +55,7 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   Ogre::SceneManager* _sceneMgr;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
+  Ogre::OverlayManager* _overlayMgr;
 
   bool _exitGame;
 };

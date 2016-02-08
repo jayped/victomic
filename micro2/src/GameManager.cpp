@@ -27,6 +27,9 @@ GameManager::start
 {
   // Creación del objeto Ogre::Root.
   _root = new Ogre::Root();
+  // se crea aqui el scene manager para introducir el overlay, porque si se hace en el introstate, no recoge los resources overlays en loadresources.
+  _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
+  _root->getSceneManager("SceneManager")->addRenderQueueListener(new Ogre::OverlaySystem());
   
   loadResources();
 

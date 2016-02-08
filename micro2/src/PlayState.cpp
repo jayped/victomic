@@ -8,6 +8,7 @@
 
 
 using namespace libxl;
+
 template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
 
 PlayState::PlayState ()
@@ -21,6 +22,7 @@ PlayState::PlayState ()
         }
     }
 }
+
 void
 PlayState::enter ()
 {
@@ -29,6 +31,8 @@ PlayState::enter ()
   // Se recupera el gestor de escena y la cámara.
   _sceneMgr = _root->getSceneManager("SceneManager");
   _sceneMgr->setAmbientLight(Ogre::ColourValue(1, 1, 1));
+  //_sceneMgr->addRenderQueueListener(new Ogre::OverlaySystem());
+
 
   _camera = _sceneMgr->getCamera("IntroCamera");
   //_camera->setPosition(Ogre::Vector3(10,10,2));
@@ -47,13 +51,27 @@ PlayState::enter ()
 	_camera->setAspectRatio(width / height);
 
 	_exitGame = false;
-
+	
 	// crea el escenario y el fondo;
 	createScene();
 	createStage();
+	
+	
+	_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
+	Ogre::Overlay *overlay = _overlayMgr->getByName("Score");
+	
+	_score = 0;
+	_scoreOverlay = _overlayMgr->getOverlayElement("scoreLabel");
+	_scoreOverlay->setCaption("Score");
+	_scoreOverlay = _overlayMgr->getOverlayElement("scoreValue");
+	_scoreOverlay->setCaption(Ogre::StringConverter::toString(_score));
+	
+	overlay->show();
+	
 
 	_playerDirection = _stop;
 	_storeDir = _stop;
+	
 }
 
 void
@@ -72,7 +90,7 @@ void
 PlayState::resume()
 {
   // Se restaura el background colour.
-  _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 1.0));
+  _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
 }
 
 bool
@@ -80,72 +98,86 @@ PlayState::frameStarted
 (const Ogre::FrameEvent& evt)
 {
 	_playerPosition = _nodePlayer->getPosition();
-	
-	double truncX = truncPosition(_playerPosition.x);
-	double truncY = truncPosition(_playerPosition.y);
 
-    double newPosX = truncX;
+	checkBalls();
+
+	// desechar el truncado, porque no vale al no ser numeros exactos. solucionado con el epsilon.
+	//double truncX = truncPosition(_playerPosition.x);
+	//double truncY = truncPosition(_playerPosition.y);
+	double truncX = _playerPosition.x;
+	double truncY = _playerPosition.y;
+
+	double newPosX = truncX;
     double newPosY = truncY;
 
 	switch (_storeDir)
 	{	
 		case _up:
-			if ((fmod(truncX, 2)>-0.1) && (fmod(truncX, 2)<0.1))
+			if ((fmod(truncX, 2)>-_epsilon) && (fmod(truncX, 2)<_epsilon))
 			{
 				_playerDirection=_up;
 				_storeDir=_stop;
+				updatePlayer();
 			}
 			break;
 		case _down:
-			if ((fmod(truncX, 2)>-0.1) && (fmod(truncX, 2)<0.1))
+			if ((fmod(truncX, 2)>-_epsilon) && (fmod(truncX, 2)<_epsilon))
 			{
 				_playerDirection=_down;
 				_storeDir=_stop;
+				updatePlayer();
 			}
 			break;
 		case _right:
-			if ((fmod(truncY, 2)>-0.1) && (fmod(truncY, 2)<0.1))
+			if ((fmod(truncY, 2)>-_epsilon) && (fmod(truncY, 2)<_epsilon))
 			{
 				_playerDirection=_right;
 				_storeDir=_stop;
+				updatePlayer();
 			}
 			break;
 		case _left:
-			if ((fmod(truncY, 2)>-0.1) && (fmod(truncY, 2)<0.1))
+			if ((fmod(truncY, 2)>-_epsilon) && (fmod(truncY, 2)<_epsilon))
 			{
 				_playerDirection=_left;
 				_storeDir=_stop;
+				updatePlayer();
 			}
 			break;
 		default:
 			break;
 	}
 
-    int boardPosX = newPosX/2-1;
+	int boardPosX = newPosX/2-1;
     int boardPosY = abs(newPosY/2)-1;   
+
 	switch (_playerDirection)
 	{	
 		case _up:
-            newPosY = truncY+0.05;
+			//_nodePlayer->setPosition(truncX,truncY+0.05,_playerPosition.z);
+			newPosY = truncY+0.05;
             boardPosY = abs(newPosY/2)-1; 
 			break;
 		case _down:
-            newPosY = truncY-0.05;
+			//_nodePlayer->setPosition(truncX,truncY-0.05,_playerPosition.z);
+			newPosY = truncY-0.05;
             boardPosY = abs(newPosY/2); 
 			break;
 		case _right:
+			//_nodePlayer->setPosition(truncX+0.05,truncY,_playerPosition.z);
             newPosX = truncX+0.05;
             boardPosX=newPosX/2;
 			break;
 		case _left:
+			//_nodePlayer->setPosition(truncX-0.05,truncY,_playerPosition.z);
             newPosX = truncX-0.05;
             boardPosX=newPosX/2-1;
 			break;
 		default:
 			break;
-	}   
-  
-    if( _playerDirection!=_stop && _boardInfo[(int)boardPosY][(int)boardPosX] != WALL )
+	}
+	
+	if( _playerDirection!=_stop && _boardInfo[(int)boardPosY][(int)boardPosX] != WALL )
     {
         //En la nueva posición no encontraremos una pared, actualizamos posición.
         //Si hubiera pared, paramos hasta nueva pulsación
@@ -180,7 +212,14 @@ PlayState::frameStarted
             _playerDirection =_stop;
         }    
     }
-			
+
+	//Ogre::Real deltaT = evt.timeSinceLastFrame;
+	//int fps = 1.0 / deltaT;
+	_scoreOverlay = _overlayMgr->getOverlayElement("scoreLabel");
+	_scoreOverlay->setCaption("Score");
+	
+	//if (_arrayNodeBalls.size() == 160) popState();
+
 	return true;
 }
 
@@ -289,12 +328,12 @@ PlayState::createScene()
 	// personaje
 
 	Ogre::Entity* ent1;
-	ent1 = _sceneMgr->createEntity("pacman.mesh");
+	ent1 = _sceneMgr->createEntity("player.mesh");
 	_nodePlayer = _sceneMgr->createSceneNode();
 	_nodePlayer->attachObject(ent1);
-	_nodePlayer->translate(38,-4,0);
-
+	_nodePlayer->translate(22,-26,0);
 	_sceneMgr->getRootSceneNode()->addChild(_nodePlayer);
+
 }
 
 
@@ -323,12 +362,13 @@ PlayState::createStage()
 					for (int j=1; j<fin; j++)
 					{
 						
-						format = sheet->cellFormat(j, i);
+						s = sheet->readStr(j, i, &format);
+						
 						color = format->patternForegroundColor();
 						if (color == Color::COLOR_OCEANBLUE_CF)
 						{
 							Ogre::Entity* ent1;
-							ent1 = _sceneMgr->createEntity("Bloque.mesh");
+							ent1 = _sceneMgr->createEntity("wall.mesh");
 							Ogre::SceneNode* node1 = _sceneMgr->createSceneNode();
 							node1->attachObject(ent1);
 							//node1->setPosition(-9.4321+(i*2),20.6799-(j*2),-60.9970);
@@ -340,12 +380,13 @@ PlayState::createStage()
 						if (color == Color::COLOR_BLACK)
 						{
 							Ogre::Entity* ent1;
-							ent1 = _sceneMgr->createEntity("bola.mesh");
+							ent1 = _sceneMgr->createEntity("ball.mesh");
 							Ogre::SceneNode* node1 = _sceneMgr->createSceneNode();
 							node1->attachObject(ent1);
 							//node1->setPosition(-9.4321+(i*2),20.6799-(j*2),-60.9970);
 							node1->setPosition((i*2),-(j*2),0);
 							_sceneMgr->getRootSceneNode()->addChild(node1);
+							_arrayNodeBalls.push_back(node1);
                             _boardInfo[j-1][i-1] = BALL;
 						}
 						
@@ -361,12 +402,64 @@ PlayState::createStage()
     }
 }
 
-double
+void
+PlayState::checkBalls()
+{
+	double _ballPositionX = 0;
+	double _ballPositionY = 0;
+	
+	std::list<Ogre::SceneNode*>::iterator list_iter = _arrayNodeBalls.begin();
+	while (list_iter != _arrayNodeBalls.end())
+	{
+		_playerPosition = _nodePlayer->getPosition();
+		_ballPositionX = (*list_iter)->getPosition().x;
+		_ballPositionY = (*list_iter)->getPosition().y;
+
+		if ( ( abs(_playerPosition.x - _ballPositionX) < _epsilon) &&
+			 ( abs(_playerPosition.y - _ballPositionY) < _epsilon))
+		{	 
+			(*list_iter)->detachObject((unsigned short)0);
+			//std::list<Ogre::SceneNode*>::iterator delElement = list_iter;
+			list_iter = _arrayNodeBalls.erase(list_iter);
+			_score++;
+			_scoreOverlay = _overlayMgr->getOverlayElement("scoreValue");
+			_scoreOverlay->setCaption(Ogre::StringConverter::toString(_score));
+		}
+		list_iter++;
+	}
+
+}
+
+double // Eliminar. no esta en uso.
 PlayState::truncPosition(double aPosition)
 {
-    int truncado = aPosition * 100;
-    double devuelta = truncado/100.0;    
+	int truncado = aPosition * 100;
+	double devuelta = truncado/100.0;
 	return devuelta;
+	
+}
+
+void
+PlayState::updatePlayer()
+{
+	_nodePlayer->setOrientation(_nodePlayer->getInitialOrientation());
+
+	switch (_playerDirection)
+	{
+		case _up:
+				_nodePlayer->roll(Ogre::Degree(90));
+				break;
+		case _down:
+				_nodePlayer->roll(Ogre::Degree(-90));
+				break;
+		case _right:
+				_nodePlayer->roll(Ogre::Degree(0));
+				break;
+		case _left:
+				_nodePlayer->roll(Ogre::Degree(180));
+				break;
+	}
+
 }
 
 // End Adding methods

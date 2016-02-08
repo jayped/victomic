@@ -8,10 +8,15 @@ IntroState::enter ()
 {
   _root = Ogre::Root::getSingletonPtr();
 
-  _sceneMgr = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
+  //_sceneMgr = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
+  _sceneMgr = _root->getSceneManager("SceneManager");
+  
   _camera = _sceneMgr->createCamera("IntroCamera");
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
-  _viewport->setBackgroundColour(Ogre::ColourValue(1.0, 1.0, 1.0));
+  _overlayMgr = Ogre::OverlayManager::getSingletonPtr();
+  Ogre::Overlay *overlay = _overlayMgr->getByName("Splash");
+  overlay->show();
+  _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
 
   _exitGame = false;
 }
@@ -21,6 +26,9 @@ IntroState::exit()
 {
   _sceneMgr->clearScene();
   _root->getAutoCreatedWindow()->removeAllViewports();
+  Ogre::Overlay *overlay = _overlayMgr->getByName("Splash");
+  overlay->hide();
+
 }
 
 void

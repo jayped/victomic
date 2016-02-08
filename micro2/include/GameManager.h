@@ -25,6 +25,9 @@
 #include <Ogre.h>
 #include <OgreSingleton.h>
 #include <OIS/OIS.h>
+#include <OgreOverlaySystem.h>
+#include <OgreOverlayElement.h>
+#include <OgreOverlayManager.h>
 
 #include "InputManager.h"
 

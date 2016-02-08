@@ -23,12 +23,16 @@
 
 #include <Ogre.h>
 #include <OIS/OIS.h>
-
 #include "GameState.h"
+#include <OgreOverlaySystem.h>
+#include <OgreOverlayElement.h>
+#include <OgreOverlayManager.h>
 
 #define _posCamX 21
 #define _posCamY -21
 #define _posCamZ 50
+#define _epsilon 0.1
+
 #define BOARDSIZE 20
 #define WALL 1
 #define BALL 2
@@ -36,7 +40,8 @@
 
 class PlayState : public Ogre::Singleton<PlayState>, public GameState
 {
-
+ enum direction {_stop, _up, _down, _right, _left};
+  
  public:
   PlayState ();
 
@@ -57,31 +62,39 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void createScene();
   void createStage();
   double truncPosition(double aPosition);
+  void PlayState::checkBalls();
+  void updatePlayer();
 
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
   static PlayState* getSingletonPtr ();
+ 
 
  protected:
   Ogre::Root* _root;
   Ogre::SceneManager* _sceneMgr;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
+  Ogre::OverlayManager* _overlayMgr;
 
   Ogre::SceneNode* _nodePlayer;
   Ogre::Vector3 _playerPosition;
-  
-  enum direction {_stop, _up, _down, _right, _left};
+  std::list<Ogre::SceneNode*> _arrayNodeBalls;
+
   direction _playerDirection;
   direction _storeDir;
+  int _score;
+  Ogre::OverlayElement *_scoreOverlay;
   
   bool _exitGame;
-private:
+
+	private:
     //Array que contendrá la información del tablero:
     // WALL -- bloque
     // BALL -- bola
     // EMPTY -- nada
     int _boardInfo[BOARDSIZE][BOARDSIZE];
+
 };
 
 #endif
