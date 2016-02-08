@@ -82,8 +82,6 @@ private:
     // BALL -- bola
     // EMPTY -- nada
     int _boardInfo[BOARDSIZE][BOARDSIZE];
-    double _boardPosX;
-    double _boardPosY;
 };
 
 #endif

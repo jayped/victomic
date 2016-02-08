@@ -8,7 +8,6 @@
 
 
 using namespace libxl;
-
 template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
 
 PlayState::PlayState ()
@@ -21,8 +20,6 @@ PlayState::PlayState ()
             _boardInfo[i][j] = EMPTY;
         }
     }
-    _boardPosX = -1.0;
-    _boardPosY = -1.0;
 }
 void
 PlayState::enter ()
@@ -90,14 +87,6 @@ PlayState::frameStarted
     double newPosX = truncX;
     double newPosY = truncY;
 
-    if( _boardPosX == -1.0 )
-    {
-        _boardPosX=floor(abs(newPosX)/2)-1;
-    }
-    if( _boardPosY == -1.0 )
-    {
-        _boardPosY = abs(ceil(newPosY/2))-1;
-    }
 	switch (_storeDir)
 	{	
 		case _up:
@@ -132,46 +121,65 @@ PlayState::frameStarted
 			break;
 	}
 
-    double boardPosX = _boardPosX;
-    double boardPosY = _boardPosY;
-
+    int boardPosX = newPosX/2-1;
+    int boardPosY = abs(newPosY/2)-1;   
 	switch (_playerDirection)
 	{	
 		case _up:
             newPosY = truncY+0.05;
-            boardPosY = abs(ceil(newPosY/2))-1;
+            boardPosY = abs(newPosY/2)-1; 
 			break;
 		case _down:
             newPosY = truncY-0.05;
-            boardPosY = abs(floor(newPosY/2))-1;
+            boardPosY = abs(newPosY/2); 
 			break;
 		case _right:
-			newPosX = truncX+0.05;
-            boardPosX = ceil(abs(newPosX/2))-1;
+            newPosX = truncX+0.05;
+            boardPosX=newPosX/2;
 			break;
 		case _left:
             newPosX = truncX-0.05;
-            boardPosX = floor(abs(newPosX/2))-1;
+            boardPosX=newPosX/2-1;
 			break;
 		default:
 			break;
-	}
-   
-    if( _playerDirection!=_stop && _boardInfo[(int)boardPosX][(int)boardPosY] != WALL )
+	}   
+  
+    if( _playerDirection!=_stop && _boardInfo[(int)boardPosY][(int)boardPosX] != WALL )
     {
         //En la nueva posición no encontraremos una pared, actualizamos posición.
         //Si hubiera pared, paramos hasta nueva pulsación
-        _nodePlayer->setPosition(newPosX,newPosY,_playerPosition.z);
-        //actulizamos valores de _boardPosX y _boardPosY
-        _boardPosX = boardPosX;
-        _boardPosY = boardPosY;
-        if( _boardInfo[(int)_boardPosX][(int)_boardPosY] == BALL )
+        _nodePlayer->setPosition(newPosX,newPosY,_playerPosition.z);    
+           
+        if( _boardInfo[(int)boardPosY][(int)boardPosX] == BALL )
         {
             //la nueva posición tiene una bola, nos la comemos!
         }
     }
- 
-    
+    else
+    {
+        if( _playerDirection!=_stop )
+        {   
+            switch (_playerDirection)
+	        {	
+		        case _up:
+                     _nodePlayer->setPosition((boardPosX+1)*2,((boardPosY+2)*-2),_playerPosition.z);
+			        break;
+		        case _down:
+                    _nodePlayer->setPosition((boardPosX+1)*2,((boardPosY)*-2),_playerPosition.z);
+			        break;
+		        case _right:
+			        _nodePlayer->setPosition((boardPosX)*2,((boardPosY+1)*-2),_playerPosition.z);
+			        break;
+		        case _left:
+                   _nodePlayer->setPosition((boardPosX+2)*2,((boardPosY+1)*-2),_playerPosition.z);
+			        break;
+		        default:
+			        break;
+	        }   
+            _playerDirection =_stop;
+        }    
+    }
 			
 	return true;
 }
@@ -284,9 +292,9 @@ PlayState::createScene()
 	ent1 = _sceneMgr->createEntity("pacman.mesh");
 	_nodePlayer = _sceneMgr->createSceneNode();
 	_nodePlayer->attachObject(ent1);
-	_nodePlayer->translate(22,-26,0);
-	_sceneMgr->getRootSceneNode()->addChild(_nodePlayer);
+	_nodePlayer->translate(38,-4,0);
 
+	_sceneMgr->getRootSceneNode()->addChild(_nodePlayer);
 }
 
 
@@ -326,7 +334,7 @@ PlayState::createStage()
 							//node1->setPosition(-9.4321+(i*2),20.6799-(j*2),-60.9970);
 							node1->setPosition((i*2),-(j*2),0);
 							_sceneMgr->getRootSceneNode()->addChild(node1);
-                            _boardInfo[i-1][j-1] = WALL;
+                            _boardInfo[j-1][i-1] = WALL;
 						}
 						
 						if (color == Color::COLOR_BLACK)
@@ -338,7 +346,7 @@ PlayState::createStage()
 							//node1->setPosition(-9.4321+(i*2),20.6799-(j*2),-60.9970);
 							node1->setPosition((i*2),-(j*2),0);
 							_sceneMgr->getRootSceneNode()->addChild(node1);
-                            _boardInfo[i-1][j-1] = BALL;
+                            _boardInfo[j-1][i-1] = BALL;
 						}
 						
 					}
@@ -356,10 +364,9 @@ PlayState::createStage()
 double
 PlayState::truncPosition(double aPosition)
 {
-	int truncado = aPosition * 100;
-	double devuelta = truncado/100.0;
+    int truncado = aPosition * 100;
+    double devuelta = truncado/100.0;    
 	return devuelta;
-	
 }
 
 // End Adding methods
