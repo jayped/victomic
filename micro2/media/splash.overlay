@@ -1,6 +1,14 @@
+template element TextArea(MyTemplates/TextStart)
+{
+    font_name Arcade
+		metrics_mode pixels
+		char_height 20
+		colour 1.0 1.0 1.0    
+}
+
 Splash
 {
-    zorder 500
+    zorder 0
 
     container Panel(splash) 
     {
@@ -12,6 +20,13 @@ Splash
         vert_align top
         horz_align left
         material splashmat
+		    element TextArea(startLabel) : MyTemplates/TextStart
+		    {
+				  top 50
+				  left -225
+				  vert_align center
+				  horz_align center
+		    }
     }	  
 
 }

@@ -10,15 +10,58 @@ IntroState::enter ()
 
   //_sceneMgr = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
   _sceneMgr = _root->getSceneManager("SceneManager");
-  
+  _sceneMgr->setAmbientLight(Ogre::ColourValue(1, 1, 1));
+
   _camera = _sceneMgr->createCamera("IntroCamera");
+
+  //---
+  _camera->setPosition(Ogre::Vector3(21,-21,55));
+  _camera->lookAt(Ogre::Vector3(21,-21,0));
+  //_camera->setDirection(Ogre::Vector3(-0.006,-0.165,-0.9621));
+  _camera->setNearClipDistance(5);
+  _camera->setFarClipDistance(10000);
+  //---
+
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
   _overlayMgr = Ogre::OverlayManager::getSingletonPtr();
-  Ogre::Overlay *overlay = _overlayMgr->getByName("Splash");
-  overlay->show();
+  Ogre::Overlay *overlaytv = _overlayMgr->getByName("aTV");
+  overlay = _overlayMgr->getByName("Splash");
+  
+  _startOverlay = _overlayMgr->getOverlayElement("startLabel");
+  _startOverlay->setCaption("PRESS SPACE TO START");
+  overlaytv->show();
+  //overlay->show();
   _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
+  _pressStartCounter = 0.0;
+  _onConsole = 0.0;
 
   _exitGame = false;
+  _isOn = false;
+
+  // quitar desde aqui
+    	double width = _viewport->getActualWidth();
+	double height = _viewport->getActualHeight();
+	_camera->setAspectRatio(width / height);
+
+	
+  	// plano pantalla
+  	// Creacion del plano
+	Ogre::Plane pl1(Ogre::Vector3::UNIT_Z,30);
+	Ogre::MeshManager::getSingleton().createPlane("pl1",
+		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+		pl1,200,200,1,1,true,1,20,20,Ogre::Vector3::UNIT_Y);
+
+	// Añadir el plano a la escena
+	nodeG = _sceneMgr->createSceneNode("nodeG");
+	Ogre::Entity* grEnt = _sceneMgr->createEntity("pEnt", "pl1");
+	grEnt->setMaterialName("WhiteNoise");
+	nodeG->attachObject(grEnt);
+	_sceneMgr->getRootSceneNode()->addChild(nodeG);
+	
+  
+  // ---
+
+
 }
 
 void
@@ -28,7 +71,7 @@ IntroState::exit()
   _root->getAutoCreatedWindow()->removeAllViewports();
   Ogre::Overlay *overlay = _overlayMgr->getByName("Splash");
   overlay->hide();
-
+  
 }
 
 void
@@ -45,7 +88,27 @@ bool
 IntroState::frameStarted
 (const Ogre::FrameEvent& evt) 
 {
-  return true;
+	Ogre::Real deltaT = evt.timeSinceLastFrame;
+	_pressStartCounter = _pressStartCounter + evt.timeSinceLastFrame;
+	_onConsole = _onConsole + evt.timeSinceLastFrame;
+	if (_pressStartCounter>0.5)
+	{
+		_pressStartCounter = 0.0;
+		if (_startOverlay->isVisible())
+			_startOverlay->hide();
+		else
+			_startOverlay->show();
+	}
+	
+	if ((_onConsole>3) && !_isOn)
+	{
+		_isOn=true;
+		nodeG->detachObject((unsigned short)0);
+		overlay->show();
+		_startOverlay->show();
+	}
+	
+	return true;
 }
 
 bool

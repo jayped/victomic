@@ -41,7 +41,7 @@ PlayState::enter ()
   //_camera->setDirection(Ogre::Vector3(-0.006,-0.165,-0.9621));
   _camera->setNearClipDistance(5);
   _camera->setFarClipDistance(10000);
-
+  
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
   // Nuevo background colour.
   _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
@@ -58,20 +58,28 @@ PlayState::enter ()
 	
 	
 	_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
+  
 	Ogre::Overlay *overlay = _overlayMgr->getByName("Score");
 	
 	_score = 0;
+	_hiscore = 0;
+
 	_scoreOverlay = _overlayMgr->getOverlayElement("scoreLabel");
 	_scoreOverlay->setCaption("Score");
 	_scoreOverlay = _overlayMgr->getOverlayElement("scoreValue");
 	_scoreOverlay->setCaption(Ogre::StringConverter::toString(_score));
 	
+	_scoreOverlay = _overlayMgr->getOverlayElement("scoreLabelHi");
+	_scoreOverlay->setCaption("HiScore");
+	_scoreOverlay = _overlayMgr->getOverlayElement("hiscoreValueHi");
+	_scoreOverlay->setCaption(Ogre::StringConverter::toString(_score));
+
 	overlay->show();
-	
+
 
 	_playerDirection = _stop;
 	_storeDir = _stop;
-	
+
 }
 
 void
@@ -215,11 +223,12 @@ PlayState::frameStarted
 
 	//Ogre::Real deltaT = evt.timeSinceLastFrame;
 	//int fps = 1.0 / deltaT;
-	_scoreOverlay = _overlayMgr->getOverlayElement("scoreLabel");
-	_scoreOverlay->setCaption("Score");
-	
-	//if (_arrayNodeBalls.size() == 160) popState();
-
+	//_scoreOverlay = _overlayMgr->getOverlayElement("scoreLabel");
+	//_scoreOverlay->setCaption("Score");
+	/*
+	if (_arrayNodeBalls.size() == 170)
+	{
+	}*/
 	return true;
 }
 
@@ -247,6 +256,7 @@ PlayState::keyPressed
 	//_nodePlayer->setPosition(pos.x,pos.y+0.1,pos.z);
 	//_playerDirection = _up;
 	  _storeDir = _up;
+
   }
   if (e.key == OIS::KC_DOWN) {
 	//_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 1.0, 1.0));
@@ -254,6 +264,8 @@ PlayState::keyPressed
 	//_nodePlayer->setPosition(pos.x,pos.y-0.1,pos.z);
 	//_playerDirection = _down;
 	  _storeDir = _down;
+	  //_camera->setPosition(Ogre::Vector3(_camera->getPosition().x,_camera->getPosition().y,_camera->getPosition().z+5));
+
   }
   if (e.key == OIS::KC_LEFT) {
 	//_viewport->setBackgroundColour(Ogre::ColourValue(1.0, 0.0, 1.0));
@@ -357,6 +369,9 @@ PlayState::createStage()
             Sheet* sheet = book->getSheet(0);
             if(sheet)
             {
+				// hiscore
+				_hiscore = sheet->readNum(1,24);
+
 				for (int i=1; i<fin; i++)
 				{
 					for (int j=1; j<fin; j++)

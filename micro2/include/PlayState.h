@@ -30,7 +30,7 @@
 
 #define _posCamX 21
 #define _posCamY -21
-#define _posCamZ 50
+#define _posCamZ 55
 #define _epsilon 0.1
 
 #define BOARDSIZE 20
@@ -84,6 +84,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   direction _playerDirection;
   direction _storeDir;
   int _score;
+  int _hiscore;
   Ogre::OverlayElement *_scoreOverlay;
   
   bool _exitGame;
