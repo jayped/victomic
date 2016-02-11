@@ -1,0 +1,7 @@
+ArcadeStart
+{
+	type truetype
+	source arcade.ttf
+	size 35
+	resolution 96
+}
