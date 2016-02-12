@@ -6,7 +6,6 @@
 #include <math.h>
 #include <cmath>
 
-
 using namespace libxl;
 
 template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
@@ -75,11 +74,6 @@ PlayState::enter ()
 	_scoreOverlay->setCaption(Ogre::StringConverter::toString(_score));
 
 	overlay->show();
-
-
-	_playerDirection = _stop;
-	_storeDir = _stop;
-
 }
 
 void
@@ -108,127 +102,12 @@ PlayState::frameStarted
 	_playerPosition = _nodePlayer->getPosition();
 
 	checkBalls();
+    movingGhosts();
+    movingGhostsInitial();
+    movingNewPos( _nodePlayer );
+    updatePlayer();
 
-	// desechar el truncado, porque no vale al no ser numeros exactos. solucionado con el epsilon.
-	//double truncX = truncPosition(_playerPosition.x);
-	//double truncY = truncPosition(_playerPosition.y);
-	double truncX = _playerPosition.x;
-	double truncY = _playerPosition.y;
 
-	double newPosX = truncX;
-    double newPosY = truncY;
-
-	switch (_storeDir)
-	{	
-		case _up:
-			if ((fmod(truncX, 2)>-_epsilon) && (fmod(truncX, 2)<_epsilon))
-			{
-				_playerDirection=_up;
-				_storeDir=_stop;
-				updatePlayer();
-			}
-			break;
-		case _down:
-			if ((fmod(truncX, 2)>-_epsilon) && (fmod(truncX, 2)<_epsilon))
-			{
-				_playerDirection=_down;
-				_storeDir=_stop;
-				updatePlayer();
-			}
-			break;
-		case _right:
-			if ((fmod(truncY, 2)>-_epsilon) && (fmod(truncY, 2)<_epsilon))
-			{
-				_playerDirection=_right;
-				_storeDir=_stop;
-				updatePlayer();
-			}
-			break;
-		case _left:
-			if ((fmod(truncY, 2)>-_epsilon) && (fmod(truncY, 2)<_epsilon))
-			{
-				_playerDirection=_left;
-				_storeDir=_stop;
-				updatePlayer();
-			}
-			break;
-		default:
-			break;
-	}
-
-	int boardPosX = newPosX/2-1;
-    int boardPosY = abs(newPosY/2)-1;   
-
-	switch (_playerDirection)
-	{	
-		case _up:
-			//_nodePlayer->setPosition(truncX,truncY+0.05,_playerPosition.z);
-			newPosY = truncY+0.05;
-            boardPosY = abs(newPosY/2)-1; 
-			break;
-		case _down:
-			//_nodePlayer->setPosition(truncX,truncY-0.05,_playerPosition.z);
-			newPosY = truncY-0.05;
-            boardPosY = abs(newPosY/2); 
-			break;
-		case _right:
-			//_nodePlayer->setPosition(truncX+0.05,truncY,_playerPosition.z);
-            newPosX = truncX+0.05;
-            boardPosX=newPosX/2;
-			break;
-		case _left:
-			//_nodePlayer->setPosition(truncX-0.05,truncY,_playerPosition.z);
-            newPosX = truncX-0.05;
-            boardPosX=newPosX/2-1;
-			break;
-		default:
-			break;
-	}
-	
-	if( _playerDirection!=_stop && _boardInfo[(int)boardPosY][(int)boardPosX] != WALL )
-    {
-        //En la nueva posición no encontraremos una pared, actualizamos posición.
-        //Si hubiera pared, paramos hasta nueva pulsación
-        _nodePlayer->setPosition(newPosX,newPosY,_playerPosition.z);    
-           
-        if( _boardInfo[(int)boardPosY][(int)boardPosX] == BALL )
-        {
-            //la nueva posición tiene una bola, nos la comemos!
-        }
-    }
-    else
-    {
-        if( _playerDirection!=_stop )
-        {   
-            switch (_playerDirection)
-	        {	
-		        case _up:
-                     _nodePlayer->setPosition((boardPosX+1)*2,((boardPosY+2)*-2),_playerPosition.z);
-			        break;
-		        case _down:
-                    _nodePlayer->setPosition((boardPosX+1)*2,((boardPosY)*-2),_playerPosition.z);
-			        break;
-		        case _right:
-			        _nodePlayer->setPosition((boardPosX)*2,((boardPosY+1)*-2),_playerPosition.z);
-			        break;
-		        case _left:
-                   _nodePlayer->setPosition((boardPosX+2)*2,((boardPosY+1)*-2),_playerPosition.z);
-			        break;
-		        default:
-			        break;
-	        }   
-            _playerDirection =_stop;
-        }    
-    }
-
-	//Ogre::Real deltaT = evt.timeSinceLastFrame;
-	//int fps = 1.0 / deltaT;
-	//_scoreOverlay = _overlayMgr->getOverlayElement("scoreLabel");
-	//_scoreOverlay->setCaption("Score");
-	/*
-	if (_arrayNodeBalls.size() == 170)
-	{
-	}*/
 	return true;
 }
 
@@ -251,35 +130,17 @@ PlayState::keyPressed
     pushState(PauseState::getSingletonPtr());
   }
   if (e.key == OIS::KC_UP) {
-	//_viewport->setBackgroundColour(Ogre::ColourValue(1.0, 1.0, 0.0));
-	//Ogre::Vector3 pos = _nodePlayer->getPosition();
-	//_nodePlayer->setPosition(pos.x,pos.y+0.1,pos.z);
-	//_playerDirection = _up;
-	  _storeDir = _up;
+	  _nodePlayer->setStoreDir (Actor::direction(_up));
 
   }
   if (e.key == OIS::KC_DOWN) {
-	//_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 1.0, 1.0));
-	//Ogre::Vector3 pos = _nodePlayer->getPosition();
-	//_nodePlayer->setPosition(pos.x,pos.y-0.1,pos.z);
-	//_playerDirection = _down;
-	  _storeDir = _down;
-	  //_camera->setPosition(Ogre::Vector3(_camera->getPosition().x,_camera->getPosition().y,_camera->getPosition().z+5));
-
+	  _nodePlayer->setStoreDir (Actor::direction(_down));
   }
   if (e.key == OIS::KC_LEFT) {
-	//_viewport->setBackgroundColour(Ogre::ColourValue(1.0, 0.0, 1.0));
-	//Ogre::Vector3 pos = _nodePlayer->getPosition();
-	//_nodePlayer->setPosition(pos.x-0.1,pos.y,pos.z);
-	//_playerDirection = _left;
-	  _storeDir = _left;
+	   _nodePlayer->setStoreDir (Actor::direction(_left)); 
   }
   if (e.key == OIS::KC_RIGHT) {
-	//_viewport->setBackgroundColour(Ogre::ColourValue(0.5, 0.5, 1.0));
-	//Ogre::Vector3 pos = _nodePlayer->getPosition();
-	//_nodePlayer->setPosition(pos.x+0.1,pos.y,pos.z);
-	//_playerDirection = _right;
-	  _storeDir = _right;
+	 _nodePlayer->setStoreDir (Actor::direction(_right)); 
   }
 }
 
@@ -341,8 +202,9 @@ PlayState::createScene()
 
 	Ogre::Entity* ent1;
 	ent1 = _sceneMgr->createEntity("player.mesh");
-	_nodePlayer = _sceneMgr->createSceneNode();
-	_nodePlayer->attachObject(ent1);
+	_nodePlayer = reinterpret_cast<Actor *>(_sceneMgr->createSceneNode());
+    _nodePlayer->init(Actor::direction(_stop), 0.25F);
+   	_nodePlayer->attachObject(ent1);
 	_nodePlayer->translate(22,-26,0);
 	_sceneMgr->getRootSceneNode()->addChild(_nodePlayer);
 
@@ -360,7 +222,7 @@ PlayState::createStage()
 	int fin = 21;
 	const char* s;
 	double r;
-	
+	bool spawnDetected=false;
 						
 	if(book)
     {
@@ -404,6 +266,17 @@ PlayState::createStage()
 							_arrayNodeBalls.push_back(node1);
                             _boardInfo[j-1][i-1] = BALL;
 						}
+
+                        if(color == Color::COLOR_LIGHTTURQUOISE_CF)
+                        {
+                            //Detectado Spawn. Colocar fantasmas en la misma posición.
+                            if( !spawnDetected )
+                            {
+                                spawnDetected = true;
+                                createRedGhost((i*2), -(j*2), 0);
+                            }
+                            _boardInfo[j-1][i-1] = SPAWN;
+                        }
 						
 					}
 				}
@@ -422,9 +295,10 @@ PlayState::checkBalls()
 {
 	double _ballPositionX = 0;
 	double _ballPositionY = 0;
-	
+    //Solo chequeamos hasta que nos comemos una bola
+	bool exit = false;
 	std::list<Ogre::SceneNode*>::iterator list_iter = _arrayNodeBalls.begin();
-	while (list_iter != _arrayNodeBalls.end())
+	while (list_iter != _arrayNodeBalls.end() && !exit )
 	{
 		_playerPosition = _nodePlayer->getPosition();
 		_ballPositionX = (*list_iter)->getPosition().x;
@@ -439,6 +313,7 @@ PlayState::checkBalls()
 			_score++;
 			_scoreOverlay = _overlayMgr->getOverlayElement("scoreValue");
 			_scoreOverlay->setCaption(Ogre::StringConverter::toString(_score));
+            exit = true;
 		}
 		list_iter++;
 	}
@@ -459,24 +334,269 @@ PlayState::updatePlayer()
 {
 	_nodePlayer->setOrientation(_nodePlayer->getInitialOrientation());
 
-	switch (_playerDirection)
+	switch (_nodePlayer->getDirection())
 	{
-		case _up:
+		case Actor::_up:
 				_nodePlayer->roll(Ogre::Degree(90));
 				break;
-		case _down:
+		case Actor::_down:
 				_nodePlayer->roll(Ogre::Degree(-90));
 				break;
-		case _right:
+		case Actor::_right:
 				_nodePlayer->roll(Ogre::Degree(0));
 				break;
-		case _left:
-				_nodePlayer->roll(Ogre::Degree(180));
+		case Actor::_left:
+				_nodePlayer->yaw(Ogre::Degree(180));
 				break;
 	}
-
 }
 
+void PlayState::movingGhosts()
+{
+    std::list<Actor*>::iterator pos;
+    pos = _nodesGhost.begin();
+    while( pos != _nodesGhost.end())
+    {
+        pos++;
+    }
+}
+void PlayState::movingGhostsInitial()
+{
+    
+    std::list<Actor*>::iterator pos;
+    pos = _nodesGhost.begin();
+    while( pos != _nodesGhost.end())
+    {
+        
+
+	    double newPosX = (*pos)->getPosition().x;
+        double newPosY = (*pos)->getPosition().y;
+        double newPosZ = (*pos)->getPosition().z;
+        Actor::direction actorDir = (*pos)->getDirection();
+        Actor::direction storeDir = (*pos)->getStoreDir();
+
+        int boardPosX = newPosX/2-1;
+        int boardPosY = abs(newPosY/2)-1;   
+
+	    switch (storeDir)
+	    {	
+		    case _up:
+			    if ((fmod(newPosX, 2)>-_epsilon) && (fmod(newPosX, 2)<_epsilon))
+			    {
+				    (*pos)->setDirection(Actor::_up);
+				    (*pos)->setStoreDir(Actor::_stop);
+			    }
+			    break;
+		    case _down:
+			    if ((fmod(newPosX, 2)>-_epsilon) && (fmod(newPosX, 2)<_epsilon))
+			    {
+				    (*pos)->setDirection(Actor::_down);
+				    (*pos)->setStoreDir(Actor::_stop);
+			    }
+			    break;
+		    case _right:
+			    if ((fmod(newPosY, 2)>-_epsilon) && (fmod(newPosY, 2)<_epsilon))
+			    {
+				
+                    (*pos)->setDirection(Actor::_right);
+				    (*pos)->setStoreDir(Actor::_stop);
+                }
+			    break;
+		    case _left:
+			    if ((fmod(newPosY, 2)>-_epsilon) && (fmod(newPosY, 2)<_epsilon))
+			    {
+				    (*pos)->setDirection(Actor::_left);
+				    (*pos)->setStoreDir(Actor::_stop);
+			    }
+			    break;
+		    default:
+			    break;
+	    }
+
+	    switch ((*pos)->getDirection())
+	    {	
+		    case Actor::_up:
+			    newPosY +=(*pos)->getSpeed();
+                boardPosY = abs(newPosY/2)-1; 
+			    break;
+		    case Actor::_down:
+			    newPosY -=(*pos)->getSpeed();
+                boardPosY = abs(newPosY/2); 
+			    break;
+		    case Actor::_right:
+                newPosX += (*pos)->getSpeed();
+                boardPosX=newPosX/2;
+			    break;
+		    case Actor::_left:
+                newPosX -=(*pos)->getSpeed();
+                boardPosX=newPosX/2-1;
+			    break;
+		    default:
+			    break;
+	    }
+	
+	    if( (*pos)->getDirection()!=_stop && 
+            _boardInfo[(int)boardPosY][(int)boardPosX] != WALL && 
+            _boardInfo[(int)boardPosY][(int)boardPosX] == SPAWN)
+        {
+            //En la nueva posición no encontraremos una pared, actualizamos posición.
+            //Si hubiera pared, paramos hasta nueva pulsación
+            (*pos)->setPosition(newPosX,newPosY,newPosZ);    
+        }
+        else
+        {
+            if( (*pos)->getDirection()!=_stop )
+            {   
+                switch ((*pos)->getDirection())
+	            {	
+		            case _up:
+                         (*pos)->setPosition((boardPosX+1)*2,((boardPosY+2)*-2),newPosZ);
+			            break;
+		            case _down:
+                        (*pos)->setPosition((boardPosX+1)*2,((boardPosY)*-2),newPosZ);
+			            break;
+		            case _right:
+			            (*pos)->setPosition((boardPosX)*2,((boardPosY+1)*-2),newPosZ);
+			            break;
+		            case _left:
+                       (*pos)->setPosition((boardPosX+2)*2,((boardPosY+1)*-2),newPosZ);
+			            break;
+		            default:
+			            break;
+	            } 
+                (*pos)->setDirection(actorDir);  
+               // _storeDir = storeDir;
+            }    
+        }
+        pos++;
+    }
+}
+void PlayState::createRedGhost(int posX, int posY, int posZ)
+{
+   createGhost("redGhost.mesh", posX, posY, posZ);
+}
+void PlayState::createWhiteGhost(int posX, int posY, int posZ){}
+void PlayState::createBlueGhost(int posX, int posY, int posZ){}
+void PlayState::createOrangeGhost(int posX, int posY, int posZ){}
+void PlayState::createGreenGhost(int posX, int posY, int posZ){}
+void PlayState::createPinkGhost(int posX, int posY, int posZ){}
+void PlayState::createCyanGhost(int posX, int posY, int posZ){}
+void PlayState::createGhost(std::string ghost, int posX, int posY, int posZ)
+{
+    Ogre::Entity* ent1;
+    ent1 = _sceneMgr->createEntity(ghost);
+    Actor* actorNode = reinterpret_cast<Actor *>(_sceneMgr->createSceneNode());
+    actorNode->init( Actor::direction(_right ) );
+    actorNode->attachObject(ent1);
+    actorNode->setPosition(posX,posY,0);
+    _sceneMgr->getRootSceneNode()->addChild(actorNode);
+    _nodesGhost.push_back(actorNode);
+}
+bool PlayState::movingNewPos( Actor* &actor )
+{
+    bool isMoving = false;
+    double newPosX = actor->getPosition().x;
+    double newPosY = actor->getPosition().y;
+    double newPosZ = actor->getPosition().z;
+    Actor::direction actorDir = actor->getDirection();
+    Actor::direction storeDir = actor->getStoreDir();
+
+    int boardPosX = newPosX/2-1;
+    int boardPosY = abs(newPosY/2)-1;   
+
+	switch (storeDir)
+	{	
+		case _up:
+			if ((fmod(newPosX, 2)>-_epsilon) && (fmod(newPosX, 2)<_epsilon))
+			{
+				actor->setDirection(Actor::_up);
+				actor->setStoreDir(Actor::_stop);
+			}
+			break;
+		case _down:
+			if ((fmod(newPosX, 2)>-_epsilon) && (fmod(newPosX, 2)<_epsilon))
+			{
+				actor->setDirection(Actor::_down);
+				actor->setStoreDir(Actor::_stop);
+			}
+			break;
+		case _right:
+			if ((fmod(newPosY, 2)>-_epsilon) && (fmod(newPosY, 2)<_epsilon))
+			{
+				
+                actor->setDirection(Actor::_right);
+				actor->setStoreDir(Actor::_stop);
+            }
+			break;
+		case _left:
+			if ((fmod(newPosY, 2)>-_epsilon) && (fmod(newPosY, 2)<_epsilon))
+			{
+				actor->setDirection(Actor::_left);
+				actor->setStoreDir(Actor::_stop);
+			}
+			break;
+		default:
+			break;
+	}
+
+	switch (actor->getDirection())
+	{	
+		case Actor::_up:
+			newPosY +=actor->getSpeed();
+            boardPosY = abs(newPosY/2)-1; 
+			break;
+		case Actor::_down:
+			newPosY -=actor->getSpeed();
+            boardPosY = abs(newPosY/2); 
+			break;
+		case Actor::_right:
+            newPosX += actor->getSpeed();
+            boardPosX=newPosX/2;
+			break;
+		case Actor::_left:
+            newPosX -=actor->getSpeed();
+            boardPosX=newPosX/2-1;
+			break;
+		default:
+			break;
+	}
+	
+	if( actor->getDirection()!=_stop && 
+        _boardInfo[(int)boardPosY][(int)boardPosX] != WALL) 
+        //_boardInfo[(int)boardPosY][(int)boardPosX] == SPAWN)
+    {
+        //En la nueva posición no encontraremos una pared, actualizamos posición.
+        //Si hubiera pared, paramos hasta nueva pulsación
+        actor->setPosition(newPosX,newPosY,newPosZ);  
+        isMoving = true;  
+    }
+    else
+    {
+        if( actor->getDirection()!=_stop )
+        {   
+            switch (actor->getDirection())
+	        {	
+		        case _up:
+                        actor->setPosition((boardPosX+1)*2,((boardPosY+2)*-2),newPosZ);
+			        break;
+		        case _down:
+                   actor->setPosition((boardPosX+1)*2,((boardPosY)*-2),newPosZ);
+			        break;
+		        case _right:
+			        actor->setPosition((boardPosX)*2,((boardPosY+1)*-2),newPosZ);
+			        break;
+		        case _left:
+                    actor->setPosition((boardPosX+2)*2,((boardPosY+1)*-2),newPosZ);
+			        break;
+		        default:
+			        break;
+	        } 
+            actor->setDirection(actorDir);  
+            // _storeDir = storeDir;
+        }    
+    }
+    return isMoving;
+}
 // End Adding methods
 PlayState*
 PlayState::getSingletonPtr ()

@@ -27,7 +27,7 @@
 #include <OgreOverlaySystem.h>
 #include <OgreOverlayElement.h>
 #include <OgreOverlayManager.h>
-
+#include "Actor.h"
 #define _posCamX 21
 #define _posCamY -21
 #define _posCamZ 55
@@ -36,6 +36,7 @@
 #define BOARDSIZE 20
 #define WALL 1
 #define BALL 2
+#define SPAWN 3
 #define EMPTY 0
 
 class PlayState : public Ogre::Singleton<PlayState>, public GameState
@@ -62,13 +63,30 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void createScene();
   void createStage();
   double truncPosition(double aPosition);
-  void PlayState::checkBalls();
-  void updatePlayer();
+ 
 
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
   static PlayState* getSingletonPtr ();
- 
+
+private:
+  void checkBalls();
+  void updatePlayer();
+  void movingGhosts();
+  //devolverá true si puede hacer el movimiento.
+  bool movingNewPos( Actor* &actor );
+  //Los fantasmas se moverán por la zona de spawn, sin salir.
+  void movingGhostsInitial();
+  void updateGhost();
+  void createRedGhost(int posX, int posY, int posZ);
+  void createWhiteGhost(int posX, int posY, int posZ);
+  void createBlueGhost(int posX, int posY, int posZ);
+  void createOrangeGhost(int posX, int posY, int posZ);
+  void createGreenGhost(int posX, int posY, int posZ);
+  void createPinkGhost(int posX, int posY, int posZ);
+  void createCyanGhost(int posX, int posY, int posZ);
+  void createGhost(std::string, int posX, int posY, int posZ);
+
 
  protected:
   Ogre::Root* _root;
@@ -77,12 +95,10 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Ogre::Camera* _camera;
   Ogre::OverlayManager* _overlayMgr;
 
-  Ogre::SceneNode* _nodePlayer;
+  Actor* _nodePlayer;
   Ogre::Vector3 _playerPosition;
   std::list<Ogre::SceneNode*> _arrayNodeBalls;
-
-  direction _playerDirection;
-  direction _storeDir;
+  std::list<Actor*> _nodesGhost;
   int _score;
   int _hiscore;
   Ogre::OverlayElement *_scoreOverlay;
