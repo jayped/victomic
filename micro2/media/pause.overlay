@@ -1,0 +1,34 @@
+template element TextArea(MyTemplates/TextPause)
+{
+    font_name Arcade
+		metrics_mode pixels
+		char_height 20
+		colour 1.0 1.0 1.0    
+}
+
+Pause
+{
+    zorder 450
+
+    container Panel(pause) 
+    {
+	      metrics_mode pixels
+        left -75
+        top -30
+        width 150
+        height 60
+        vert_align center
+        horz_align center
+		material pausemat
+		    element TextArea(pauseLabel) : MyTemplates/TextPause
+		    {
+				  top -10
+				  left 0
+				  vert_align center
+				  horz_align center
+				  alignment center
+		    }
+
+    }	  
+
+}
