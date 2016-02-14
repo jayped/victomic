@@ -135,6 +135,16 @@ GameManager::configure ()
   return true;
 }
 
+void
+GameManager::updateScore(int aNewScore)
+{
+	_score = aNewScore;
+	if (aNewScore > _hiscore)
+	{
+		_hiscore = aNewScore;
+	}
+}
+
 GameManager*
 GameManager::getSingletonPtr ()
 {

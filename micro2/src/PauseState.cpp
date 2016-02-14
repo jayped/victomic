@@ -12,14 +12,24 @@ PauseState::enter ()
   _camera = _sceneMgr->getCamera("IntroCamera");
   _viewport = _root->getAutoCreatedWindow()->getViewport(0);
   // Nuevo background colour.
-  _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 1.0, 0.0));
+  _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
 
+  _overlayMgr = Ogre::OverlayManager::getSingletonPtr();
+  overlay = _overlayMgr->getByName("Pause");
+  _pauseOverlay = _overlayMgr->getOverlayElement("pauseLabel");
+  _pauseOverlay->setCaption("PAUSE");
+  overlay->show();
+  _pauseOverlay->show();
+  _pauseCounter=0;
   _exitGame = false;
 }
 
 void
 PauseState::exit ()
 {
+  overlay->hide();
+  _pauseOverlay->hide();
+
 }
 
 void
@@ -36,6 +46,17 @@ bool
 PauseState::frameStarted
 (const Ogre::FrameEvent& evt)
 {
+	Ogre::Real deltaT = evt.timeSinceLastFrame;
+	_pauseCounter = _pauseCounter + evt.timeSinceLastFrame;
+	if (_pauseCounter>0.5)
+	{
+		_pauseCounter = 0.0;
+		if (_pauseOverlay->isVisible())
+			_pauseOverlay->hide();
+		else
+			_pauseOverlay->show();
+	}
+
   return true;
 }
 

@@ -1,3 +1,4 @@
+#include "ReplayState.h"
 #include "PlayState.h"
 #include "PauseState.h"
 #include <iostream>
@@ -25,30 +26,33 @@ PlayState::PlayState ()
 void
 PlayState::enter ()
 {
-  _root = Ogre::Root::getSingletonPtr();
+	if (!_root)
+	{
+		_root = Ogre::Root::getSingletonPtr();
+		_gameMgr = GameManager::getSingletonPtr();
 
-  // Se recupera el gestor de escena y la cámara.
-  _sceneMgr = _root->getSceneManager("SceneManager");
-  _sceneMgr->setAmbientLight(Ogre::ColourValue(1, 1, 1));
-  //_sceneMgr->addRenderQueueListener(new Ogre::OverlaySystem());
+		// Se recupera el gestor de escena y la cámara.
+		_sceneMgr = _root->getSceneManager("SceneManager");
+		_sceneMgr->setAmbientLight(Ogre::ColourValue(1, 1, 1));
+		//_sceneMgr->addRenderQueueListener(new Ogre::OverlaySystem());
 
 
-  _camera = _sceneMgr->getCamera("IntroCamera");
-  //_camera->setPosition(Ogre::Vector3(10,10,2));
-  _camera->setPosition(Ogre::Vector3(_posCamX,_posCamY,_posCamZ));
-  _camera->lookAt(Ogre::Vector3(_posCamX,_posCamY,0));
-  //_camera->setDirection(Ogre::Vector3(-0.006,-0.165,-0.9621));
-  _camera->setNearClipDistance(5);
-  _camera->setFarClipDistance(10000);
+		_camera = _sceneMgr->getCamera("IntroCamera");
+		//_camera->setPosition(Ogre::Vector3(10,10,2));
+		_camera->setPosition(Ogre::Vector3(_posCamX,_posCamY,_posCamZ));
+		_camera->lookAt(Ogre::Vector3(_posCamX,_posCamY,0));
+		//_camera->setDirection(Ogre::Vector3(-0.006,-0.165,-0.9621));
+		_camera->setNearClipDistance(5);
+		_camera->setFarClipDistance(10000);
   
-  _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
-  // Nuevo background colour.
-  _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
+		_viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
+		// Nuevo background colour.
+		_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
   
-	double width = _viewport->getActualWidth();
-	double height = _viewport->getActualHeight();
-	_camera->setAspectRatio(width / height);
-
+		double width = _viewport->getActualWidth();
+		double height = _viewport->getActualHeight();
+		_camera->setAspectRatio(width / height);
+	}
 	_exitGame = false;
 	
 	// crea el escenario y el fondo;
@@ -58,10 +62,10 @@ PlayState::enter ()
 	
 	_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
   
-	Ogre::Overlay *overlay = _overlayMgr->getByName("Score");
+	_overlay = _overlayMgr->getByName("Score");
 	
 	_score = 0;
-	_hiscore = 0;
+	_hiscore = _gameMgr->_hiscore;
 
 	_scoreOverlay = _overlayMgr->getOverlayElement("scoreLabel");
 	_scoreOverlay->setCaption("Score");
@@ -71,16 +75,19 @@ PlayState::enter ()
 	_scoreOverlay = _overlayMgr->getOverlayElement("scoreLabelHi");
 	_scoreOverlay->setCaption("HiScore");
 	_scoreOverlay = _overlayMgr->getOverlayElement("hiscoreValueHi");
-	_scoreOverlay->setCaption(Ogre::StringConverter::toString(_score));
+	_scoreOverlay->setCaption(Ogre::StringConverter::toString(_hiscore));
 
-	overlay->show();
+	_overlay->show();
+
+
 }
 
 void
 PlayState::exit ()
 {
   _sceneMgr->clearScene();
-  _root->getAutoCreatedWindow()->removeAllViewports();
+  _overlay->hide();
+  //_root->getAutoCreatedWindow()->removeAllViewports();
 }
 
 void
@@ -99,11 +106,12 @@ bool
 PlayState::frameStarted
 (const Ogre::FrameEvent& evt)
 {
+
 	_playerPosition = _nodePlayer->getPosition();
 
 	checkBalls();
-    movingGhosts();
-    movingGhostsInitial();
+    //movingGhosts();
+    //movingGhostsInitial();
     movingNewPos( _nodePlayer );
     updatePlayer();
 
@@ -142,6 +150,19 @@ PlayState::keyPressed
   if (e.key == OIS::KC_RIGHT) {
 	 _nodePlayer->setStoreDir (Actor::direction(_right)); 
   }
+
+  // Fin de juego y Replay
+  if (e.key == OIS::KC_Z) {
+	
+	//_sceneMgr->getRootSceneNode()->removeAndDestroyAllChildren();
+	//_sceneMgr->clearScene();
+	
+	_gameMgr->updateScore(_score);
+	_arrayNodeBalls.clear();
+	changeState(ReplayState::getSingletonPtr());
+  }
+
+
 }
 
 void
@@ -149,7 +170,8 @@ PlayState::keyReleased
 (const OIS::KeyEvent &e)
 {
   if (e.key == OIS::KC_ESCAPE) {
-    _exitGame = true;
+    _root->getAutoCreatedWindow()->removeAllViewports();
+	_exitGame = true;
   }
 }
 
@@ -203,7 +225,7 @@ PlayState::createScene()
 	Ogre::Entity* ent1;
 	ent1 = _sceneMgr->createEntity("player.mesh");
 	_nodePlayer = reinterpret_cast<Actor *>(_sceneMgr->createSceneNode());
-    _nodePlayer->init(Actor::direction(_stop), 0.25F);
+    _nodePlayer->init(Actor::direction(_stop), 0.05F);
    	_nodePlayer->attachObject(ent1);
 	_nodePlayer->translate(22,-26,0);
 	_sceneMgr->getRootSceneNode()->addChild(_nodePlayer);
@@ -308,7 +330,6 @@ PlayState::checkBalls()
 			 ( abs(_playerPosition.y - _ballPositionY) < _epsilon))
 		{	 
 			(*list_iter)->detachObject((unsigned short)0);
-			//std::list<Ogre::SceneNode*>::iterator delElement = list_iter;
 			list_iter = _arrayNodeBalls.erase(list_iter);
 			_score++;
 			_scoreOverlay = _overlayMgr->getOverlayElement("scoreValue");
@@ -316,6 +337,11 @@ PlayState::checkBalls()
             exit = true;
 		}
 		list_iter++;
+	}
+
+	if (_arrayNodeBalls.empty())
+	{
+		_exitGame = true;
 	}
 
 }
