@@ -69,6 +69,7 @@ IntroState::enter ()
 		// carga de hiscore
 		_gameMgr->_hiscore=0;
 	
+		_gameMgr->loadHiScore();
 }
 
 void

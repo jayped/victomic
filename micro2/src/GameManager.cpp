@@ -2,6 +2,11 @@
 
 #include "GameManager.h"
 #include "GameState.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
 
 template<> GameManager* Ogre::Singleton<GameManager>::msSingleton = 0;
 
@@ -138,11 +143,48 @@ GameManager::configure ()
 void
 GameManager::updateScore(int aNewScore)
 {
+
+	string line;
+	ofstream myWritefile;
+	ifstream myReadFile;
+	const char* linechar;
+ 
+	// check score
 	_score = aNewScore;
 	if (aNewScore > _hiscore)
 	{
 		_hiscore = aNewScore;
+		myWritefile.open("pacmanhiscore.txt");
+		myWritefile << Ogre::StringConverter::toString(_hiscore);
 	}
+
+	myWritefile.close();
+
+}
+
+void
+GameManager::loadHiScore()
+{
+	string line;
+	ofstream myWritefile;
+	ifstream myReadFile;
+	const char* linechar;
+ 
+	myReadFile.open ("pacmanhiscore.txt");
+	if (myReadFile.is_open())
+	{
+		std::getline(myReadFile,line);
+		myReadFile.close();
+ 		linechar = line.c_str();
+		_hiscore = atoi(linechar);
+	}
+	else
+	{
+		myWritefile.open("pacmanhiscore.txt");
+		myWritefile << Ogre::StringConverter::toString(_hiscore);
+	}
+
+	
 }
 
 GameManager*
