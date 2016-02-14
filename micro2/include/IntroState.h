@@ -57,11 +57,16 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   Ogre::Camera* _camera;
   Ogre::OverlayManager* _overlayMgr;
   Ogre::OverlayElement *_startOverlay;
+  Ogre::OverlayElement *_uhfOverlayElement;
   Ogre::Real _pressStartCounter;
   Ogre::Real _onConsole;
   Ogre::Overlay *overlay;
+  Ogre::Overlay *uhfoverlay;
   Ogre::SceneNode* nodeG;
+  GameManager *_gameMgr;
+
   bool _isOn;
+  bool _UHFOFF;
 
   bool _exitGame;
 };

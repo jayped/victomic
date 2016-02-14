@@ -39,6 +39,11 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   GameManager ();
   ~GameManager (); // Limpieza de todos los estados.
 
+
+  // maxima puntuacion del juego.
+  int _hiscore;
+  int _score;
+
   // Para el estado inicial.
   void start (GameState* state);
   
@@ -50,6 +55,8 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   // Heredados de Ogre::Singleton.
   static GameManager& getSingleton ();
   static GameManager* getSingletonPtr ();
+
+  void updateScore(int aNewScore);
 
  protected:
   Ogre::Root* _root;
@@ -78,6 +85,7 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   InputManager *_inputMgr;
   // Estados del juego.
   std::stack<GameState*> _states;
+
 };
 
 #endif

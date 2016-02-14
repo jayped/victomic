@@ -34,7 +34,7 @@ class GameState {
 
  public:
   GameState() {}
-  
+
   // Gestión básica del estado.
   virtual void enter () = 0;
   virtual void exit () = 0;
