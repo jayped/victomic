@@ -57,6 +57,7 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   static GameManager* getSingletonPtr ();
 
   void updateScore(int aNewScore);
+  void loadHiScore();
 
  protected:
   Ogre::Root* _root;
