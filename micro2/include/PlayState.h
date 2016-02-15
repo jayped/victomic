@@ -104,7 +104,8 @@ private:
   Ogre::OverlayElement *_scoreOverlay;
   GameManager *_gameMgr;
   Ogre::Overlay *_overlay;
-
+  Ogre::Real _introCounter;
+  
   bool _exitGame;
 
 	private:

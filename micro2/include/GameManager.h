@@ -28,6 +28,7 @@
 #include <OgreOverlaySystem.h>
 #include <OgreOverlayElement.h>
 #include <OgreOverlayManager.h>
+#include "SoundFXManager.h"
 
 #include "InputManager.h"
 
@@ -43,6 +44,12 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   // maxima puntuacion del juego.
   int _hiscore;
   int _score;
+  SoundFXPtr _simpleEffect;
+  SoundFXPtr _introEffect;
+  SoundFXPtr _whitenoiseEffect;
+  SoundFXManager* _pSoundFXManager;
+
+  SoundFXPtr getSoundFXPtr () { return _simpleEffect; }
 
   // Para el estado inicial.
   void start (GameState* state);
@@ -55,9 +62,13 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   // Heredados de Ogre::Singleton.
   static GameManager& getSingleton ();
   static GameManager* getSingletonPtr ();
-
+  bool _initSDL ();
   void updateScore(int aNewScore);
   void loadHiScore();
+  void playWaka();
+  void playIntro();
+  void playWhiteNoise();
+  void stopWhiteNoise();
 
  protected:
   Ogre::Root* _root;
