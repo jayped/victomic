@@ -15,7 +15,10 @@ IntroState::enter ()
 		_sceneMgr->setAmbientLight(Ogre::ColourValue(1, 1, 1));
 
 		_camera = _sceneMgr->createCamera("IntroCamera");
+		_gameMgr = GameManager::getSingletonPtr();
 	}
+		_gameMgr->playWhiteNoise();
+
 		_camera->setPosition(Ogre::Vector3(21,-21,55));
 		_camera->lookAt(Ogre::Vector3(21,-21,0));
 		_camera->setNearClipDistance(5);
@@ -64,12 +67,13 @@ IntroState::enter ()
 
 		// [!] Hiscore
 		//_gameManager = GameManager::getSingleton();
-		_gameMgr = GameManager::getSingletonPtr();
 		
 		// carga de hiscore
 		_gameMgr->_hiscore=0;
 	
 		_gameMgr->loadHiScore();
+
+
 }
 
 void
@@ -108,15 +112,16 @@ IntroState::frameStarted
 			_startOverlay->show();
 	}
 	
-	if ((_onConsole>/*3*/.5) && !_isOn)
+	if ((_onConsole>3) && !_isOn)
 	{
+		_gameMgr->stopWhiteNoise();
 		_isOn=true;
 		nodeG->detachObject((unsigned short)0);
 		overlay->show();
 		_startOverlay->show();
 	}
 	
-	if ((_onConsole>/*5*/.5) && !_UHFOFF)
+	if ((_onConsole>5) && !_UHFOFF)
 	{
 		_UHFOFF=true;
 		_uhfOverlayElement->hide();

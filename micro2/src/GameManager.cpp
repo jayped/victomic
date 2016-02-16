@@ -30,6 +30,8 @@ void
 GameManager::start
 (GameState* state)
 {
+  _initSDL();
+
   // Creación del objeto Ogre::Root.
   _root = new Ogre::Root();
   // se crea aqui el scene manager para introducir el overlay, porque si se hace en el introstate, no recoge los resources overlays en loadresources.
@@ -37,7 +39,9 @@ GameManager::start
   _root->getSceneManager("SceneManager")->addRenderQueueListener(new Ogre::OverlaySystem());
   
   loadResources();
-
+  
+  _pSoundFXManager = OGRE_NEW SoundFXManager;
+  
   if (!configure())
     return;    
   	
@@ -51,11 +55,17 @@ GameManager::start
   // El GameManager es un FrameListener.
   _root->addFrameListener(this);
 
+  _simpleEffect = _pSoundFXManager->load("waka.wav");
+  _introEffect = _pSoundFXManager->load("begin.wav");
+  _whitenoiseEffect = _pSoundFXManager->load("whitenoise.wav");
+
   // Transición al estado inicial.
   changeState(state);
 
   // Bucle de rendering.
   _root->startRendering();
+
+
 }
 
 void
@@ -159,7 +169,6 @@ GameManager::updateScore(int aNewScore)
 	}
 
 	myWritefile.close();
-
 }
 
 void
@@ -185,6 +194,30 @@ GameManager::loadHiScore()
 	}
 
 	
+}
+
+void
+GameManager::playWaka()
+{
+	_simpleEffect->play();
+}
+
+void
+GameManager::playIntro()
+{
+	_introEffect->play();
+}
+
+void
+GameManager::playWhiteNoise()
+{
+	_whitenoiseEffect->play();
+}
+
+void
+GameManager::stopWhiteNoise()
+{
+	_whitenoiseEffect->stop();
 }
 
 GameManager*
@@ -255,4 +288,23 @@ GameManager::mouseReleased
 {
   _states.top()->mouseReleased(e, id);
   return true;
+}
+
+bool
+GameManager::_initSDL() {
+  if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+    return false;
+  }
+  // Llamar a  SDL_Quit al terminar.
+  atexit(SDL_Quit);
+ 
+  // Inicializando SDL mixer...
+  if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT,MIX_DEFAULT_CHANNELS, 4096) < 0) {
+    return false;
+  }
+ 
+  // Llamar a Mix_CloseAudio al terminar.
+  atexit(Mix_CloseAudio);
+ 
+  return true;    
 }

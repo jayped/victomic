@@ -58,7 +58,8 @@ PlayState::enter ()
 	// crea el escenario y el fondo;
 	createScene();
 	createStage();
-	
+	_gameMgr->playIntro();
+
 	
 	_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
   
@@ -66,6 +67,7 @@ PlayState::enter ()
 	
 	_score = 0;
 	_hiscore = _gameMgr->_hiscore;
+	_introCounter=0;
 
 	_scoreOverlay = _overlayMgr->getOverlayElement("scoreLabel");
 	_scoreOverlay->setCaption("Score");
@@ -106,15 +108,19 @@ bool
 PlayState::frameStarted
 (const Ogre::FrameEvent& evt)
 {
+	Ogre::Real deltaT = evt.timeSinceLastFrame;
+	_introCounter = _introCounter + evt.timeSinceLastFrame;
 
-	_playerPosition = _nodePlayer->getPosition();
+	if (_introCounter>4.5)
+	{
+		_playerPosition = _nodePlayer->getPosition();
 
-	checkBalls();
-    //movingGhosts();
-    //movingGhostsInitial();
-    movingNewPos( _nodePlayer );
-    updatePlayer();
-
+		//movingGhosts();
+		//movingGhostsInitial();
+		movingNewPos( _nodePlayer );
+		updatePlayer();
+		checkBalls();
+	}
 
 	return true;
 }
@@ -157,9 +163,9 @@ PlayState::keyPressed
 	//_sceneMgr->getRootSceneNode()->removeAndDestroyAllChildren();
 	//_sceneMgr->clearScene();
 	
-	_gameMgr->updateScore(_score);
-	_arrayNodeBalls.clear();
-	changeState(ReplayState::getSingletonPtr());
+	//_gameMgr->updateScore(_score);
+	//_arrayNodeBalls.clear();
+	//changeState(ReplayState::getSingletonPtr());
   }
 
 
@@ -329,6 +335,7 @@ PlayState::checkBalls()
 		if ( ( abs(_playerPosition.x - _ballPositionX) < _epsilon) &&
 			 ( abs(_playerPosition.y - _ballPositionY) < _epsilon))
 		{	 
+			_gameMgr->playWaka();
 			(*list_iter)->detachObject((unsigned short)0);
 			list_iter = _arrayNodeBalls.erase(list_iter);
 			_score++;
@@ -341,7 +348,11 @@ PlayState::checkBalls()
 
 	if (_arrayNodeBalls.empty())
 	{
-		_exitGame = true;
+		_gameMgr->updateScore(_score);
+		_arrayNodeBalls.clear();
+		changeState(ReplayState::getSingletonPtr());
+
+		//_exitGame = true;
 	}
 
 }
