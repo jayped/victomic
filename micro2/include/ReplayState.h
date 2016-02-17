@@ -29,7 +29,7 @@
 class ReplayState : public Ogre::Singleton<ReplayState>, public GameState
 {
  public:
-  ReplayState() {}
+  ReplayState():_root(0) {}
 
   void enter ();
   void exit ();

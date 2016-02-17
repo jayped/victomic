@@ -13,6 +13,7 @@ template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
 
 PlayState::PlayState ()
 {
+    _root = 0;
     //Se inicializa el tablero.
     for(int i = 0; i < BOARDSIZE; i++ )
     {
