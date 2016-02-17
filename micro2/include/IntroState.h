@@ -29,7 +29,7 @@
 class IntroState : public Ogre::Singleton<IntroState>, public GameState
 {
  public:
-  IntroState() {}
+  IntroState():_root(0) {}
 
   void enter ();
   void exit ();
