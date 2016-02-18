@@ -71,6 +71,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
 
 private:
   void checkBalls();
+  void eatBall(int posX, int posY);
   void updatePlayer();
   void movingGhosts();
   void checkGhost();
@@ -98,7 +99,8 @@ private:
 
   Actor* _nodePlayer;
   Ogre::Vector3 _playerPosition;
-  std::list<Ogre::SceneNode*> _arrayNodeBalls;
+  //std::list<Ogre::SceneNode*> _arrayNodeBalls;
+  Ogre::SceneNode* _arrayNodeBalls[BOARDSIZE][BOARDSIZE];
   std::list<Actor*> _nodesGhost;
   int _score;
   int _hiscore;

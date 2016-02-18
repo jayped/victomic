@@ -22,6 +22,7 @@ PlayState::PlayState ()
         for( int j = 0; j < BOARDSIZE; j++ )
         {
             _boardInfo[i][j] = EMPTY;
+            _arrayNodeBalls[i][j] = 0;
         }
     }
 }
@@ -92,9 +93,37 @@ PlayState::enter ()
 void
 PlayState::exit ()
 {
-  _sceneMgr->clearScene();
-  _overlay->hide();
-  //_root->getAutoCreatedWindow()->removeAllViewports();
+    std::list<Actor*>::iterator pos = _nodesGhost.begin();;
+    //std::list<Ogre::SceneNode*>::iterator list_iter = _arrayNodeBalls.begin();
+
+    while( pos != _nodesGhost.end() )
+    {
+        (*pos)->detachObject((unsigned short)0);
+        pos =_nodesGhost.erase( pos );
+    }
+    _nodesGhost.clear();	    
+    /*while (list_iter != _arrayNodeBalls.end())
+    {
+        (*list_iter)->detachObject((unsigned short)0);
+        list_iter = _arrayNodeBalls.erase(list_iter);	   
+    }
+    _arrayNodeBalls.clear();*/
+    for(int i = 0; i < BOARDSIZE; i++ )
+    {
+        for( int j = 0; j < BOARDSIZE; j++ )
+        {
+            _boardInfo[i][j] = EMPTY;
+            if( _arrayNodeBalls[i][j] != 0 )
+            {
+                _arrayNodeBalls[i][j]->detachObject((unsigned short)0);
+                //delete _arrayNodeBalls[i][j];
+                _arrayNodeBalls[i][j] = 0;           
+            }  
+        }
+    }
+    
+    _sceneMgr->clearScene();
+    _overlay->hide();
 }
 
 void
@@ -294,7 +323,7 @@ PlayState::createStage()
 							//node1->setPosition(-9.4321+(i*2),20.6799-(j*2),-60.9970);
 							node1->setPosition((i*2),-(j*2),0);
 							_sceneMgr->getRootSceneNode()->addChild(node1);
-							_arrayNodeBalls.push_back(node1);
+							_arrayNodeBalls[j-1][i-1] = node1;
                             _boardInfo[j-1][i-1] = BALL;
 						}
 
@@ -329,14 +358,14 @@ PlayState::createStage()
 void
 PlayState::checkBalls()
 {
-    if( !isStop )
+    /*if( !isStop )
     {
 	    double _ballPositionX = 0;
 	    double _ballPositionY = 0;
         //Solo chequeamos hasta que nos comemos una bola
 	    bool exit = false;
 	    std::list<Ogre::SceneNode*>::iterator list_iter = _arrayNodeBalls.begin();
-	    while (list_iter != _arrayNodeBalls.end() && !exit && !isStop )
+	    while ( !isStop && list_iter != _arrayNodeBalls.end() && !exit )
 	    {
 		    _playerPosition = _nodePlayer->getPosition();
 		    _ballPositionX = (*list_iter)->getPosition().x;
@@ -364,7 +393,18 @@ PlayState::checkBalls()
 
 		    //_exitGame = true;
 	    }
-    }
+    }*/
+}
+void PlayState::eatBall(int posX, int posY)
+{
+    _boardInfo[(int)posX][(int)posY] = EMPTY;
+    _gameMgr->playWaka();
+    _arrayNodeBalls[posX][posY]->detachObject((unsigned short)0);
+    //delete _arrayNodeBalls[posX][posY];
+    _arrayNodeBalls[posX][posY] = 0;
+    _score++;
+    _scoreOverlay = _overlayMgr->getOverlayElement("scoreValue");
+    _scoreOverlay->setCaption(Ogre::StringConverter::toString(_score));
 }
 
 double // Eliminar. no esta en uso.
@@ -626,6 +666,8 @@ bool PlayState::movingNewPos( Actor* &actor )
 
     int boardPosX = newPosX/2-1;
     int boardPosY = abs(newPosY/2)-1;   
+    int ballPosX = boardPosX;
+    int ballPosY = boardPosY; 
 
 	switch (storeDir)
 	{	
@@ -665,6 +707,7 @@ bool PlayState::movingNewPos( Actor* &actor )
 	switch (actor->getDirection())
 	{	
 		case Actor::_up:
+            ballPosY =  abs((newPosY-2))/2 -1;
 			newPosY +=actor->getSpeed();
             boardPosY = abs(newPosY/2)-1; 
 			break;
@@ -677,6 +720,7 @@ bool PlayState::movingNewPos( Actor* &actor )
             boardPosX=newPosX/2;
 			break;
 		case Actor::_left:
+            ballPosX =  (newPosX+2)/2 -1;
             newPosX -=actor->getSpeed();
             boardPosX=newPosX/2-1;
 			break;
@@ -684,6 +728,12 @@ bool PlayState::movingNewPos( Actor* &actor )
 			break;
 	}
 	
+    if( _boardInfo[(int)ballPosY][(int)ballPosX] == BALL )
+    {
+        //Nos comemos la bola
+        eatBall( (int)ballPosY, (int)ballPosX );
+    }
+
 	if( actor->getDirection()!=_stop && 
         _boardInfo[(int)boardPosY][(int)boardPosX] != WALL) 
     {
