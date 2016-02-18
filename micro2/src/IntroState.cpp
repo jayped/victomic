@@ -83,7 +83,9 @@ IntroState::exit()
   _root->getAutoCreatedWindow()->removeAllViewports();
   Ogre::Overlay *overlay = _overlayMgr->getByName("Splash");
   overlay->hide();
-  
+  _uhfOverlayElement->hide();
+  _gameMgr->stopWhiteNoise();
+		
 }
 
 void
