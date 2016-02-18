@@ -5,6 +5,13 @@ template element TextArea(MyTemplates/TextStart)
 		char_height 20
 		colour 1.0 1.0 1.0    
 }
+template element TextArea(MyTemplates/TextUHF)
+{
+    font_name Arcade
+		metrics_mode pixels
+		char_height 40
+		colour 0.0 1.0 0.0    
+}
 
 Splash
 {
@@ -26,6 +33,31 @@ Splash
 				  left -225
 				  vert_align center
 				  horz_align center
+		    }
+    }	  
+
+}
+
+UFH
+{
+    zorder 300
+
+    container Panel(uhf) 
+    {
+	      metrics_mode pixels
+        left -240
+        top 100
+        width 0
+        height 0
+        vert_align top
+        horz_align right
+        material scoremat
+		    element TextArea(uhfLabel) : MyTemplates/TextUHF
+		    {
+				  top 0
+				  left 0
+				  vert_align center
+				  horz_align left
 		    }
     }	  
 
