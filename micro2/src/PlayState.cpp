@@ -409,26 +409,48 @@ void PlayState::movingGhosts()
 }
 void PlayState::checkGhost()
 {
-    double _ghostPositionX = 0;
-	double _ghostPositionY = 0;
-    //Solo chequeamos hasta que nos comemos una bola
+    double ghostPositionX = 0.0;
+	double ghostPositionY = 0.0;
+    double playerPositionX = 0.0;
+    double playerPositionY = 0.0;
+    //Solo chequeamos hasta que nos chocamos la primera vez
 	bool exit = false;
-	std::list<Actor*>::iterator pos;
+	
+    playerPositionX = _nodePlayer->getPosition().x;
+    playerPositionY = _nodePlayer->getPosition().y;
+    std::list<Actor*>::iterator pos;
     pos = _nodesGhost.begin();
+    switch (_nodePlayer->getDirection())
+	{	
+		case Actor::_up:
+			playerPositionY +=1;
+			break;
+		case Actor::_down:
+			playerPositionY -=1;
+			break;
+		case Actor::_right:
+            playerPositionX +=1;
+			break;
+		case Actor::_left:
+           playerPositionX -=1;
+			break;
+		default:
+			break;
+	}
+
     while( pos != _nodesGhost.end() && !exit )
     {
-		_playerPosition = _nodePlayer->getPosition();
-		_ghostPositionX = (*pos)->getPosition().x;
-		_ghostPositionY = (*pos)->getPosition().y;
+		ghostPositionX = (*pos)->getPosition().x;
+		ghostPositionY = (*pos)->getPosition().y;
 
-		if ( ( abs(_playerPosition.x - _ghostPositionX) < _epsilon) &&
-			 ( abs(_playerPosition.y - _ghostPositionY) < _epsilon))
+        pos++;
+		if ( ( abs(playerPositionX - ghostPositionX) < _epsilon) &&
+			 ( abs(playerPositionY - ghostPositionY) < _epsilon))
 		{	 
             exit = true;
 			_gameMgr->updateScore(_score);
             changeState(ReplayState::getSingletonPtr());
 		}
-		pos++;
 	}
 }
 void PlayState::movingGhostsInitial()
