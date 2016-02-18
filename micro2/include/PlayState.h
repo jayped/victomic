@@ -88,6 +88,7 @@ private:
   void createPinkGhost(int posX, int posY, int posZ);
   void createCyanGhost(int posX, int posY, int posZ);
   void createGhost(std::string, int posX, int posY, int posZ);
+  Ogre::SceneNode* getWallEntity(int aType);
 
 
  protected:

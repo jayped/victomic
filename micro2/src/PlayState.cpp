@@ -270,7 +270,6 @@ PlayState::createScene()
 
 }
 
-
 void
 PlayState::createStage()
 {
@@ -304,13 +303,6 @@ PlayState::createStage()
 						color = format->patternForegroundColor();
 						if (color == Color::COLOR_OCEANBLUE_CF)
 						{
-							Ogre::Entity* ent1;
-							ent1 = _sceneMgr->createEntity("wall.mesh");
-							Ogre::SceneNode* node1 = _sceneMgr->createSceneNode();
-							node1->attachObject(ent1);
-							//node1->setPosition(-9.4321+(i*2),20.6799-(j*2),-60.9970);
-							node1->setPosition((i*2),-(j*2),0);
-							_sceneMgr->getRootSceneNode()->addChild(node1);
                             _boardInfo[j-1][i-1] = WALL;
 						}
 						
@@ -353,7 +345,192 @@ PlayState::createStage()
         }
         book->release();
     }
+
+		// Obtiene el codigo para saber que tipo de muro es y lo solicita.
+	for (int i=0; i<20; i++)
+	{
+		for (int j=0; j<20; j++)
+		{
+			if (_boardInfo[j][i] == WALL)
+			{
+				int localWall = 0;
+
+				// Vecino arriba
+				if (j==0) // fila de arriba
+				{
+					localWall += 0;
+				}
+				else
+				{
+					if (_boardInfo[j-1][i] == WALL)
+					{
+						localWall += 1;
+					}
+					else
+					{
+						localWall += 0;
+					}
+				}
+
+				localWall = localWall << 1;
+				// Vecino derecha
+				if (i==19) // columna de derecha
+				{
+					localWall += 0;
+				}
+				else
+				{
+					if (_boardInfo[j][i+1] == WALL)
+					{
+						localWall += 1;
+					}
+					else
+					{
+						localWall += 0;
+					}
+				}
+
+				localWall = localWall << 1;
+				// Vecino abajo
+				if (j==19) // fila de abajo
+				{
+					localWall += 0;
+				}
+				else
+				{
+					if (_boardInfo[j+1][i] == WALL)
+					{
+						localWall += 1;
+					}
+					else
+					{
+						localWall += 0;
+					}
+				}
+
+				localWall = localWall << 1;
+				// Vecino izquierda
+				if (i==0) // columna de derecha
+				{
+					localWall += 0;
+				}
+				else
+				{
+					if (_boardInfo[j][i-1] == WALL)
+					{
+						localWall += 1;
+					}
+					else
+					{
+						localWall += 0;
+					}
+				}
+			
+				// inclusion del muro
+				Ogre::SceneNode* node1 = getWallEntity(localWall);
+				node1->setPosition(((i+1)*2),-((j+1)*2),0);
+				_sceneMgr->getRootSceneNode()->addChild(node1);
+			}
+		}
+	}
 }
+
+Ogre::SceneNode*
+PlayState::getWallEntity(int aType)
+{
+
+	Ogre::Entity* ent1 = _sceneMgr->createEntity("wall.mesh");;
+	Ogre::SceneNode* node1 = _sceneMgr->createSceneNode();
+
+	switch (aType)
+	{
+		case 0:
+			ent1 = _sceneMgr->createEntity("wall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			break;
+		case 1:
+			ent1 = _sceneMgr->createEntity("cornerWall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(90));
+			break;
+		case 2:
+			ent1 = _sceneMgr->createEntity("cornerWall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(180));
+			break;
+		case 3:
+			ent1 = _sceneMgr->createEntity("lWall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(180));
+			break;
+		case 4:
+			ent1 = _sceneMgr->createEntity("cornerWall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(-90));
+			break;
+		case 5:
+			ent1 = _sceneMgr->createEntity("parallelwall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(90));
+			break;
+		case 6:
+			ent1 = _sceneMgr->createEntity("lWall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(-90));
+			break;
+		case 7:
+			ent1 = _sceneMgr->createEntity("onewall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(-90));
+			break;
+		case 8:
+			ent1 = _sceneMgr->createEntity("cornerWall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(0));
+			break;
+		case 9:
+			ent1 = _sceneMgr->createEntity("lWall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(90));
+			break;
+		case 10:
+			ent1 = _sceneMgr->createEntity("parallelwall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(0));
+			break;
+		case 11:
+			ent1 = _sceneMgr->createEntity("onewall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(180));
+			break;
+		case 12:
+			ent1 = _sceneMgr->createEntity("lWall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(0));
+			break;
+		case 13:
+			ent1 = _sceneMgr->createEntity("onewall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(90));
+			break;
+		case 14:
+			ent1 = _sceneMgr->createEntity("onewall.mesh");
+			node1 = _sceneMgr->createSceneNode();
+			node1->roll(Ogre::Degree(0));
+			break;
+		case 15:
+			//ent1 = _sceneMgr->createEntity("");
+			break;
+		default:
+			break;
+		
+	}
+
+	node1->attachObject(ent1);
+
+	return node1;
+}
+
 
 void
 PlayState::checkBalls()
