@@ -20,7 +20,7 @@ SoundFX::~SoundFX() {
 }
 
 int SoundFX::play(int loop) {
-  int channel;
+  int channel = 0;
   Ogre::LogManager* pLogManager = Ogre::LogManager::getSingletonPtr();
 
   // Si el primer parámetro es un -1, maneja nuevos canales para efectos simultáneos

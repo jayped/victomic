@@ -24,7 +24,7 @@
 #include "IntroState.h"
 #include "PlayState.h"
 #include "PauseState.h"
-
+#include "ReplayState.h"
 #include <iostream>
 
 using namespace std;
@@ -39,6 +39,7 @@ using namespace std;
   IntroState* introState = new IntroState();
   PlayState* playState = new PlayState();
   PauseState* pauseState = new PauseState();
+  ReplayState* replayState = new ReplayState(); 
 
   UNUSED_VARIABLE(introState);
   UNUSED_VARIABLE(playState);

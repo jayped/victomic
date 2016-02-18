@@ -14,6 +14,8 @@ template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
 PlayState::PlayState ()
 {
     _root = 0;
+    isInitialMove = true;
+    isStop = false;
     //Se inicializa el tablero.
     for(int i = 0; i < BOARDSIZE; i++ )
     {
@@ -54,8 +56,10 @@ PlayState::enter ()
 		double height = _viewport->getActualHeight();
 		_camera->setAspectRatio(width / height);
 	}
+     isStop = false;
 	_exitGame = false;
-	
+	 isInitialMove = true;
+
 	// crea el escenario y el fondo;
 	createScene();
 	createStage();
@@ -114,13 +118,11 @@ PlayState::frameStarted
 
 	if (_introCounter>4.5)
 	{
-		_playerPosition = _nodePlayer->getPosition();
-
-		//movingGhosts();
-		//movingGhostsInitial();
+		movingGhostsInitial();
 		movingNewPos( _nodePlayer );
 		updatePlayer();
 		checkBalls();
+        checkGhost();
 	}
 
 	return true;
@@ -303,10 +305,15 @@ PlayState::createStage()
                             {
                                 spawnDetected = true;
                                 createRedGhost((i*2), -(j*2), 0);
+                                //createWhiteGhost((i*2), -(j*2), 0);
+                                //createBlueGhost((i*2), -(j*2), 0);
+                                createOrangeGhost((i*2), -(j*2), 0);
+                                //createGreenGhost((i*2), -(j*2), 0);
+                                createPinkGhost((i*2), -(j*2), 0);
+                                createCyanGhost((i*2), -(j*2), 0);
                             }
                             _boardInfo[j-1][i-1] = SPAWN;
-                        }
-						
+                        }	
 					}
 				}
             }
@@ -322,40 +329,42 @@ PlayState::createStage()
 void
 PlayState::checkBalls()
 {
-	double _ballPositionX = 0;
-	double _ballPositionY = 0;
-    //Solo chequeamos hasta que nos comemos una bola
-	bool exit = false;
-	std::list<Ogre::SceneNode*>::iterator list_iter = _arrayNodeBalls.begin();
-	while (list_iter != _arrayNodeBalls.end() && !exit )
-	{
-		_playerPosition = _nodePlayer->getPosition();
-		_ballPositionX = (*list_iter)->getPosition().x;
-		_ballPositionY = (*list_iter)->getPosition().y;
+    if( !isStop )
+    {
+	    double _ballPositionX = 0;
+	    double _ballPositionY = 0;
+        //Solo chequeamos hasta que nos comemos una bola
+	    bool exit = false;
+	    std::list<Ogre::SceneNode*>::iterator list_iter = _arrayNodeBalls.begin();
+	    while (list_iter != _arrayNodeBalls.end() && !exit && !isStop )
+	    {
+		    _playerPosition = _nodePlayer->getPosition();
+		    _ballPositionX = (*list_iter)->getPosition().x;
+		    _ballPositionY = (*list_iter)->getPosition().y;
 
-		if ( ( abs(_playerPosition.x - _ballPositionX) < _epsilon) &&
-			 ( abs(_playerPosition.y - _ballPositionY) < _epsilon))
-		{	 
-			_gameMgr->playWaka();
-			(*list_iter)->detachObject((unsigned short)0);
-			list_iter = _arrayNodeBalls.erase(list_iter);
-			_score++;
-			_scoreOverlay = _overlayMgr->getOverlayElement("scoreValue");
-			_scoreOverlay->setCaption(Ogre::StringConverter::toString(_score));
-            exit = true;
-		}
-		list_iter++;
-	}
+		    if ( ( abs(_playerPosition.x - _ballPositionX) < _epsilon) &&
+			     ( abs(_playerPosition.y - _ballPositionY) < _epsilon))
+		    {	 
+			    _gameMgr->playWaka();
+			    (*list_iter)->detachObject((unsigned short)0);
+			    list_iter = _arrayNodeBalls.erase(list_iter);
+			    _score++;
+			    _scoreOverlay = _overlayMgr->getOverlayElement("scoreValue");
+			    _scoreOverlay->setCaption(Ogre::StringConverter::toString(_score));
+                exit = true;
+		    }
+		    list_iter++;
+	    }
 
-	if (_arrayNodeBalls.empty())
-	{
-		_gameMgr->updateScore(_score);
-		_arrayNodeBalls.clear();
-		changeState(ReplayState::getSingletonPtr());
+	    if (_arrayNodeBalls.empty())
+	    {
+		    _gameMgr->updateScore(_score);
+		    _arrayNodeBalls.clear();
+		    changeState(ReplayState::getSingletonPtr());
 
-		//_exitGame = true;
-	}
-
+		    //_exitGame = true;
+	    }
+    }
 }
 
 double // Eliminar. no esta en uso.
@@ -398,6 +407,30 @@ void PlayState::movingGhosts()
         pos++;
     }
 }
+void PlayState::checkGhost()
+{
+    double _ghostPositionX = 0;
+	double _ghostPositionY = 0;
+    //Solo chequeamos hasta que nos comemos una bola
+	bool exit = false;
+	std::list<Actor*>::iterator pos;
+    pos = _nodesGhost.begin();
+    while( pos != _nodesGhost.end() && !exit )
+    {
+		_playerPosition = _nodePlayer->getPosition();
+		_ghostPositionX = (*pos)->getPosition().x;
+		_ghostPositionY = (*pos)->getPosition().y;
+
+		if ( ( abs(_playerPosition.x - _ghostPositionX) < _epsilon) &&
+			 ( abs(_playerPosition.y - _ghostPositionY) < _epsilon))
+		{	 
+            exit = true;
+			_gameMgr->updateScore(_score);
+            changeState(ReplayState::getSingletonPtr());
+		}
+		pos++;
+	}
+}
 void PlayState::movingGhostsInitial()
 {
     
@@ -405,8 +438,6 @@ void PlayState::movingGhostsInitial()
     pos = _nodesGhost.begin();
     while( pos != _nodesGhost.end())
     {
-        
-
 	    double newPosX = (*pos)->getPosition().x;
         double newPosY = (*pos)->getPosition().y;
         double newPosZ = (*pos)->getPosition().z;
@@ -474,12 +505,25 @@ void PlayState::movingGhostsInitial()
 	    }
 	
 	    if( (*pos)->getDirection()!=_stop && 
-            _boardInfo[(int)boardPosY][(int)boardPosX] != WALL && 
-            _boardInfo[(int)boardPosY][(int)boardPosX] == SPAWN)
+            _boardInfo[(int)boardPosY][(int)boardPosX] != WALL)
         {
-            //En la nueva posición no encontraremos una pared, actualizamos posición.
-            //Si hubiera pared, paramos hasta nueva pulsación
-            (*pos)->setPosition(newPosX,newPosY,newPosZ);    
+            if( isInitialMove )
+            {
+                if( _boardInfo[(int)boardPosY][(int)boardPosX] == SPAWN )
+                {
+                    (*pos)->setPosition(newPosX,newPosY,newPosZ);    
+                }
+                else
+                {
+                     (*pos)->setDirection(Actor::direction::_random);  
+                }
+            }
+            else
+            {
+                //En la nueva posición no encontraremos una pared, actualizamos posición.
+                //Si hubiera pared, paramos hasta nueva pulsación
+                (*pos)->setPosition(newPosX,newPosY,newPosZ);    
+            }
         }
         else
         {
@@ -502,7 +546,7 @@ void PlayState::movingGhostsInitial()
 		            default:
 			            break;
 	            } 
-                (*pos)->setDirection(actorDir);  
+                (*pos)->setDirection(Actor::direction::_random);  
                // _storeDir = storeDir;
             }    
         }
@@ -513,18 +557,37 @@ void PlayState::createRedGhost(int posX, int posY, int posZ)
 {
    createGhost("redGhost.mesh", posX, posY, posZ);
 }
-void PlayState::createWhiteGhost(int posX, int posY, int posZ){}
-void PlayState::createBlueGhost(int posX, int posY, int posZ){}
-void PlayState::createOrangeGhost(int posX, int posY, int posZ){}
-void PlayState::createGreenGhost(int posX, int posY, int posZ){}
-void PlayState::createPinkGhost(int posX, int posY, int posZ){}
-void PlayState::createCyanGhost(int posX, int posY, int posZ){}
+void PlayState::createWhiteGhost(int posX, int posY, int posZ)
+{
+   createGhost("whiteGhost.mesh", posX, posY, posZ);
+}
+void PlayState::createBlueGhost(int posX, int posY, int posZ)
+{
+   createGhost("blueGhost.mesh", posX, posY, posZ);
+}
+void PlayState::createOrangeGhost(int posX, int posY, int posZ)
+{
+   createGhost("orangeGhost.mesh", posX, posY, posZ);
+}
+void PlayState::createGreenGhost(int posX, int posY, int posZ)
+{
+    createGhost("greenGhost.mesh", posX, posY, posZ);
+}
+void PlayState::createPinkGhost(int posX, int posY, int posZ)
+{
+   createGhost("pinkGhost.mesh", posX, posY, posZ);
+}
+void PlayState::createCyanGhost(int posX, int posY, int posZ)
+{
+   createGhost("CyanGhost.mesh", posX, posY, posZ);
+}
+
 void PlayState::createGhost(std::string ghost, int posX, int posY, int posZ)
 {
     Ogre::Entity* ent1;
     ent1 = _sceneMgr->createEntity(ghost);
     Actor* actorNode = reinterpret_cast<Actor *>(_sceneMgr->createSceneNode());
-    actorNode->init( Actor::direction(_right ) );
+    actorNode->init( Actor::direction(_up ) );
     actorNode->attachObject(ent1);
     actorNode->setPosition(posX,posY,0);
     _sceneMgr->getRootSceneNode()->addChild(actorNode);
@@ -601,11 +664,16 @@ bool PlayState::movingNewPos( Actor* &actor )
 	
 	if( actor->getDirection()!=_stop && 
         _boardInfo[(int)boardPosY][(int)boardPosX] != WALL) 
-        //_boardInfo[(int)boardPosY][(int)boardPosX] == SPAWN)
     {
         //En la nueva posición no encontraremos una pared, actualizamos posición.
         //Si hubiera pared, paramos hasta nueva pulsación
         actor->setPosition(newPosX,newPosY,newPosZ);  
+        if( isInitialMove )
+        {
+            //Pacman ya se ha movido, por lo que los fantasmas ya pueden salir de la zona
+            //de SPAWN
+            isInitialMove = false;
+        }
         isMoving = true;  
     }
     else

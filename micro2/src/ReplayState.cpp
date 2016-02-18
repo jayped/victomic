@@ -33,7 +33,7 @@ ReplayState::enter ()
   _ReplayOverlay = _overlayMgr->getOverlayElement("reHiscoreDataLabel");
   _ReplayOverlay->setCaption(Ogre::StringConverter::toString(_gameMgr->_hiscore));
   _ReplayOverlay = _overlayMgr->getOverlayElement("reInfoLabel");
-  _ReplayOverlay->setCaption("PRESS ESCAPE TO REPLAY...");
+  _ReplayOverlay->setCaption("PRESS SPACE TO REPLAY...");
 
   overlay->show();
   _ReplayOverlay->show();

@@ -73,6 +73,7 @@ private:
   void checkBalls();
   void updatePlayer();
   void movingGhosts();
+  void checkGhost();
   //devolverá true si puede hacer el movimiento.
   bool movingNewPos( Actor* &actor );
   //Los fantasmas se moverán por la zona de spawn, sin salir.
@@ -114,6 +115,8 @@ private:
     // BALL -- bola
     // EMPTY -- nada
     int _boardInfo[BOARDSIZE][BOARDSIZE];
+    bool isInitialMove;
+    bool isStop;
 
 };
 
