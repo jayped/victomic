@@ -17,7 +17,7 @@ public:
     direction getStoreDir() const { return _storeDir; }
     float getSpeed() const { return _speed; }
     void setDirection(const direction& dir);
-    void setStoreDir(const direction& dir){ _storeDir = dir;}
+    void setStoreDir(const direction& dir);
     void setSpeed( const float& speed ){ _speed = speed;}
 private:
    direction _actorDirection;

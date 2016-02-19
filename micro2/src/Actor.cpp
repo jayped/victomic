@@ -30,7 +30,7 @@ void Actor::init( direction dir, float speed )
     if( speed == 0.0 )
     {
         //velocidad aleatoria
-        _speed =  Ogre::Math::RangeRandom(0.08, 0.15);
+        _speed =  Ogre::Math::RangeRandom(0.05, 0.10);
     }
     else
     {        
@@ -48,5 +48,17 @@ void Actor::setDirection(const direction& dir)
     {
         float random = Ogre::Math::RangeRandom(1.00, 4.99);
         _actorDirection = (direction)(int)floor( random );
+    }
+}
+void Actor::setStoreDir(const direction& dir)
+{
+    if( dir != _random )
+    {
+        _storeDir = dir; 
+    }
+    else
+    {
+        float random = Ogre::Math::RangeRandom(1.00, 4.99);
+        _storeDir = (direction)(int)floor( random );
     }
 }

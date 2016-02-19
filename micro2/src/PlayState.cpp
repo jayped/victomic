@@ -74,6 +74,7 @@ PlayState::enter ()
 	_score = 0;
 	_hiscore = _gameMgr->_hiscore;
 	_introCounter=0;
+    _timerGhostDir = 0;
 
 	_scoreOverlay = _overlayMgr->getOverlayElement("scoreLabel");
 	_scoreOverlay->setCaption("Score");
@@ -94,7 +95,6 @@ void
 PlayState::exit ()
 {
     std::list<Actor*>::iterator pos = _nodesGhost.begin();;
-    //std::list<Ogre::SceneNode*>::iterator list_iter = _arrayNodeBalls.begin();
 
     while( pos != _nodesGhost.end() )
     {
@@ -102,12 +102,7 @@ PlayState::exit ()
         pos =_nodesGhost.erase( pos );
     }
     _nodesGhost.clear();	    
-    /*while (list_iter != _arrayNodeBalls.end())
-    {
-        (*list_iter)->detachObject((unsigned short)0);
-        list_iter = _arrayNodeBalls.erase(list_iter);	   
-    }
-    _arrayNodeBalls.clear();*/
+    
     for(int i = 0; i < BOARDSIZE; i++ )
     {
         for( int j = 0; j < BOARDSIZE; j++ )
@@ -144,12 +139,26 @@ PlayState::frameStarted
 {
 	Ogre::Real deltaT = evt.timeSinceLastFrame;
 	_introCounter = _introCounter + evt.timeSinceLastFrame;
+    
 
 	if (_introCounter>4.5)
 	{
+        _timerGhostDir +=  evt.timeSinceLastFrame;
+        if( _timerGhostDir > Ogre::Math::RangeRandom(3.0, 5.0) )
+        {
+            std::list<Actor*>::iterator pos;
+            pos = _nodesGhost.begin();
+            while( pos != _nodesGhost.end())
+            {
+                (*pos)->setStoreDir(Actor::direction::_random);
+                pos++;
+            }
+            _timerGhostDir = 0;
+        }
 		movingGhostsInitial();
 		movingNewPos( _nodePlayer );
         checkGhost();
+        
 	}
 
 	return true;
@@ -261,7 +270,7 @@ PlayState::createScene()
 	Ogre::Entity* ent1;
 	ent1 = _sceneMgr->createEntity("player.mesh");
 	_nodePlayer = reinterpret_cast<Actor *>(_sceneMgr->createSceneNode());
-    _nodePlayer->init(Actor::direction(_stop), 0.15F);
+    _nodePlayer->init(Actor::direction(_stop), 0.10F);
    	_nodePlayer->attachObject(ent1);
 	_nodePlayer->translate(22,-26,0);
 	_sceneMgr->getRootSceneNode()->addChild(_nodePlayer);
@@ -588,24 +597,6 @@ void PlayState::checkGhost()
 		ghostPositionY = (*pos)->getPosition().y;
         playerPositionX = _nodePlayer->getPosition().x;
         playerPositionY = _nodePlayer->getPosition().y;
-   
-        /*switch (_nodePlayer->getDirection())
-	    {	
-		    case Actor::_up:
-			    playerPositionY +=2;
-			    break;
-		    case Actor::_down:
-			    playerPositionY -=2;
-			    break;
-		    case Actor::_right:
-                playerPositionX +=2;
-			    break;
-		    case Actor::_left:
-               playerPositionX -=2;
-			    break;
-		    default:
-			    break;
-	    }*/
 
         pos++;
 		if ( ( ( abs(playerPositionX - ghostPositionX) < _epsilonghost) &&
@@ -630,51 +621,96 @@ void PlayState::movingGhostsInitial()
     pos = _nodesGhost.begin();
     while( pos != _nodesGhost.end())
     {
-	    double newPosX = (*pos)->getPosition().x;
-        double newPosY = (*pos)->getPosition().y;
-        double newPosZ = (*pos)->getPosition().z;
-        Actor::direction actorDir = (*pos)->getDirection();
-        Actor::direction storeDir = (*pos)->getStoreDir();
+     bool isMoving = false;
+    double newPosX = (*pos)->getPosition().x;
+    double newPosY = (*pos)->getPosition().y;
+    double newPosZ = (*pos)->getPosition().z;
+    Actor::direction actorDir = (*pos)->getDirection();
+    Actor::direction storeDir = (*pos)->getStoreDir();
 
-        int boardPosX = newPosX/2-1;
-        int boardPosY = abs(newPosY/2)-1;   
+    int boardPosX = newPosX/2-1;
+    int boardPosY = abs(newPosY/2)-1;   
 
-	    switch (storeDir)
+    bool isPosible = false;
+
+    if( storeDir!=Actor::_stop )
+    {
+        switch (storeDir)
 	    {	
-		    case _up:
-			    if ((fmod(newPosX, 2)>-_epsilon) && (fmod(newPosX, 2)<_epsilon))
+		    case Actor::_up:
+                if ((fmod(newPosX, 2)>-_epsilon) && (fmod(newPosX, 2)<_epsilon))
 			    {
-				    (*pos)->setDirection(Actor::_up);
-				    (*pos)->setStoreDir(Actor::_stop);
+			        newPosY +=(*pos)->getSpeed();
+                    boardPosY = abs(newPosY/2)-1; 
+                    isPosible = true;
 			    }
-			    break;
-		    case _down:
-			    if ((fmod(newPosX, 2)>-_epsilon) && (fmod(newPosX, 2)<_epsilon))
+                break;
+		    case Actor::_down:
+                if ((fmod(newPosX, 2)>-_epsilon) && (fmod(newPosX, 2)<_epsilon))
 			    {
-				    (*pos)->setDirection(Actor::_down);
-				    (*pos)->setStoreDir(Actor::_stop);
-			    }
-			    break;
-		    case _right:
-			    if ((fmod(newPosY, 2)>-_epsilon) && (fmod(newPosY, 2)<_epsilon))
+			        newPosY -=(*pos)->getSpeed();
+                    boardPosY = abs(newPosY/2); 
+                    isPosible = true;
+                }
+                 break;
+		    case Actor::_right:
+                if ((fmod(newPosY, 2)>-_epsilon) && (fmod(newPosY, 2)<_epsilon))
 			    {
-				
-                    (*pos)->setDirection(Actor::_right);
-				    (*pos)->setStoreDir(Actor::_stop);
+                    newPosX += (*pos)->getSpeed();
+                    boardPosX=newPosX/2;
+                    isPosible = true;
                 }
 			    break;
-		    case _left:
-			    if ((fmod(newPosY, 2)>-_epsilon) && (fmod(newPosY, 2)<_epsilon))
+		    case Actor::_left:
+                if ((fmod(newPosY, 2)>-_epsilon) && (fmod(newPosY, 2)<_epsilon))
 			    {
-				    (*pos)->setDirection(Actor::_left);
-				    (*pos)->setStoreDir(Actor::_stop);
-			    }
+                    newPosX -=(*pos)->getSpeed();
+                    boardPosX=newPosX/2-1;
+                    isPosible = true;
+                }
 			    break;
 		    default:
 			    break;
 	    }
-
-	    switch ((*pos)->getDirection())
+	    if( isPosible )
+        {
+	        if( _boardInfo[(int)boardPosY][(int)boardPosX] != WALL) 
+            {
+                //En la nueva posición no encontraremos una pared, actualizamos posición.
+                //Si hubiera pared, paramos hasta nueva pulsación
+                (*pos)->setDirection( storeDir );
+                (*pos)->setStoreDir( Actor::_stop );
+               
+                if( isInitialMove )
+                {
+                    if( _boardInfo[(int)boardPosY][(int)boardPosX] == SPAWN )
+                    {
+                        (*pos)->setPosition(newPosX,newPosY,newPosZ);    
+                    }
+                    else
+                    {
+                         (*pos)->setDirection(Actor::direction::_random);  
+                    }
+                }
+                else
+                {
+                    //En la nueva posición no encontraremos una pared, actualizamos posición.
+                    //Si hubiera pared, paramos hasta nueva pulsación
+                    (*pos)->setPosition(newPosX,newPosY,newPosZ);    
+                }
+                isMoving = true;  
+            }
+        }
+    }
+    if( !isMoving )
+    {
+        newPosX = (*pos)->getPosition().x;
+            newPosY = (*pos)->getPosition().y;
+            newPosZ = (*pos)->getPosition().z;
+    
+            boardPosX = newPosX/2-1;
+            boardPosY = abs(newPosY/2)-1;   
+        switch ((*pos)->getDirection())
 	    {	
 		    case Actor::_up:
 			    newPosY +=(*pos)->getSpeed();
@@ -695,9 +731,9 @@ void PlayState::movingGhostsInitial()
 		    default:
 			    break;
 	    }
-	
+
 	    if( (*pos)->getDirection()!=_stop && 
-            _boardInfo[(int)boardPosY][(int)boardPosX] != WALL)
+            _boardInfo[(int)boardPosY][(int)boardPosX] != WALL) 
         {
             if( isInitialMove )
             {
@@ -707,7 +743,7 @@ void PlayState::movingGhostsInitial()
                 }
                 else
                 {
-                     (*pos)->setDirection(Actor::direction::_random);  
+                        (*pos)->setDirection(Actor::direction::_random);  
                 }
             }
             else
@@ -716,32 +752,31 @@ void PlayState::movingGhostsInitial()
                 //Si hubiera pared, paramos hasta nueva pulsación
                 (*pos)->setPosition(newPosX,newPosY,newPosZ);    
             }
+               
+            isMoving = true;  
         }
         else
         {
-            if( (*pos)->getDirection()!=_stop )
-            {   
                 switch ((*pos)->getDirection())
-	            {	
-		            case _up:
-                         (*pos)->setPosition((boardPosX+1)*2,((boardPosY+2)*-2),newPosZ);
-			            break;
-		            case _down:
-                        (*pos)->setPosition((boardPosX+1)*2,((boardPosY)*-2),newPosZ);
-			            break;
-		            case _right:
-			            (*pos)->setPosition((boardPosX)*2,((boardPosY+1)*-2),newPosZ);
-			            break;
-		            case _left:
-                       (*pos)->setPosition((boardPosX+2)*2,((boardPosY+1)*-2),newPosZ);
-			            break;
-		            default:
-			            break;
-	            } 
+	        {	
+		        case _up:
+                    (*pos)->setPosition((boardPosX+1)*2,((boardPosY+2)*-2),newPosZ);
+			        break;
+		        case _down:
+                    (*pos)->setPosition((boardPosX+1)*2,((boardPosY)*-2),newPosZ);
+			        break;
+		        case _right:
+			        (*pos)->setPosition((boardPosX)*2,((boardPosY+1)*-2),newPosZ);
+			        break;
+		        case _left:
+                    (*pos)->setPosition((boardPosX+2)*2,((boardPosY+1)*-2),newPosZ);
+			        break;
+		        default:
+			        break;
+	        } 
                 (*pos)->setDirection(Actor::direction::_random);  
-               // _storeDir = storeDir;
-            }    
-        }
+        }    
+    }
         pos++;
     }
 }
@@ -962,4 +997,3 @@ PlayState::getSingleton ()
   assert(msSingleton);
   return *msSingleton;
 }
-

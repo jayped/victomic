@@ -118,6 +118,7 @@ private:
     int _boardInfo[BOARDSIZE][BOARDSIZE];
     bool isInitialMove;
     bool isStop;
+    Ogre::Real _timerGhostDir;
 
 };
 
