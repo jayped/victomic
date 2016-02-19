@@ -30,7 +30,7 @@ void Actor::init( direction dir, float speed )
     if( speed == 0.0 )
     {
         //velocidad aleatoria
-        _speed =  Ogre::Math::RangeRandom(0.01, 0.05);
+        _speed =  Ogre::Math::RangeRandom(0.08, 0.15);
     }
     else
     {        

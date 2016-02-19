@@ -149,8 +149,6 @@ PlayState::frameStarted
 	{
 		movingGhostsInitial();
 		movingNewPos( _nodePlayer );
-		updatePlayer();
-		checkBalls();
         checkGhost();
 	}
 
@@ -263,7 +261,7 @@ PlayState::createScene()
 	Ogre::Entity* ent1;
 	ent1 = _sceneMgr->createEntity("player.mesh");
 	_nodePlayer = reinterpret_cast<Actor *>(_sceneMgr->createSceneNode());
-    _nodePlayer->init(Actor::direction(_stop), 0.05F);
+    _nodePlayer->init(Actor::direction(_stop), 0.15F);
    	_nodePlayer->attachObject(ent1);
 	_nodePlayer->translate(22,-26,0);
 	_sceneMgr->getRootSceneNode()->addChild(_nodePlayer);
@@ -531,47 +529,6 @@ PlayState::getWallEntity(int aType)
 	return node1;
 }
 
-
-void
-PlayState::checkBalls()
-{
-    /*if( !isStop )
-    {
-	    double _ballPositionX = 0;
-	    double _ballPositionY = 0;
-        //Solo chequeamos hasta que nos comemos una bola
-	    bool exit = false;
-	    std::list<Ogre::SceneNode*>::iterator list_iter = _arrayNodeBalls.begin();
-	    while ( !isStop && list_iter != _arrayNodeBalls.end() && !exit )
-	    {
-		    _playerPosition = _nodePlayer->getPosition();
-		    _ballPositionX = (*list_iter)->getPosition().x;
-		    _ballPositionY = (*list_iter)->getPosition().y;
-
-		    if ( ( abs(_playerPosition.x - _ballPositionX) < _epsilon) &&
-			     ( abs(_playerPosition.y - _ballPositionY) < _epsilon))
-		    {	 
-			    _gameMgr->playWaka();
-			    (*list_iter)->detachObject((unsigned short)0);
-			    list_iter = _arrayNodeBalls.erase(list_iter);
-			    _score++;
-			    _scoreOverlay = _overlayMgr->getOverlayElement("scoreValue");
-			    _scoreOverlay->setCaption(Ogre::StringConverter::toString(_score));
-                exit = true;
-		    }
-		    list_iter++;
-	    }
-
-	    if (_arrayNodeBalls.empty())
-	    {
-		    _gameMgr->updateScore(_score);
-		    _arrayNodeBalls.clear();
-		    changeState(ReplayState::getSingletonPtr());
-
-		    //_exitGame = true;
-	    }
-    }*/
-}
 void PlayState::eatBall(int posX, int posY)
 {
     _boardInfo[(int)posX][(int)posY] = EMPTY;
@@ -582,15 +539,6 @@ void PlayState::eatBall(int posX, int posY)
     _score++;
     _scoreOverlay = _overlayMgr->getOverlayElement("scoreValue");
     _scoreOverlay->setCaption(Ogre::StringConverter::toString(_score));
-}
-
-double // Eliminar. no esta en uso.
-PlayState::truncPosition(double aPosition)
-{
-	int truncado = aPosition * 100;
-	double devuelta = truncado/100.0;
-	return devuelta;
-	
 }
 
 void
@@ -632,37 +580,42 @@ void PlayState::checkGhost()
     double playerPositionY = 0.0;
     //Solo chequeamos hasta que nos chocamos la primera vez
 	bool exit = false;
-	
-    playerPositionX = _nodePlayer->getPosition().x;
-    playerPositionY = _nodePlayer->getPosition().y;
-    std::list<Actor*>::iterator pos;
+	std::list<Actor*>::iterator pos;
     pos = _nodesGhost.begin();
-    switch (_nodePlayer->getDirection())
-	{	
-		case Actor::_up:
-			playerPositionY +=1;
-			break;
-		case Actor::_down:
-			playerPositionY -=1;
-			break;
-		case Actor::_right:
-            playerPositionX +=1;
-			break;
-		case Actor::_left:
-           playerPositionX -=1;
-			break;
-		default:
-			break;
-	}
-
     while( pos != _nodesGhost.end() && !exit )
     {
 		ghostPositionX = (*pos)->getPosition().x;
 		ghostPositionY = (*pos)->getPosition().y;
+        playerPositionX = _nodePlayer->getPosition().x;
+        playerPositionY = _nodePlayer->getPosition().y;
+   
+        /*switch (_nodePlayer->getDirection())
+	    {	
+		    case Actor::_up:
+			    playerPositionY +=2;
+			    break;
+		    case Actor::_down:
+			    playerPositionY -=2;
+			    break;
+		    case Actor::_right:
+                playerPositionX +=2;
+			    break;
+		    case Actor::_left:
+               playerPositionX -=2;
+			    break;
+		    default:
+			    break;
+	    }*/
 
         pos++;
-		if ( ( abs(playerPositionX - ghostPositionX) < _epsilon) &&
-			 ( abs(playerPositionY - ghostPositionY) < _epsilon))
+		if ( ( ( abs(playerPositionX - ghostPositionX) < _epsilonghost) &&
+			 ( abs(playerPositionY - (ghostPositionY-2) ) < _epsilonghost)) ||
+              ( ( abs(playerPositionX - ghostPositionX) < _epsilonghost) &&
+			 ( abs(playerPositionY - (ghostPositionY+2) ) < _epsilonghost)) ||
+              ( ( abs(playerPositionX - (ghostPositionX-2)) < _epsilonghost) &&
+			 ( abs(playerPositionY - ghostPositionY ) < _epsilonghost)) ||
+             ( ( abs(playerPositionX - (ghostPositionX+2)) < _epsilonghost) &&
+			 ( abs(playerPositionY - ghostPositionY ) < _epsilonghost)))
 		{	 
             exit = true;
 			_gameMgr->updateScore(_score);
@@ -846,110 +799,154 @@ bool PlayState::movingNewPos( Actor* &actor )
     int ballPosX = boardPosX;
     int ballPosY = boardPosY; 
 
-	switch (storeDir)
-	{	
-		case _up:
-			if ((fmod(newPosX, 2)>-_epsilon) && (fmod(newPosX, 2)<_epsilon))
-			{
-				actor->setDirection(Actor::_up);
-				actor->setStoreDir(Actor::_stop);
-			}
-			break;
-		case _down:
-			if ((fmod(newPosX, 2)>-_epsilon) && (fmod(newPosX, 2)<_epsilon))
-			{
-				actor->setDirection(Actor::_down);
-				actor->setStoreDir(Actor::_stop);
-			}
-			break;
-		case _right:
-			if ((fmod(newPosY, 2)>-_epsilon) && (fmod(newPosY, 2)<_epsilon))
-			{
-				
-                actor->setDirection(Actor::_right);
-				actor->setStoreDir(Actor::_stop);
-            }
-			break;
-		case _left:
-			if ((fmod(newPosY, 2)>-_epsilon) && (fmod(newPosY, 2)<_epsilon))
-			{
-				actor->setDirection(Actor::_left);
-				actor->setStoreDir(Actor::_stop);
-			}
-			break;
-		default:
-			break;
-	}
+    bool isPosible = false;
 
-	switch (actor->getDirection())
-	{	
-		case Actor::_up:
-            ballPosY =  abs((newPosY-2))/2 -1;
-			newPosY +=actor->getSpeed();
-            boardPosY = abs(newPosY/2)-1; 
-			break;
-		case Actor::_down:
-			newPosY -=actor->getSpeed();
-            boardPosY = abs(newPosY/2); 
-			break;
-		case Actor::_right:
-            newPosX += actor->getSpeed();
-            boardPosX=newPosX/2;
-			break;
-		case Actor::_left:
-            ballPosX =  (newPosX+2)/2 -1;
-            newPosX -=actor->getSpeed();
-            boardPosX=newPosX/2-1;
-			break;
-		default:
-			break;
-	}
-	
-    if( _boardInfo[(int)ballPosY][(int)ballPosX] == BALL )
+    if( storeDir!=Actor::_stop )
     {
-        //Nos comemos la bola
-        eatBall( (int)ballPosY, (int)ballPosX );
-    }
-
-	if( actor->getDirection()!=_stop && 
-        _boardInfo[(int)boardPosY][(int)boardPosX] != WALL) 
-    {
-        //En la nueva posición no encontraremos una pared, actualizamos posición.
-        //Si hubiera pared, paramos hasta nueva pulsación
-        actor->setPosition(newPosX,newPosY,newPosZ);  
-        if( isInitialMove )
+        switch (storeDir)
+	    {	
+		    case Actor::_up:
+                if ((fmod(newPosX, 2)>-_epsilon) && (fmod(newPosX, 2)<_epsilon))
+			    {
+                    ballPosY =  abs((newPosY-2))/2 -1;
+			        newPosY +=actor->getSpeed();
+                    boardPosY = abs(newPosY/2)-1; 
+                    isPosible = true;
+			    }
+                break;
+		    case Actor::_down:
+                if ((fmod(newPosX, 2)>-_epsilon) && (fmod(newPosX, 2)<_epsilon))
+			    {
+			        newPosY -=actor->getSpeed();
+                    boardPosY = abs(newPosY/2); 
+                    isPosible = true;
+                }
+                 break;
+		    case Actor::_right:
+                if ((fmod(newPosY, 2)>-_epsilon) && (fmod(newPosY, 2)<_epsilon))
+			    {
+                    newPosX += actor->getSpeed();
+                    boardPosX=newPosX/2;
+                    isPosible = true;
+                }
+			    break;
+		    case Actor::_left:
+                if ((fmod(newPosY, 2)>-_epsilon) && (fmod(newPosY, 2)<_epsilon))
+			    {
+                    ballPosX =  (newPosX+2)/2 -1;
+                    newPosX -=actor->getSpeed();
+                    boardPosX=newPosX/2-1;
+                    isPosible = true;
+                }
+			    break;
+		    default:
+			    break;
+	    }
+	    if( isPosible )
         {
-            //Pacman ya se ha movido, por lo que los fantasmas ya pueden salir de la zona
-            //de SPAWN
-            isInitialMove = false;
+            if( _boardInfo[(int)ballPosY][(int)ballPosX] == BALL )
+            {
+                //Nos comemos la bola
+                eatBall( (int)ballPosY, (int)ballPosX );
+            }
+
+	        if( _boardInfo[(int)boardPosY][(int)boardPosX] != WALL) 
+            {
+                //En la nueva posición no encontraremos una pared, actualizamos posición.
+                //Si hubiera pared, paramos hasta nueva pulsación
+                actor->setDirection( storeDir );
+                actor->setStoreDir( Actor::_stop );
+                actor->setPosition(newPosX,newPosY,newPosZ);  
+                updatePlayer();
+                if( isInitialMove )
+                {
+                    //Pacman ya se ha movido, por lo que los fantasmas ya pueden salir de la zona
+                    //de SPAWN
+                    isInitialMove = false;
+                }
+                isMoving = true;  
+            }
         }
-        isMoving = true;  
     }
-    else
-    {
-        if( actor->getDirection()!=_stop )
-        {   
+        if( !isMoving )
+        {
+            newPosX = actor->getPosition().x;
+             newPosY = actor->getPosition().y;
+             newPosZ = actor->getPosition().z;
+    
+             boardPosX = newPosX/2-1;
+             boardPosY = abs(newPosY/2)-1;   
+             ballPosX = boardPosX;
+             ballPosY = boardPosY; 
             switch (actor->getDirection())
 	        {	
-		        case _up:
-                        actor->setPosition((boardPosX+1)*2,((boardPosY+2)*-2),newPosZ);
+		        case Actor::_up:
+                    ballPosY =  abs((newPosY-2))/2 -1;
+			        newPosY +=actor->getSpeed();
+                    boardPosY = abs(newPosY/2)-1; 
 			        break;
-		        case _down:
-                   actor->setPosition((boardPosX+1)*2,((boardPosY)*-2),newPosZ);
+		        case Actor::_down:
+			        newPosY -=actor->getSpeed();
+                    boardPosY = abs(newPosY/2); 
 			        break;
-		        case _right:
-			        actor->setPosition((boardPosX)*2,((boardPosY+1)*-2),newPosZ);
+		        case Actor::_right:
+                    newPosX += actor->getSpeed();
+                    boardPosX=newPosX/2;
 			        break;
-		        case _left:
-                    actor->setPosition((boardPosX+2)*2,((boardPosY+1)*-2),newPosZ);
+		        case Actor::_left:
+                    ballPosX =  (newPosX+2)/2 -1;
+                    newPosX -=actor->getSpeed();
+                    boardPosX=newPosX/2-1;
 			        break;
 		        default:
 			        break;
-	        } 
-            actor->setDirection(actorDir);  
-            // _storeDir = storeDir;
-        }    
-    }
+	        }
+	
+            if( _boardInfo[(int)ballPosY][(int)ballPosX] == BALL )
+            {
+                //Nos comemos la bola
+                eatBall( (int)ballPosY, (int)ballPosX );
+            }
+
+	        if( actor->getDirection()!=_stop && 
+                _boardInfo[(int)boardPosY][(int)boardPosX] != WALL) 
+            {
+                //En la nueva posición no encontraremos una pared, actualizamos posición.
+                //Si hubiera pared, paramos hasta nueva pulsación
+                actor->setPosition(newPosX,newPosY,newPosZ);  
+                updatePlayer();
+                if( isInitialMove )
+                {
+                    //Pacman ya se ha movido, por lo que los fantasmas ya pueden salir de la zona
+                    //de SPAWN
+                    isInitialMove = false;
+                }
+                isMoving = true;  
+            }
+            else
+            {
+                 switch (actor->getDirection())
+	            {	
+		            case _up:
+                        actor->setPosition((boardPosX+1)*2,((boardPosY+2)*-2),newPosZ);
+			            break;
+		            case _down:
+                        actor->setPosition((boardPosX+1)*2,((boardPosY)*-2),newPosZ);
+			            break;
+		            case _right:
+			           actor->setPosition((boardPosX)*2,((boardPosY+1)*-2),newPosZ);
+			            break;
+		            case _left:
+                       actor->setPosition((boardPosX+2)*2,((boardPosY+1)*-2),newPosZ);
+			            break;
+		            default:
+			            break;
+	            } 
+                    actor->setDirection(actorDir);  
+                    updatePlayer();
+                
+            }    
+        }
     return isMoving;
 }
 // End Adding methods

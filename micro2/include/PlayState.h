@@ -32,6 +32,7 @@
 #define _posCamY -21
 #define _posCamZ 55
 #define _epsilon 0.1
+#define _epsilonghost 0.2
 
 #define BOARDSIZE 20
 #define WALL 1
@@ -62,15 +63,12 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   bool frameEnded (const Ogre::FrameEvent& evt);
   void createScene();
   void createStage();
-  double truncPosition(double aPosition);
- 
 
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
   static PlayState* getSingletonPtr ();
 
 private:
-  void checkBalls();
   void eatBall(int posX, int posY);
   void updatePlayer();
   void movingGhosts();
