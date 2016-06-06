@@ -1,7 +1,7 @@
-<scene previous_export_time="1465223211.609488" exported_by="Pamela" formatVersion="1.0.1" export_time="1465227825.676826" >
+<scene previous_export_time="1465227825.676826" exported_by="Pamela" formatVersion="1.0.1" export_time="1465248571.550628" >
   <nodes >
     <node name="Nori" >
-      <position z="-0.068922" x="0.150531" y="0.179150" />
+      <position z="0.013911" x="0.001548" y="1.758924" />
       <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
       <scale z="1.000000" x="1.000000" y="1.000000" />
       <game >
