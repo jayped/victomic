@@ -1,9 +1,9 @@
-<scene previous_export_time="1465223211.609488" exported_by="Pamela" formatVersion="1.0.1" export_time="1465223970.946224" >
+<scene previous_export_time="1465223211.609488" exported_by="Pamela" formatVersion="1.0.1" export_time="1465224537.1774" >
   <nodes >
     <node name="Nori" >
-      <position z="0.730088" x="0.653370" y="0.248032" />
-      <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
-      <scale z="1.000000" x="1.000000" y="1.000000" />
+      <position z="-0.061025" x="0.030202" y="-1.302178" />
+      <rotation qy="1.000000" qz="-0.000000" qx="0.000000" qw="0.000000" />
+      <scale z="0.295037" x="0.295037" y="0.295037" />
       <game >
         <sensors />
         <actuators />
@@ -41,10 +41,10 @@
   </nodes>
   <externals >
     <item type="material" >
-      <file name="D:\Dropbox\CEDV\PFC\Codigo\media\Nori_eye_M.material" />
+      <file name="D:\Dropbox\CEDV\PFC\Codigo\media\Nori_body_M.material" />
     </item>
     <item type="material" >
-      <file name="D:\Dropbox\CEDV\PFC\Codigo\media\Nori_body_M.material" />
+      <file name="D:\Dropbox\CEDV\PFC\Codigo\media\Nori_eye_M.material" />
     </item>
     <item type="material" >
       <file name="D:\Dropbox\CEDV\PFC\Codigo\media\Nori_face_M.material" />
