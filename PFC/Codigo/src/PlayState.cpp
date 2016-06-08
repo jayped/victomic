@@ -110,8 +110,8 @@ PlayState::frameStarted
 	_camera->lookAt(Ogre::Vector3(0,0,0));
 
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_ESCAPE)) return false;
-	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_UP))    vt += Ogre::Vector3(0, 0, -1);
-	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_DOWN))  vt += Ogre::Vector3(0, 0, 1);
+	
+	/*
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_LEFT))
 	{
 		Ogre::Vector3 localpos = _camera->getPosition();
@@ -124,16 +124,28 @@ PlayState::frameStarted
 		localpos.x+=.4;
 		_camera->setPosition(localpos);
 	}
+	*/
 
   btVector3 impulse(0,0,0);
-  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_I)) {_fallRigidBody->activate(true); impulse = btVector3(0,0,-.5);}
-  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_J)) { _fallRigidBody->activate(true); impulse = btVector3(-.5,0,0);}
-  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_K)) { _fallRigidBody->activate(true); impulse = btVector3(0,0,.5);}
-  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_L)) { _fallRigidBody->activate(true); impulse = btVector3(.5,0,0);}
+  
+  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_I)) {
+	_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(0,0,-.002));
+  }
+  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_J)) {
+	_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(-.002,0,0));
+  }
+  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_K)) {
+	_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(0,0,.002));
+  }
+  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_L)) {
+	_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(.002,0,0));
+  }
 
-  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_SPACE)) { _fallRigidBody->activate(true); impulse = btVector3(0,3,0);}
+  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_SPACE)) {
+	  _fallRigidBody->activate(true); impulse = btVector3(0,3,0);
+  }
 
-  _fallRigidBody->applyCentralImpulse(impulse);
+  
 
 	return true;
 }
@@ -170,15 +182,13 @@ PlayState::keyPressed
 	  _camera->setPosition(localpos);
   }
   if (e.key == OIS::KC_LEFT) {
-	  Ogre::Vector3 localpos = _camera->getPosition();
-	  localpos.x-=1;
-	  _camera->setPosition(localpos);
+	  moveCamera(_left);
   }
+  
   if (e.key == OIS::KC_RIGHT) {
-	  Ogre::Vector3 localpos = _camera->getPosition();
-	  localpos.x+=1;
-	  _camera->setPosition(localpos);
-  }
+  	  moveCamera(_right);
+	}
+  
   if (e.key == OIS::KC_A) {
 	  Ogre::Vector3 localpos = _camera->getPosition();
 	  localpos.z-=1;
@@ -190,17 +200,13 @@ PlayState::keyPressed
 	  _camera->setPosition(localpos);
   }
 
-  btVector3 impulse(0,0,0);
-  if (e.key==OIS::KC_I) {_fallRigidBody->activate(true); impulse = btVector3(0,0,-.5);}
-  if (e.key==OIS::KC_J) { _fallRigidBody->activate(true); impulse = btVector3(-.5,0,0);}
-  if (e.key==OIS::KC_K){ _fallRigidBody->activate(true); impulse = btVector3(0,0,.5);}
-  if (e.key==OIS::KC_L) { _fallRigidBody->activate(true); impulse = btVector3(.5,0,0);}
+  //btVector3 impulse(0,0,0);
 
-  if (e.key==OIS::KC_SPACE) { _fallRigidBody->activate(true); impulse = btVector3(0,3,0);}
+  //if (e.key==OIS::KC_SPACE) { _fallRigidBody->activate(true); impulse = btVector3(0,3,0);_fallRigidBody->applyCentralImpulse(impulse);}
 
-  _fallRigidBody->applyCentralImpulse(impulse);
+  //_fallRigidBody->applyCentralImpulse(impulse);
 
-
+  //if (e.key==OIS::KC_I) {_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(0,0,1));}
   
 }
 
@@ -253,7 +259,7 @@ void PlayState::CreateInitialWorld() {
 	// Suelo
 	_fallShape = new btBoxShape(btVector3(15.0f, 5.0f, 15.0f));
 	// bloques de choque
-	Entity *entity2 = _sceneMgr->createEntity("suelo", "Floor.mesh");
+	Entity *entity2 = _sceneMgr->createEntity("suelo", "GrassFloor.mesh");
 	SceneNode *node2 = _sceneMgr->getRootSceneNode()->createChildSceneNode("suelo");
 	node2->attachObject(entity2);
 
@@ -278,17 +284,17 @@ void PlayState::CreateInitialWorld() {
 	node->attachObject(entity);
   
 	// cuerpo rigido para bullet
-	MyMotionState* fallMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,30,0)), node);
+	MyMotionState* fallMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,5,0)), node);
 	btScalar mass_nori = 1;
 	btVector3 fallInertia_nori(-0,0,0);
 	_fallShape_nori->calculateLocalInertia(mass_nori,fallInertia_nori);
 	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass_nori,fallMotionState,_fallShape_nori,fallInertia_nori);
 	_fallRigidBody = new btRigidBody(fallRigidBodyCI);
 	_world->addRigidBody(_fallRigidBody);
-	node->setPosition(0.0f,30.0f,0.0f);
+	node->setPosition(0.0f,5.0f,0.0f);
 	// add rigid body to nori
 	node->setRigitBody(_fallRigidBody);
-  
+	
 }
 
 // End Adding methods
@@ -305,3 +311,16 @@ PlayState::getSingleton ()
   return *msSingleton;
 }
 
+void
+PlayState::moveCamera(direction aDirection)
+{
+	if (_movingCamera==false)
+	{
+		_movingCamera=true;
+	}
+
+	if (aDirection == _right)
+	{}
+	else if (aDirection == _left)
+	{}
+}

@@ -66,7 +66,8 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   bool frameEnded (const Ogre::FrameEvent& evt);
   void createScene();
   void createStage();
-  
+  void moveCamera(direction dir);
+
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
   static PlayState* getSingletonPtr ();
@@ -113,6 +114,7 @@ private:
   Ogre::Real _canCounter;
   Ogre::Real _flashCounter;
   bool _exitGame;
+  bool _movingCamera; // true: la camara se esta moviendo
 
 	private:
     bool isInitialMove;
