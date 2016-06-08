@@ -1,0 +1,17 @@
+material WhiteNoise
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			ambient 0.75 0.75 0.75
+			diffuse 1 1 1 1
+			
+			texture_unit
+			{
+				anim_texture wn1.PNG wn2.PNG wn3.PNG wn4.PNG wn5.PNG 0.3
+			}
+		}
+	}
+}

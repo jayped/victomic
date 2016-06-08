@@ -1,0 +1,7 @@
+Arcade
+{
+	type truetype
+	source arcade.ttf
+	size 25
+	resolution 96
+}

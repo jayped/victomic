@@ -1,0 +1,17 @@
+aTV
+{
+    zorder 500
+
+    container Panel(atv) 
+    {
+	      metrics_mode pixels
+        left 0
+        top 0
+        width 800
+        height 605
+        vert_align top
+        horz_align left
+        material tvmat
+    }	  
+
+}

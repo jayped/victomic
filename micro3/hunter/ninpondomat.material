@@ -1,0 +1,14 @@
+material ninpondomat
+{
+	technique
+	{
+		pass
+		{
+			scene_blend src_alpha one_minus_src_alpha
+			texture_unit
+			{
+				anim_texture ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondo.PNG ninpondowhite.PNG ninpondo.PNG 2.5
+			}
+		}
+	}
+}

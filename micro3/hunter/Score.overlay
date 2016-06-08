@@ -1,0 +1,170 @@
+template element TextArea(MyTemplates/TextScore)
+{
+    font_name Arcade
+		metrics_mode pixels
+		char_height 15
+		colour 1.0 1.0 1.0    
+}
+
+template element TextArea(MyTemplates/TexthiScore)
+{
+    font_name Arcade
+		metrics_mode pixels
+		char_height 12
+		colour 1.0 0.0 0.0    
+}
+
+template element TextArea(MyTemplates/TextRound)
+{
+    font_name Arcade
+		metrics_mode pixels
+		char_height 30
+		colour 0.0 1.0 0.0    
+}
+
+Score
+{
+    zorder 300
+	container Panel(panelScore) 
+    {
+	metrics_mode pixels
+	top -140
+    width 800
+    height 150
+	vert_align bottom
+	material panelmat
+    
+	container Panel(flashPanel) 
+    {
+	    metrics_mode pixels
+        left 0
+        top -500
+        width 1000
+        height 1000
+        vert_align top
+        horz_align left
+        material flashmat
+    }
+	
+	container Panel(score) 
+    {
+	      metrics_mode pixels
+        left 35
+        top -100
+        width 140
+        height 50
+        vert_align bottom
+        horz_align left
+        material scoremat
+		    element TextArea(scoreLabel) : MyTemplates/TextScore
+		    {
+				  top -20
+				  left -5
+				  horz_align right
+				  vert_align bottom
+				  alignment right
+		    }
+		    element TextArea(scoreValue) : MyTemplates/TextScore
+		    {
+				  top 5
+				  left -5
+				  horz_align right
+				  alignment right
+		    }
+    }	  
+
+    container Panel(scoreHi) 
+    {
+	      metrics_mode pixels
+        left -175
+        top -100
+        width 140
+        height 50
+        vert_align bottom
+        horz_align right
+        material scoremat
+		    element TextArea(scoreLabelHi) : MyTemplates/TextScore
+		    {
+				  top -20
+				  left -5
+				  horz_align right
+				  vert_align bottom
+				  alignment right
+		    }
+		    element TextArea(hiscoreValueHi) : MyTemplates/TextScore
+		    {
+				  top 5
+				  left -5
+				  horz_align right
+				  alignment right
+		    }
+    }
+
+    container Panel(LivesPanel) 
+    {
+	      metrics_mode pixels
+        left -70
+        top -100
+        width 140
+        height 50
+        vert_align bottom
+        horz_align center
+		
+        
+		    element TextArea(RoundLabel) : MyTemplates/TextRound
+		    {
+				  top 0
+				  left 0
+				  horz_align center
+				  vert_align top
+				  alignment center
+		    }
+		    element TextArea(MissLabel) : MyTemplates/TextScore
+		    {
+				  top 0
+				  left 0
+				  horz_align center
+				  vert_align bottom
+				  alignment center
+		    }
+    }
+
+	container Panel(puntuacion1Panel) 
+    {
+	      metrics_mode pixels
+        left 50
+        top -450
+        width 20
+        height 60
+        vert_align top
+        horz_align left
+        material score1mat
+    }
+
+	container Panel(puntuacion2Panel) 
+    {
+	      metrics_mode pixels
+        left 50
+        top -250
+        width 20
+        height 60
+        vert_align top
+        horz_align left
+        material score2mat
+    }
+
+		container Panel(puntuacion3Panel) 
+    {
+	      metrics_mode pixels
+        left 50
+        top -50
+        width 20
+        height 70
+        vert_align top
+        horz_align left
+        material score3mat
+    }
+
+	
+	}
+}
