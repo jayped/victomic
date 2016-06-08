@@ -1,0 +1,52 @@
+<scene export_time="1465402225.473788" previous_export_time="1465401266.724147" exported_by="Pamela" formatVersion="1.0.1" >
+  <nodes >
+    <node name="GrassCube" >
+      <position z="-0.000000" y="0.000000" x="0.000000" />
+      <rotation qy="0.000000" qx="0.000000" qw="1.000000" qz="-0.000000" />
+      <scale z="1.000000" y="1.000000" x="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity mass_radius="1.0" velocity_max="0.0" velocity_min="0.0" ghost="False" friction_z="1.0" lock_rot_z="False" physics_type="STATIC" friction_x="1.0" lock_rot_x="False" name="GrassCube" lock_trans_y="False" damping_trans="0.02539999969303608" anisotropic_friction="False" lock_trans_x="False" meshFile="GrassCube.mesh" lock_rot_y="False" mass="1.0" lock_trans_z="False" actor="False" damping_rot="0.1589999943971634" friction_y="1.0" inertia_tensor="0.4000000059604645" />
+    </node>
+    <node name="Lamp" >
+      <position z="-2.162585" y="2.377239" x="2.438510" />
+      <rotation qy="0.755880" qx="0.169076" qw="0.570948" qz="-0.272171" />
+      <scale z="1.000000" y="1.000000" x="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light powerScale="1.0" type="point" name="Lamp" shadow="true" >
+        <position z="-2.162585" y="2.377239" x="2.438510" />
+        <lightAttenuation linear="0.03333335240683057" range="5000" constant="1.0" quadratic="0.0" />
+        <colourDiffuse b="1.0" r="1.0" g="1.0" />
+        <colourSpecular b="1.0" r="1.0" g="1.0" />
+        <colourShadow b="1.0" r="1.0" g="1.0" />
+      </light>
+    </node>
+    <node name="Camera" >
+      <position z="6.507640" y="5.343665" x="7.481132" />
+      <rotation qy="0.334251" qx="0.481707" qw="0.781600" qz="-0.212922" />
+      <scale z="1.000000" y="1.000000" x="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <camera projectionType="perspective" name="Camera" fov="0.5033799435163735" >
+        <clipping near="0.10000000149011612" farPlaneDist="100.0" nearPlaneDist="0.10000000149011612" far="100.0" />
+      </camera>
+    </node>
+  </nodes>
+  <externals >
+    <item type="material" >
+      <file name="D:\Dropbox\CEDV\PFC\Codigo\media\GrassCube_M.material" />
+    </item>
+  </externals>
+  <environment >
+    <colourDiffuse b="0.05087608844041824" r="0.05087608844041824" g="0.05087608844041824" />
+    <colourBackground b="0.05087608844041824" r="0.05087608844041824" g="0.05087608844041824" />
+    <colourAmbient b="0.0" r="0.0" g="0.0" />
+  </environment>
+</scene>
