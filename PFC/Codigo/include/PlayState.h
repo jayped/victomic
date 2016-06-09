@@ -29,7 +29,7 @@
 #include <OgreOverlayManager.h>
 #include <btBulletDynamicsCommon.h>
 #include "Actor.h"
-#define _posCamX 0//-15
+#define _posCamX 0 //-15
 #define _posCamY 24
 #define _posCamZ 50
 #define _epsilon 0.1
@@ -70,6 +70,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void createScene();
   void createStage();
   void moveCamera(direction dir);
+  void initCameras();
 
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
