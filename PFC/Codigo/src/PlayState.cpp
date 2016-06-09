@@ -72,6 +72,7 @@ PlayState::enter ()
 	CreateInitialWorld();
 	// End Bullet -------------------------------------------------------------------------------
 	_lives = 0;
+	initCameras();
 }
 
 void
@@ -390,14 +391,35 @@ PlayState::moveCamera(direction aDirection)
 	{
 		_currentCamera++;
 		if (_currentCamera > _cameraMax) _currentCamera=_cameraMin;
+		_camera->setPosition(_cameras[_currentCamera]);
 	}
 	else if (aDirection == _left)
 	{
 		_currentCamera--;
 		if (_currentCamera < _cameraMin) _currentCamera=_cameraMax;
+		_camera->setPosition(_cameras[_currentCamera]);
 	}
 }
+
+void
+PlayState::initCameras()
+{
+	//_cameras = {Ogre::Vector3(_posCamX,_posCamY,_posCamX)};
+	std::vector<Ogre::Vector3>::iterator it;
+	it=_cameras.begin();
+	_cameras.insert(it,(Ogre::Vector3(-_posCamZ,_posCamY,_posCamX)));
+	it=_cameras.begin();
+	_cameras.insert(it,(Ogre::Vector3(_posCamX,_posCamY,-_posCamZ)));
+	it=_cameras.begin();
+	_cameras.insert(it,(Ogre::Vector3(_posCamZ,_posCamY,_posCamX)));
+	it=_cameras.begin();
+	_cameras.insert(it,(Ogre::Vector3(_posCamX,_posCamY,_posCamZ)));
+}
+
+
 // End Adding methods -------------------------------------
+
+
 
 PlayState*
 PlayState::getSingletonPtr ()
