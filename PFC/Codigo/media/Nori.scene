@@ -1,41 +1,41 @@
-<scene export_time="1465406305.095357" previous_export_time="1465227825.676826" exported_by="Pamela" formatVersion="1.0.1" >
+<scene exported_by="Pamela" formatVersion="1.0.1" export_time="1465490134.468761" previous_export_time="1465489861.160585" >
   <nodes >
     <node name="Nori" >
-      <position z="-0.116768" y="0.107332" x="-0.022864" />
-      <rotation qy="0.000000" qx="0.000000" qw="1.000000" qz="-0.000000" />
-      <scale z="1.000000" y="1.000000" x="1.000000" />
+      <position z="0.969427" x="0.003141" y="-0.539770" />
+      <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
+      <scale z="1.000000" x="1.000000" y="1.000000" />
       <game >
         <sensors />
         <actuators />
       </game>
-      <entity mass_radius="1.0" velocity_max="0.0" velocity_min="0.0" ghost="False" friction_z="1.0" lock_rot_z="False" physics_type="STATIC" friction_x="1.0" lock_rot_x="False" name="Nori" lock_trans_y="False" damping_trans="0.03999999910593033" anisotropic_friction="False" lock_trans_x="False" meshFile="Nori.mesh" lock_rot_y="False" mass="1.0" lock_trans_z="False" actor="False" damping_rot="0.10000000149011612" friction_y="1.0" inertia_tensor="0.4000000059604645" />
+      <entity anisotropic_friction="False" friction_x="1.0" lock_rot_z="False" name="Nori" mass="1.0" ghost="False" physics_type="STATIC" velocity_max="0.0" inertia_tensor="0.4000000059604645" damping_trans="0.03999999910593033" lock_trans_y="False" lock_trans_z="False" lock_trans_x="False" velocity_min="0.0" friction_z="1.0" actor="False" lock_rot_x="False" mass_radius="1.0" damping_rot="0.10000000149011612" friction_y="1.0" lock_rot_y="False" meshFile="Nori.mesh" />
     </node>
     <node name="Lamp" >
-      <position z="-1.403234" y="7.351286" x="5.107880" />
-      <rotation qy="0.755880" qx="0.169076" qw="0.570948" qz="-0.272171" />
-      <scale z="1.000000" y="1.000000" x="1.000000" />
+      <position z="-1.403234" x="5.107880" y="7.351286" />
+      <rotation qy="0.755880" qz="-0.272171" qx="0.169076" qw="0.570948" />
+      <scale z="1.000000" x="1.000000" y="1.000000" />
       <game >
         <sensors />
         <actuators />
       </game>
-      <light powerScale="1.0" type="point" name="Lamp" shadow="true" >
-        <position z="-1.403234" y="7.351286" x="5.107880" />
-        <lightAttenuation linear="0.03333335240683057" range="5000" constant="1.0" quadratic="0.0" />
-        <colourDiffuse b="1.0" r="1.0" g="1.0" />
-        <colourSpecular b="1.0" r="1.0" g="1.0" />
-        <colourShadow b="1.0" r="1.0" g="1.0" />
+      <light type="point" name="Lamp" shadow="true" powerScale="1.0" >
+        <position z="-1.403234" x="5.107880" y="7.351286" />
+        <lightAttenuation quadratic="0.0" range="5000" linear="0.03333335240683057" constant="1.0" />
+        <colourDiffuse r="1.0" b="1.0" g="1.0" />
+        <colourSpecular r="1.0" b="1.0" g="1.0" />
+        <colourShadow r="1.0" b="1.0" g="1.0" />
       </light>
     </node>
     <node name="Camera" >
-      <position z="7.619912" y="6.154639" x="8.673903" />
-      <rotation qy="0.334251" qx="0.481707" qw="0.781600" qz="-0.212922" />
-      <scale z="1.000000" y="1.000000" x="1.000000" />
+      <position z="7.619912" x="8.673903" y="6.154639" />
+      <rotation qy="0.334251" qz="-0.212922" qx="0.481707" qw="0.781600" />
+      <scale z="1.000000" x="1.000000" y="1.000000" />
       <game >
         <sensors />
         <actuators />
       </game>
-      <camera projectionType="perspective" name="Camera" fov="0.5033799435163735" >
-        <clipping near="0.10000000149011612" farPlaneDist="100.0" nearPlaneDist="0.10000000149011612" far="100.0" />
+      <camera fov="0.5033799435163735" name="Camera" projectionType="perspective" >
+        <clipping near="0.10000000149011612" far="100.0" nearPlaneDist="0.10000000149011612" farPlaneDist="100.0" />
       </camera>
     </node>
   </nodes>
@@ -60,8 +60,8 @@
     </item>
   </externals>
   <environment >
-    <colourDiffuse b="0.05087608844041824" r="0.05087608844041824" g="0.05087608844041824" />
-    <colourBackground b="0.05087608844041824" r="0.05087608844041824" g="0.05087608844041824" />
-    <colourAmbient b="0.0" r="0.0" g="0.0" />
+    <colourDiffuse r="0.05087608844041824" b="0.05087608844041824" g="0.05087608844041824" />
+    <colourBackground r="0.05087608844041824" b="0.05087608844041824" g="0.05087608844041824" />
+    <colourAmbient r="0.0" b="0.0" g="0.0" />
   </environment>
 </scene>
