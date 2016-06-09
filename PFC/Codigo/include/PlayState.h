@@ -28,6 +28,7 @@
 #include <OgreOverlayElement.h>
 #include <OgreOverlayManager.h>
 #include <btBulletDynamicsCommon.h>
+#include "Actor.h"
 #define _posCamX 0//-15
 #define _posCamY 24
 #define _posCamZ 50
@@ -40,6 +41,8 @@
 #define _block2 10
 #define _bonusItemDelay 15
 #define _canLaunch 5
+#define _cameraMax 3
+#define _cameraMin 0
 
 using namespace Ogre;
 
@@ -115,6 +118,9 @@ private:
   Ogre::Real _flashCounter;
   bool _exitGame;
   bool _movingCamera; // true: la camara se esta moviendo
+  int _currentCamera; // punto actual de la camara 0..3
+  Actor *_player;
+  std::vector<Ogre::Vector3> _cameras;
 
 	private:
     bool isInitialMove;
