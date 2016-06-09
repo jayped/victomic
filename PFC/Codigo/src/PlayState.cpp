@@ -1,4 +1,3 @@
-#include "Can.h"
 #include "ReplayState.h"
 #include "PlayState.h"
 #include "PauseState.h"
@@ -53,7 +52,7 @@ PlayState::enter ()
      isStop = false;
 	_exitGame = false;
 	 isInitialMove = true;
-
+	 _currentCamera = 0;
 	
 	_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
   
@@ -126,24 +125,49 @@ PlayState::frameStarted
 	}
 	*/
 
-  btVector3 impulse(0,0,0);
   
   if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_I)) {
 	_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(0,0,-.002));
+	
+	btQuaternion btq = _fallRigidBody->getOrientation();
+	  btTransform transform = _fallRigidBody->getWorldTransform();
+	  btq.setRotation(btVector3(0,1,0),Math::PI);
+	  transform.setRotation(btq);
+	  _fallRigidBody->activate(true);
+	  _fallRigidBody->setWorldTransform(transform);
+
   }
   if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_J)) {
 	_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(-.002,0,0));
+		  btQuaternion btq = _fallRigidBody->getOrientation();
+	  btTransform transform = _fallRigidBody->getWorldTransform();
+	  btq.setRotation(btVector3(0,1,0),(3.0/2.0) * Math::PI);
+	  transform.setRotation(btq);
+	  _fallRigidBody->activate(true);
+	  _fallRigidBody->setWorldTransform(transform);
+
   }
   if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_K)) {
 	_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(0,0,.002));
+		  btQuaternion btq = _fallRigidBody->getOrientation();
+	  btTransform transform = _fallRigidBody->getWorldTransform();
+	  btq.setRotation(btVector3(0,1,0),0);
+	  transform.setRotation(btq);
+	  _fallRigidBody->activate(true);
+	  _fallRigidBody->setWorldTransform(transform);
+
   }
   if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_L)) {
 	_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(.002,0,0));
+		  btQuaternion btq = _fallRigidBody->getOrientation();
+	  btTransform transform = _fallRigidBody->getWorldTransform();
+	  btq.setRotation(btVector3(0,1,0),Math::PI/2);
+	  transform.setRotation(btq);
+	  _fallRigidBody->activate(true);
+	  _fallRigidBody->setWorldTransform(transform);
+
   }
 
-  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_SPACE)) {
-	  _fallRigidBody->activate(true); impulse = btVector3(0,3,0);
-  }
 
   
 
@@ -170,6 +194,24 @@ PlayState::keyPressed
     pushState(PauseState::getSingletonPtr());
   }
   
+  if (e.key == OIS::KC_LEFT) {
+	  moveCamera(_left);
+  }
+  
+  if (e.key == OIS::KC_RIGHT) {
+  	  moveCamera(_right);
+	}
+  
+  if (e.key == OIS::KC_SPACE) {
+	    btVector3 impulse(0,5,0);
+	  _fallRigidBody->activate(true);
+	  _fallRigidBody->applyCentralImpulse(impulse);
+  }
+
+  /////////////////////////
+  ///// Teclas para pruebas -------------------------
+  /////////////////////////
+
   if (e.key == OIS::KC_UP) {
 	  Ogre::Vector3 localpos = _camera->getPosition();
 	  localpos.y+=1;
@@ -181,13 +223,6 @@ PlayState::keyPressed
 	  localpos.y-=1;
 	  _camera->setPosition(localpos);
   }
-  if (e.key == OIS::KC_LEFT) {
-	  moveCamera(_left);
-  }
-  
-  if (e.key == OIS::KC_RIGHT) {
-  	  moveCamera(_right);
-	}
   
   if (e.key == OIS::KC_A) {
 	  Ogre::Vector3 localpos = _camera->getPosition();
@@ -200,13 +235,17 @@ PlayState::keyPressed
 	  _camera->setPosition(localpos);
   }
 
-  //btVector3 impulse(0,0,0);
+  if (e.key == OIS::KC_T) {
+  }
+    if (e.key == OIS::KC_G) {
+  }
+  if (e.key == OIS::KC_F) {
+  }
+  if (e.key == OIS::KC_H) {
+  }
 
-  //if (e.key==OIS::KC_SPACE) { _fallRigidBody->activate(true); impulse = btVector3(0,3,0);_fallRigidBody->applyCentralImpulse(impulse);}
+  ///// Fin Teclas para pruebas ----------------------
 
-  //_fallRigidBody->applyCentralImpulse(impulse);
-
-  //if (e.key==OIS::KC_I) {_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(0,0,1));}
   
 }
 
@@ -253,7 +292,12 @@ PlayState::mouseReleased
 
 }
 
-// Adding methods
+// Adding methods -------------------------------------
+
+// CreateInitialWorld
+// se encargara de cargar los mundos segun la stage en la que nos encontremos.
+// la idea es realizar varias stages que se cargen dinamicamente.
+// cada stage se correspondera con una matriz 3d realizada en un archivo de texto o hardcodeada.
 void PlayState::CreateInitialWorld() {
   
 	// Suelo
@@ -277,27 +321,84 @@ void PlayState::CreateInitialWorld() {
 	// ---
 
 	//Nori
-	btCollisionShape *_fallShape_nori = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
+	btCollisionShape *_fallShape_nori = new btBoxShape(btVector3(1.0f, 1.75f, 1.0f));
 	Entity *entity = _sceneMgr->createEntity("nori", "Nori.mesh");
 	//SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode(name);
-	Can *node = reinterpret_cast<Can *>(_sceneMgr->getRootSceneNode()->createChildSceneNode("nori"));
-	node->attachObject(entity);
+	_player = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode("nori"));
+	_player->attachObject(entity);
   
 	// cuerpo rigido para bullet
-	MyMotionState* fallMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,5,0)), node);
+	MyMotionState* fallMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,10,0)), _player);
 	btScalar mass_nori = 1;
 	btVector3 fallInertia_nori(-0,0,0);
 	_fallShape_nori->calculateLocalInertia(mass_nori,fallInertia_nori);
 	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass_nori,fallMotionState,_fallShape_nori,fallInertia_nori);
 	_fallRigidBody = new btRigidBody(fallRigidBodyCI);
 	_world->addRigidBody(_fallRigidBody);
-	node->setPosition(0.0f,5.0f,0.0f);
+	_player->setPosition(0.0f,10.0f,0.0f);
 	// add rigid body to nori
-	node->setRigitBody(_fallRigidBody);
+	_player->setRigitBody(_fallRigidBody);
 	
+	
+	// piedra cesped
+	btCollisionShape *_blockShape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
+	Entity *blockEntity = _sceneMgr->createEntity("block", "GrassCube.mesh");
+	Actor *Actorblock = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode("block"));
+	Actorblock->attachObject(blockEntity);
+  
+	// cuerpo rigido para bullet
+	MyMotionState* blockMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(-7,8,7)), Actorblock);
+	btScalar mass_block = 0;
+	btVector3 blockFallInertia(-0,0,0);
+	_blockShape->calculateLocalInertia(mass_block,blockFallInertia);
+	btRigidBody::btRigidBodyConstructionInfo blockFallRigidBodyCI(mass_block,blockMotionState,_blockShape,blockFallInertia);
+	btRigidBody *blockRigidBody = new btRigidBody(blockFallRigidBodyCI);
+	_world->addRigidBody(blockRigidBody);
+	Actorblock->setPosition(-7.0f,8.0f,7.0f);
+	// add rigid body to nori
+	Actorblock->setRigitBody(blockRigidBody);
+
+	// piedra roca
+	btCollisionShape *_rockShape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
+	Entity *rockEntity = _sceneMgr->createEntity("rock", "RockCube.mesh");
+	Actor *ActorRock = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode("rock"));
+	ActorRock->attachObject(rockEntity);
+  
+	// cuerpo rigido para bullet
+	MyMotionState* rockMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(7,5,7)), ActorRock);
+	btScalar mass_rock = 1;
+	btVector3 rockFallInertia(-0,0,0);
+	_rockShape->calculateLocalInertia(mass_rock,rockFallInertia);
+	btRigidBody::btRigidBodyConstructionInfo rockFallRigidBodyCI(mass_rock,rockMotionState,_rockShape,rockFallInertia);
+	btRigidBody *rockRigidBody = new btRigidBody(rockFallRigidBodyCI);
+	_world->addRigidBody(rockRigidBody);
+	ActorRock->setPosition(7.0f,5.0f,7.0f);
+	// add rigid body to nori
+	ActorRock->setRigitBody(rockRigidBody);
+
 }
 
-// End Adding methods
+void
+PlayState::moveCamera(direction aDirection)
+{
+	if (_movingCamera==false)
+	{
+		_movingCamera=true;
+	}
+
+	if (aDirection == _right)
+	{
+		_currentCamera++;
+		if (_currentCamera > _cameraMax) _currentCamera=_cameraMin;
+	}
+	else if (aDirection == _left)
+	{
+		_currentCamera--;
+		if (_currentCamera < _cameraMin) _currentCamera=_cameraMax;
+	}
+}
+// End Adding methods -------------------------------------
+
 PlayState*
 PlayState::getSingletonPtr ()
 {
@@ -311,16 +412,3 @@ PlayState::getSingleton ()
   return *msSingleton;
 }
 
-void
-PlayState::moveCamera(direction aDirection)
-{
-	if (_movingCamera==false)
-	{
-		_movingCamera=true;
-	}
-
-	if (aDirection == _right)
-	{}
-	else if (aDirection == _left)
-	{}
-}
