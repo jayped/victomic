@@ -6,12 +6,10 @@ class MakeCamera : public Ogre::Camera
 {
   
 public:
-	MakeCamera(const Ogre::Camera & camera);
-    MakeCamera(const Ogre::String & name, Ogre::SceneManager *creator);
+	MakeCamera(const Ogre::String & name, Ogre::SceneManager *creator);
     ~MakeCamera();
-    
-	void init();
-
+    void init();
+   
 private:
 	
 };
