@@ -27,7 +27,7 @@ Actor::getRigitBody()
 }
 
 void
-destroyRigitBody()
+Actor::destroyRigitBody()
 {
 	//_fallRigidBody
 }

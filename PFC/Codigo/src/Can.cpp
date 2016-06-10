@@ -27,7 +27,7 @@ Can::getRigitBody()
 }
 
 void
-destroyRigitBody()
+Can::destroyRigitBody()
 {
 	//_fallRigidBody
 }
