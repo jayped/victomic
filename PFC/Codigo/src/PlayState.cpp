@@ -15,7 +15,6 @@ template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
 PlayState::PlayState ()
 {
     _root = 0;
-    isInitialMove = true;
     isStop = false;
 
 }
@@ -27,32 +26,43 @@ PlayState::enter ()
 	{
 		_root = Ogre::Root::getSingletonPtr();
 		_gameMgr = GameManager::getSingletonPtr();
-
+		
 		// Se recupera el gestor de escena y la cámara.
 		_sceneMgr = _root->getSceneManager("SceneManager");
 		_sceneMgr->setAmbientLight(Ogre::ColourValue(1, 1, 1));
 		//_sceneMgr->addRenderQueueListener(new Ogre::OverlaySystem());
-
-
+		
 		_camera = _sceneMgr->getCamera("IntroCamera");
+		_makeCamera = reinterpret_cast<MakeCamera*>(_camera);
+		_makeCamera->init();
+		
+		/*
 		_camera->setPosition(Ogre::Vector3(_posCamX,_posCamY,_posCamZ));
 		_camera->lookAt(Ogre::Vector3(_posCamX,_posCamY,0));
 		_camera->setNearClipDistance(5);
 		_camera->setFarClipDistance(10000);
-  
+		*/
+
 		_viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 		_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 100.0));
 		_win = _root->getAutoCreatedWindow();
 
+		//Create the Background ///////////////////////////////////////////////////////////////////////////
+		_sceneMgr->setSkyBox(true, "skyMat", 100.0F, true);
+		////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		double width = _viewport->getActualWidth();
 		double height = _viewport->getActualHeight();
-		_camera->setAspectRatio(width / height);
-
+		_makeCamera->setAspectRatio(width / height);
+		
+		//_movingCamera= false;
+		//_cameraAngle = 0;
+		//_cameraDirection = _stop;
 	}
+
      isStop = false;
 	_exitGame = false;
-	 isInitialMove = true;
-	 _currentCamera = 0;
+	 //_currentCamera = 0;
 	
 	_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
   
@@ -72,7 +82,7 @@ PlayState::enter ()
 	CreateInitialWorld();
 	// End Bullet -------------------------------------------------------------------------------
 	_lives = 0;
-	initCameras();
+	//initCameras();
 }
 
 void
@@ -108,27 +118,12 @@ PlayState::frameStarted
 
 	// mira siempre al centro del escenario
 	_camera->lookAt(Ogre::Vector3(0,0,0));
-
+	
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_ESCAPE)) return false;
 	
-	/*
-	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_LEFT))
-	{
-		Ogre::Vector3 localpos = _camera->getPosition();
-		localpos.x-=.1;
-		_camera->setPosition(localpos);
-	}
-	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_RIGHT))
-	{
-		Ogre::Vector3 localpos = _camera->getPosition();
-		localpos.x+=.4;
-		_camera->setPosition(localpos);
-	}
-	*/
-
-  
-  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_I)) {
-	_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(0,0,-.002));
+	/// Movimiento de Nori
+	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_I)) {
+		_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(0,0,-.002));
 	
 	btQuaternion btq = _fallRigidBody->getOrientation();
 	  btTransform transform = _fallRigidBody->getWorldTransform();
@@ -168,9 +163,19 @@ PlayState::frameStarted
 	  _fallRigidBody->setWorldTransform(transform);
 
   }
-
-
+  // fin movimiento nori.
   
+  // nori no se cae
+  _fallRigidBody->setAngularVelocity(btVector3(0,0,0));
+  // fin nori no se cae
+
+  // [!] prueba movimiento de camara
+	
+  if (_makeCamera->isMoving())
+	{
+		_makeCamera->move();
+	}
+  // fin prueba movimiento de camara
 
 	return true;
 }
@@ -196,11 +201,15 @@ PlayState::keyPressed
   }
   
   if (e.key == OIS::KC_LEFT) {
-	  moveCamera(_left);
+	  _makeCamera->setMoving(_left);
+	  //moveCamera(_left);
+	  //_makeCamera->_cameraDirection=_left;
   }
   
   if (e.key == OIS::KC_RIGHT) {
-  	  moveCamera(_right);
+	  _makeCamera->setMoving(_right);
+  	  //moveCamera(_right);
+	  //_cameraDirection=_right;
 	}
   
   if (e.key == OIS::KC_SPACE) {
@@ -381,26 +390,15 @@ void PlayState::CreateInitialWorld() {
 
 void
 PlayState::moveCamera(direction aDirection)
-{
+{/*
 	if (_movingCamera==false)
 	{
 		_movingCamera=true;
 	}
 
-	if (aDirection == _right)
-	{
-		_currentCamera++;
-		if (_currentCamera > _cameraMax) _currentCamera=_cameraMin;
-		_camera->setPosition(_cameras[_currentCamera]);
-	}
-	else if (aDirection == _left)
-	{
-		_currentCamera--;
-		if (_currentCamera < _cameraMin) _currentCamera=_cameraMax;
-		_camera->setPosition(_cameras[_currentCamera]);
-	}
-}
+*/}
 
+/*
 void
 PlayState::initCameras()
 {
@@ -415,11 +413,9 @@ PlayState::initCameras()
 	it=_cameras.begin();
 	_cameras.insert(it,(Ogre::Vector3(_posCamX,_posCamY,_posCamZ)));
 }
-
+*/
 
 // End Adding methods -------------------------------------
-
-
 
 PlayState*
 PlayState::getSingletonPtr ()
