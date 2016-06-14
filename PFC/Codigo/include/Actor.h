@@ -10,7 +10,7 @@
 class Actor : public Ogre::SceneNode
 {
 	enum direction {_stop, _up, _down, _right, _left};
-
+	
 public:
     //Actor(){}
     Actor(Ogre::SceneManager *creator);
@@ -22,6 +22,7 @@ public:
 	btRigidBody* getRigitBody();
 	void destroyRigitBody();
 	void move(int aDirection);
+	void orientate(bool aRotate[]);
 	void jump();
 
 private:
