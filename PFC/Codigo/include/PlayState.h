@@ -128,6 +128,7 @@ private:
   //std::vector<Ogre::Vector3> _cameras;
   //double _cameraAngle;
   MakeCamera *_makeCamera;
+  bool _storeMove[4]; //0. down, 1. right, 2. up, 3. left.
 
 	private:
     bool isInitialMove;
