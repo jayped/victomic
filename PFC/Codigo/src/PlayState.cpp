@@ -76,7 +76,7 @@ PlayState::enter ()
 	_world = new btDiscreteDynamicsWorld(_dispatcher,_broadphase,_solver,_collisionConf);
   
 	// Establecimiento propiedades del mundo
-	_world->setGravity(btVector3(0,-3,0));
+	_world->setGravity(btVector3(0,-9,0));
 
 	// Creacion de los elementos iniciales del mundo
 	CreateInitialWorld();
@@ -117,56 +117,64 @@ PlayState::frameStarted
 	_world->stepSimulation(deltaT, 1); // Actualizar simulacion Bullet
 
 	// mira siempre al centro del escenario
-	_camera->lookAt(Ogre::Vector3(0,0,0));
+	_makeCamera->lookAt(Ogre::Vector3(0,0,0));
 	
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_ESCAPE)) return false;
 	
 	/// Movimiento de Nori
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_I)) {
+		// mover personaje principal
+		_player->move((int)_up);
+		/*
 		_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(0,0,-.002));
-	
-	btQuaternion btq = _fallRigidBody->getOrientation();
-	  btTransform transform = _fallRigidBody->getWorldTransform();
-	  btq.setRotation(btVector3(0,1,0),Math::PI);
-	  transform.setRotation(btq);
-	  _fallRigidBody->activate(true);
-	  _fallRigidBody->setWorldTransform(transform);
-
-  }
-  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_J)) {
-	_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(-.002,0,0));
-		  btQuaternion btq = _fallRigidBody->getOrientation();
-	  btTransform transform = _fallRigidBody->getWorldTransform();
-	  btq.setRotation(btVector3(0,1,0),(3.0/2.0) * Math::PI);
-	  transform.setRotation(btq);
-	  _fallRigidBody->activate(true);
-	  _fallRigidBody->setWorldTransform(transform);
-
-  }
-  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_K)) {
-	_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(0,0,.002));
-		  btQuaternion btq = _fallRigidBody->getOrientation();
-	  btTransform transform = _fallRigidBody->getWorldTransform();
-	  btq.setRotation(btVector3(0,1,0),0);
-	  transform.setRotation(btq);
-	  _fallRigidBody->activate(true);
-	  _fallRigidBody->setWorldTransform(transform);
-
-  }
-  if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_L)) {
-	_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(.002,0,0));
-		  btQuaternion btq = _fallRigidBody->getOrientation();
-	  btTransform transform = _fallRigidBody->getWorldTransform();
-	  btq.setRotation(btVector3(0,1,0),Math::PI/2);
-	  transform.setRotation(btq);
-	  _fallRigidBody->activate(true);
-	  _fallRigidBody->setWorldTransform(transform);
-
-  }
+		btQuaternion btq = _fallRigidBody->getOrientation();
+		btTransform transform = _fallRigidBody->getWorldTransform();
+		btq.setRotation(btVector3(0,1,0),Math::PI);
+		transform.setRotation(btq);
+		_fallRigidBody->activate(true);
+		_fallRigidBody->setWorldTransform(transform);
+		*/
+	}
+	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_J)) {
+		_player->move((int)_left);
+		/*
+		_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(-.002,0,0));
+		btQuaternion btq = _fallRigidBody->getOrientation();
+		btTransform transform = _fallRigidBody->getWorldTransform();
+		btq.setRotation(btVector3(0,1,0),(3.0/2.0) * Math::PI);
+		transform.setRotation(btq);
+		_fallRigidBody->activate(true);
+		_fallRigidBody->setWorldTransform(transform);
+		*/
+	}
+	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_K)) {
+		_player->move((int)_down);
+		/*
+		_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(0,0,.002));
+		btQuaternion btq = _fallRigidBody->getOrientation();
+		btTransform transform = _fallRigidBody->getWorldTransform();
+		btq.setRotation(btVector3(0,1,0),0);
+		transform.setRotation(btq);
+		_fallRigidBody->activate(true);
+		_fallRigidBody->setWorldTransform(transform);
+		*/
+	}
+	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_L)) {
+		_player->move((int)_right);
+		/*
+		_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(.002,0,0));
+		btQuaternion btq = _fallRigidBody->getOrientation();
+		btTransform transform = _fallRigidBody->getWorldTransform();
+		btq.setRotation(btVector3(0,1,0),Math::PI/2);
+		transform.setRotation(btq);
+		_fallRigidBody->activate(true);
+		_fallRigidBody->setWorldTransform(transform);
+		*/
+	}
   // fin movimiento nori.
   
   // nori no se cae
-  _fallRigidBody->setAngularVelocity(btVector3(0,0,0));
+  _player->getRigitBody()->setAngularVelocity(btVector3(0,0,0));
   // fin nori no se cae
 
   // [!] prueba movimiento de camara
@@ -213,9 +221,12 @@ PlayState::keyPressed
 	}
   
   if (e.key == OIS::KC_SPACE) {
-	    btVector3 impulse(0,5,0);
+	  _player->jump();
+	  /*
+	    btVector3 impulse(0,9,0);
 	  _fallRigidBody->activate(true);
 	  _fallRigidBody->applyCentralImpulse(impulse);
+	  */
   }
 
   /////////////////////////
@@ -331,6 +342,7 @@ void PlayState::CreateInitialWorld() {
 	// ---
 
 	//Nori
+	/*
 	btCollisionShape *_fallShape_nori = new btBoxShape(btVector3(1.0f, 1.75f, 1.0f));
 	Entity *entity = _sceneMgr->createEntity("nori", "Nori.mesh");
 	//SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode(name);
@@ -348,7 +360,8 @@ void PlayState::CreateInitialWorld() {
 	_player->setPosition(0.0f,10.0f,0.0f);
 	// add rigid body to nori
 	_player->setRigitBody(_fallRigidBody);
-	
+	*/
+	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh",0.0f,10.0f,0.0f,1);
 	
 	// piedra cesped
 	btCollisionShape *_blockShape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
@@ -397,6 +410,33 @@ PlayState::moveCamera(direction aDirection)
 	}
 
 */}
+
+Actor *
+PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEntity, string meshName,
+					double aMotionPosX,double aMotionPosY,double aMotionPosZ, btScalar aMass)
+{
+
+	btCollisionShape *newFallShape = new btBoxShape(btVector3(aShapeX, aShapeY, aShapeZ));
+	Entity *entity = _sceneMgr->createEntity(nameEntity, meshName);
+	//SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode(name);
+	Actor *newActor = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode(nameEntity));
+	newActor->attachObject(entity);
+  
+	// cuerpo rigido para bullet
+	MyMotionState* newFallMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(aMotionPosX,aMotionPosY,aMotionPosZ)), newActor);
+	btVector3 newFallInertia(-0,0,0);
+	newFallShape->calculateLocalInertia(aMass,newFallInertia);
+	btRigidBody::btRigidBodyConstructionInfo newFallRigidBodyCI(aMass,newFallMotionState,newFallShape,newFallInertia);
+	btRigidBody *newFallRigidBody = new btRigidBody(newFallRigidBodyCI);
+	_world->addRigidBody(newFallRigidBody);
+	newActor->setPosition(aMotionPosX,aMotionPosY,aMotionPosZ);
+	// add rigid body to nori
+	newActor->setRigitBody(newFallRigidBody);
+	
+	return newActor;
+
+
+}
 
 /*
 void
