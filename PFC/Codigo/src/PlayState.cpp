@@ -63,7 +63,8 @@ PlayState::enter ()
      isStop = false;
 	_exitGame = false;
 	 //_currentCamera = 0;
-	
+	for (int i =0; i<4; i++) _storeMove[i] = false;	
+
 	_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
   
 	//_overlay = _overlayMgr->getByName("Score");
@@ -120,59 +121,29 @@ PlayState::frameStarted
 	_makeCamera->lookAt(Ogre::Vector3(0,0,0));
 	
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_ESCAPE)) return false;
-	
+
 	/// Movimiento de Nori
-	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_I)) {
-		// mover personaje principal
-		_player->move((int)_up);
-		/*
-		_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(0,0,-.002));
-		btQuaternion btq = _fallRigidBody->getOrientation();
-		btTransform transform = _fallRigidBody->getWorldTransform();
-		btq.setRotation(btVector3(0,1,0),Math::PI);
-		transform.setRotation(btq);
-		_fallRigidBody->activate(true);
-		_fallRigidBody->setWorldTransform(transform);
-		*/
-	}
-	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_J)) {
-		_player->move((int)_left);
-		/*
-		_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(-.002,0,0));
-		btQuaternion btq = _fallRigidBody->getOrientation();
-		btTransform transform = _fallRigidBody->getWorldTransform();
-		btq.setRotation(btVector3(0,1,0),(3.0/2.0) * Math::PI);
-		transform.setRotation(btq);
-		_fallRigidBody->activate(true);
-		_fallRigidBody->setWorldTransform(transform);
-		*/
-	}
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_K)) {
 		_player->move((int)_down);
-		/*
-		_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(0,0,.002));
-		btQuaternion btq = _fallRigidBody->getOrientation();
-		btTransform transform = _fallRigidBody->getWorldTransform();
-		btq.setRotation(btVector3(0,1,0),0);
-		transform.setRotation(btq);
-		_fallRigidBody->activate(true);
-		_fallRigidBody->setWorldTransform(transform);
-		*/
+		_storeMove[0]=true;
 	}
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_L)) {
 		_player->move((int)_right);
-		/*
-		_fallRigidBody->activate(true);_fallRigidBody->translate(btVector3(.002,0,0));
-		btQuaternion btq = _fallRigidBody->getOrientation();
-		btTransform transform = _fallRigidBody->getWorldTransform();
-		btq.setRotation(btVector3(0,1,0),Math::PI/2);
-		transform.setRotation(btq);
-		_fallRigidBody->activate(true);
-		_fallRigidBody->setWorldTransform(transform);
-		*/
+		_storeMove[1]=true;
+	}
+	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_I)) {
+		_player->move((int)_up);
+		_storeMove[2]=true;
+	}
+	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_J)) {
+		_player->move((int)_left);
+		_storeMove[3]=true;
 	}
   // fin movimiento nori.
   
+	if ( (_storeMove[0]==true) || (_storeMove[1]==true) || (_storeMove[2]==true) || (_storeMove[3]==true) )
+		_player->orientate(_storeMove);
+
   // nori no se cae
   _player->getRigitBody()->setAngularVelocity(btVector3(0,0,0));
   // fin nori no se cae
@@ -258,7 +229,7 @@ PlayState::keyPressed
 
   if (e.key == OIS::KC_T) {
   }
-    if (e.key == OIS::KC_G) {
+  if (e.key == OIS::KC_G) {
   }
   if (e.key == OIS::KC_F) {
   }
@@ -278,6 +249,21 @@ PlayState::keyReleased
     _root->getAutoCreatedWindow()->removeAllViewports();
 	_exitGame = true;
   }
+
+  	/// Movimiento de Nori
+	if (e.key == OIS::KC_K) {
+		_storeMove[0]=false;
+	}
+	if (e.key == OIS::KC_L) {
+		_storeMove[1]=false;
+	}
+	if (e.key == OIS::KC_I) {
+		_storeMove[2]=false;
+	}
+	if (e.key == OIS::KC_J) {
+		_storeMove[3]=false;
+	}
+
 
 }
 
