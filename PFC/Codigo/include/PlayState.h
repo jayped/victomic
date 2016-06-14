@@ -72,6 +72,8 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void createStage();
   void moveCamera(direction dir);
   void initCameras();
+  Actor *addActor(double aShapeX,double aShapeY,double aShapeZ, std::string nameEntity, std::string meshName,
+					double aMotionPosX,double aMotionPosY,double aMotionPosZ, btScalar aMass);
 
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
