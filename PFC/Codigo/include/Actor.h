@@ -21,12 +21,14 @@ public:
 	void setRigitBody(btRigidBody *myRigitBody);
 	btRigidBody* getRigitBody();
 	void destroyRigitBody();
-	void move(int aDirection);
-	void orientate(bool aRotate[]);
+	void move(int aDirection, int aCameraPosition);
+	void orientate(bool aRotate[], int aCameraPosition);
 	void jump();
+	void resetSpeed();
 
 private:
 	btRigidBody* _fallRigidBody;
+	double _currentSpeed;
 	
 };
 #endif
