@@ -29,7 +29,15 @@ PlayState::enter ()
 		
 		// Se recupera el gestor de escena y la cámara.
 		_sceneMgr = _root->getSceneManager("SceneManager");
-		_sceneMgr->setAmbientLight(Ogre::ColourValue(1, 1, 1));
+		_sceneMgr->setAmbientLight(Ogre::ColourValue(0.7, 0.7, 0.7));
+		
+		_sceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+		Ogre::Light* light = _sceneMgr->createLight("light1");
+		light->setType(Ogre::Light::LT_DIRECTIONAL);
+		light->setDirection(Ogre::Vector3(1,-1,0));
+		light->setPosition(Ogre::Vector3(0,0,0));
+		_sceneMgr->getRootSceneNode()->attachObject(light);
+		
 		//_sceneMgr->addRenderQueueListener(new Ogre::OverlaySystem());
 		
 		_camera = _sceneMgr->getCamera("IntroCamera");
