@@ -23,10 +23,13 @@ public:
 	void move();
 	void setCameraDirection(direction aDirection);
 	void setMoving(int aDirection);
+	int getCameraPosition();
 
 protected:
 	bool _isMoving;
 	double _cameraAngle;
 	direction _cameraDirection;
+	int _cameraPosition; // 4 posiciones posibles en las 4 caras del cubo.
+
 };
 #endif
