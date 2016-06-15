@@ -17,6 +17,7 @@ MakeCamera::init()
 	_isMoving=false;
 	_cameraAngle = 0;
 	_cameraDirection = _stop;
+	_cameraPosition = 0;
 }
 
 void
@@ -32,6 +33,13 @@ MakeCamera::setMoving(int aDirection)
 	{
 		_isMoving = true;
 	}
+
+	if ( (direction) aDirection == _right) _cameraPosition++;
+	if ( (direction) aDirection == _left) _cameraPosition--;
+	
+	if ((_cameraPosition) > 3) _cameraPosition=0;
+	if ((_cameraPosition) < 0) _cameraPosition=3;
+
 	_cameraDirection = (direction) aDirection;
 }
 
@@ -39,6 +47,12 @@ bool
 MakeCamera::isMoving()
 {
 	return _isMoving;
+}
+
+int
+MakeCamera::getCameraPosition()
+{
+	return _cameraPosition;
 }
 
 void
