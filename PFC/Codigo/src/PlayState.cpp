@@ -63,6 +63,8 @@ PlayState::enter ()
      isStop = false;
 	_exitGame = false;
 	 //_currentCamera = 0;
+	
+	// inicializacion de movimientos de nori.
 	for (int i =0; i<4; i++) _storeMove[i] = false;	
 
 	_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
@@ -124,25 +126,26 @@ PlayState::frameStarted
 
 	/// Movimiento de Nori
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_K)) {
-		_player->move((int)_down);
+		_player->move((int)_down, _makeCamera->getCameraPosition());
 		_storeMove[0]=true;
 	}
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_L)) {
-		_player->move((int)_right);
+		_player->move((int)_right, _makeCamera->getCameraPosition());
 		_storeMove[1]=true;
 	}
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_I)) {
-		_player->move((int)_up);
+		_player->move((int)_up, _makeCamera->getCameraPosition());
 		_storeMove[2]=true;
 	}
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_J)) {
-		_player->move((int)_left);
+		_player->move((int)_left, _makeCamera->getCameraPosition());
 		_storeMove[3]=true;
 	}
   // fin movimiento nori.
   
+	// orienta a nori segun movimiento.
 	if ( (_storeMove[0]==true) || (_storeMove[1]==true) || (_storeMove[2]==true) || (_storeMove[3]==true) )
-		_player->orientate(_storeMove);
+		_player->orientate(_storeMove, _makeCamera->getCameraPosition());
 
   // nori no se cae
   _player->getRigitBody()->setAngularVelocity(btVector3(0,0,0));
@@ -406,6 +409,7 @@ PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEnt
 	Entity *entity = _sceneMgr->createEntity(nameEntity, meshName);
 	//SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode(name);
 	Actor *newActor = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode(nameEntity));
+	newActor->init();
 	newActor->attachObject(entity);
   
 	// cuerpo rigido para bullet
