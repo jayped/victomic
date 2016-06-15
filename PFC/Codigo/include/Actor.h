@@ -5,7 +5,7 @@
 #define _jumpX 0 //-15
 #define _jumpY 9
 #define _jumpZ 0
-#define _moveSpeed .003
+#define _moveSpeed .004 // .003 sin sombras
 
 class Actor : public Ogre::SceneNode
 {
