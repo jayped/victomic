@@ -59,9 +59,9 @@ void
 MakeCamera::move()
 {
 		if (_cameraDirection==_right)
-			_cameraAngle+=0.1;
+			_cameraAngle+=0.15; // 0.1 sin sombras
 		else if (_cameraDirection==_left)
-			_cameraAngle-=0.1;
+			_cameraAngle-=0.15; // 0.1 sin sombras
 		
 		double posx = (Math::Sin(Math::AngleUnitsToRadians(_cameraAngle))*50);
 		double posz = (Math::Cos(Math::AngleUnitsToRadians(_cameraAngle))*50);
