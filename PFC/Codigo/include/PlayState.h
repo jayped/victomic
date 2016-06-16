@@ -129,6 +129,8 @@ private:
   //double _cameraAngle;
   MakeCamera *_makeCamera;
   bool _storeMove[4]; //0. down, 1. right, 2. up, 3. left.
+	ParticleSystem* sunParticle;
+	SceneNode* particleNode;
 
 	private:
     bool isInitialMove;
