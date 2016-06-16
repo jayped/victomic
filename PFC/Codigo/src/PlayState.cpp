@@ -34,7 +34,7 @@ PlayState::enter ()
 		_sceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 		Ogre::Light* light = _sceneMgr->createLight("light1");
 		light->setType(Ogre::Light::LT_DIRECTIONAL);
-		light->setDirection(Ogre::Vector3(1,-1,0));
+		light->setDirection(Ogre::Vector3(0.80,-1,0));
 		light->setPosition(Ogre::Vector3(0,0,0));
 		_sceneMgr->getRootSceneNode()->attachObject(light);
 		
@@ -66,6 +66,11 @@ PlayState::enter ()
 		//_movingCamera= false;
 		//_cameraAngle = 0;
 		//_cameraDirection = _stop;
+
+		sunParticle = _sceneMgr->createParticleSystem("Smoke", "Smoke");
+		sunParticle->setEmitting(false);
+		particleNode = _sceneMgr->getRootSceneNode()->createChildSceneNode("Particle");
+		particleNode->attachObject(sunParticle);
 	}
 
      isStop = false;
@@ -136,26 +141,41 @@ PlayState::frameStarted
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_K)) {
 		_player->move((int)_down, _makeCamera->getCameraPosition());
 		_storeMove[0]=true;
+		sunParticle->setEmitting(true);
 	}
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_L)) {
 		_player->move((int)_right, _makeCamera->getCameraPosition());
 		_storeMove[1]=true;
+		sunParticle->setEmitting(true);
 	}
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_I)) {
 		_player->move((int)_up, _makeCamera->getCameraPosition());
 		_storeMove[2]=true;
+		sunParticle->setEmitting(true);
 	}
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_J)) {
 		_player->move((int)_left, _makeCamera->getCameraPosition());
 		_storeMove[3]=true;
+		sunParticle->setEmitting(true);
 	}
   // fin movimiento nori.
   
+	// Prueba para deteccion de no salto
+	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_V)) {
+	}
+
+
+
+
 	// orienta a nori segun movimiento.
 	if ( (_storeMove[0]==true) || (_storeMove[1]==true) || (_storeMove[2]==true) || (_storeMove[3]==true) )
 		_player->orientate(_storeMove, _makeCamera->getCameraPosition());
 
-  // nori no se cae
+	// corta particulas cuando no se mueve el personaje
+	if ( (_storeMove[0]==false) && (_storeMove[1]==false) && (_storeMove[2]==false) && (_storeMove[3]==false) )
+		sunParticle->setEmitting(false);
+  
+	// nori no se cae
   _player->getRigitBody()->setAngularVelocity(btVector3(0,0,0));
   // fin nori no se cae
 
@@ -166,6 +186,17 @@ PlayState::frameStarted
 		_makeCamera->move();
 	}
   // fin prueba movimiento de camara
+
+  //if (particleNode)
+	particleNode->setPosition(_player->getPosition());
+	
+	Actor::states _myState = _player->getState();
+//	if (_myState == Actor::states::_stay)
+//		sunParticle->setEmitting(true);
+	if (_myState == Actor::states::_falling)
+		sunParticle->setEmitting(false);
+	if (_myState == Actor::states::_jumping)
+		sunParticle->setEmitting(false);
 
 	return true;
 }
@@ -192,23 +223,25 @@ PlayState::keyPressed
   
   if (e.key == OIS::KC_LEFT) {
 	  _makeCamera->setMoving(_left);
-	  //moveCamera(_left);
-	  //_makeCamera->_cameraDirection=_left;
   }
   
   if (e.key == OIS::KC_RIGHT) {
 	  _makeCamera->setMoving(_right);
-  	  //moveCamera(_right);
-	  //_cameraDirection=_right;
 	}
   
   if (e.key == OIS::KC_SPACE) {
 	  _player->jump();
-	  /*
-	    btVector3 impulse(0,9,0);
-	  _fallRigidBody->activate(true);
-	  _fallRigidBody->applyCentralImpulse(impulse);
-	  */
+
+	
+	/*Ogre::ParticleSystem *myParticleSystem = _sceneMgr->
+	  myParticleSystem->createParticle();
+	  myParticleSystem->createParticle();
+	  myParticleSystem->createParticle();
+	  myParticleSystem->createParticle();
+	  myParticleSystem->createParticle();
+	  myParticleSystem->createParticle();
+	  myParticleSystem->createParticle();*/
+	  
   }
 
   /////////////////////////
@@ -241,10 +274,20 @@ PlayState::keyPressed
   if (e.key == OIS::KC_T) {
   }
   if (e.key == OIS::KC_G) {
+	// test de particulas
+	//sunParticle->setEmitting(true);
+	  btVector3 linearVelocity = _player->getRigitBody()->getLinearVelocity();
+	  btScalar x=linearVelocity.getX();
+	  btScalar y=linearVelocity.getY();
+	  btScalar z=linearVelocity.getZ();
+	  if ((y<0.005) && (y>-0.005))
+		int xcvgxcv=0;
   }
   if (e.key == OIS::KC_F) {
   }
   if (e.key == OIS::KC_H) {
+	// test de particulas
+	  //sunParticle->setEmitting(false);
   }
 
   ///// Fin Teclas para pruebas ----------------------
