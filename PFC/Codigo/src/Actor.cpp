@@ -14,6 +14,7 @@ Actor::~Actor()
 void Actor::init()
 {
 	_currentSpeed=0.0F;
+	_state = _stay;
 }
 
 void
@@ -143,6 +144,20 @@ Actor::jump()
 void Actor::resetSpeed()
 {
 	_currentSpeed=0.0F;
+}
+
+Actor::states
+Actor::getState()
+{
+	btVector3 linearVelocity = getRigitBody()->getLinearVelocity();
+	btScalar y=linearVelocity.getY();
+
+	if (y<=-0.5)_state = _falling;
+	if ( ((y>-0.5) && (y<0.5)) && (_state==_falling)) _state = _stay;
+	if (y>=0.5) _state = _jumping;
+
+	return _state;
+
 }
 
 /*
