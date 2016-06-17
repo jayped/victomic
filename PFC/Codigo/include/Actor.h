@@ -35,5 +35,7 @@ private:
 	states _state;
 	Ogre::ParticleSystem *smokeParticle;
 	Ogre::SceneNode *particleNode;
+	Ogre::ParticleSystem *jumpParticle;
+	Ogre::SceneNode *jumpParticleNode;
 };
 #endif
