@@ -38,44 +38,25 @@ PlayState::enter ()
 		light->setPosition(Ogre::Vector3(0,0,0));
 		_sceneMgr->getRootSceneNode()->attachObject(light);
 		
-		//_sceneMgr->addRenderQueueListener(new Ogre::OverlaySystem());
-		
 		_camera = _sceneMgr->getCamera("IntroCamera");
 		_makeCamera = reinterpret_cast<MakeCamera*>(_camera);
 		_makeCamera->init();
 		
-		/*
-		_camera->setPosition(Ogre::Vector3(_posCamX,_posCamY,_posCamZ));
-		_camera->lookAt(Ogre::Vector3(_posCamX,_posCamY,0));
-		_camera->setNearClipDistance(5);
-		_camera->setFarClipDistance(10000);
-		*/
-
 		_viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 		_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 100.0));
 		_win = _root->getAutoCreatedWindow();
 
-		//Create the Background ///////////////////////////////////////////////////////////////////////////
+		//Create the Background
 		_sceneMgr->setSkyBox(true, "skyMat", 100.0F, true);
-		////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		double width = _viewport->getActualWidth();
 		double height = _viewport->getActualHeight();
 		_makeCamera->setAspectRatio(width / height);
 		
-		//_movingCamera= false;
-		//_cameraAngle = 0;
-		//_cameraDirection = _stop;
-
-		sunParticle = _sceneMgr->createParticleSystem("Smoke", "Smoke");
-		sunParticle->setEmitting(false);
-		particleNode = _sceneMgr->getRootSceneNode()->createChildSceneNode("Particle");
-		particleNode->attachObject(sunParticle);
 	}
 
      isStop = false;
 	_exitGame = false;
-	 //_currentCamera = 0;
 	
 	// inicializacion de movimientos de nori.
 	for (int i =0; i<4; i++) _storeMove[i] = false;	
@@ -84,7 +65,7 @@ PlayState::enter ()
   
 	//_overlay = _overlayMgr->getByName("Score");
 
-	// Bullet -------------------------------------------------------------------------------
+	// Bullet
 	_broadphase = new btDbvtBroadphase();
 	_collisionConf = new btDefaultCollisionConfiguration();
 	_dispatcher = new btCollisionDispatcher(_collisionConf);
@@ -96,9 +77,9 @@ PlayState::enter ()
 
 	// Creacion de los elementos iniciales del mundo
 	CreateInitialWorld();
-	// End Bullet -------------------------------------------------------------------------------
+	// End Bullet
+
 	_lives = 0;
-	//initCameras();
 }
 
 void
@@ -125,10 +106,10 @@ bool
 PlayState::frameStarted
 (const Ogre::FrameEvent& evt)
 {
+	// Sincronización
 	Ogre::Vector3 vt(0,0,0);     Ogre::Real tSpeed = 20.0;  
 	Ogre::Real deltaT = evt.timeSinceLastFrame;
 	int fps = 1.0 / deltaT;
-	bool mbleft, mbmiddle, mbright; // Botones del raton pulsados
 	
 	_world->stepSimulation(deltaT, 1); // Actualizar simulacion Bullet
 
@@ -141,62 +122,44 @@ PlayState::frameStarted
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_K)) {
 		_player->move((int)_down, _makeCamera->getCameraPosition());
 		_storeMove[0]=true;
-		sunParticle->setEmitting(true);
 	}
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_L)) {
 		_player->move((int)_right, _makeCamera->getCameraPosition());
 		_storeMove[1]=true;
-		sunParticle->setEmitting(true);
 	}
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_I)) {
 		_player->move((int)_up, _makeCamera->getCameraPosition());
 		_storeMove[2]=true;
-		sunParticle->setEmitting(true);
 	}
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_J)) {
 		_player->move((int)_left, _makeCamera->getCameraPosition());
 		_storeMove[3]=true;
-		sunParticle->setEmitting(true);
 	}
-  // fin movimiento nori.
+	// fin movimiento nori.
   
-	// Prueba para deteccion de no salto
+	// [!] Key Test
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_V)) {
 	}
-
-
-
-
+	
 	// orienta a nori segun movimiento.
 	if ( (_storeMove[0]==true) || (_storeMove[1]==true) || (_storeMove[2]==true) || (_storeMove[3]==true) )
 		_player->orientate(_storeMove, _makeCamera->getCameraPosition());
 
-	// corta particulas cuando no se mueve el personaje
+	// personaje se para
 	if ( (_storeMove[0]==false) && (_storeMove[1]==false) && (_storeMove[2]==false) && (_storeMove[3]==false) )
-		sunParticle->setEmitting(false);
+		_player->stop();
   
 	// nori no se cae
-  _player->getRigitBody()->setAngularVelocity(btVector3(0,0,0));
-  // fin nori no se cae
-
-  // [!] prueba movimiento de camara
+	_player->getRigitBody()->setAngularVelocity(btVector3(0,0,0));
 	
-  if (_makeCamera->isMoving())
+	// Mueve la camara, mientras no se alcance un punto clave
+	if (_makeCamera->isMoving())
 	{
 		_makeCamera->move();
 	}
-  // fin prueba movimiento de camara
 
-  //if (particleNode)
-	particleNode->setPosition(_player->getPosition());
-	
-	Actor::states _myState = _player->getState();
-//	if (_myState == Actor::states::_stay)
-//		sunParticle->setEmitting(true);
-	if (_myState == Actor::states::_falling)
-		sunParticle->setEmitting(false);
-	if (_myState == Actor::states::_jumping)
-		sunParticle->setEmitting(false);
+	// Actualiza el estado del personaje
+	_player->getState();
 
 	return true;
 }
@@ -231,16 +194,6 @@ PlayState::keyPressed
   
   if (e.key == OIS::KC_SPACE) {
 	  _player->jump();
-
-	
-	/*Ogre::ParticleSystem *myParticleSystem = _sceneMgr->
-	  myParticleSystem->createParticle();
-	  myParticleSystem->createParticle();
-	  myParticleSystem->createParticle();
-	  myParticleSystem->createParticle();
-	  myParticleSystem->createParticle();
-	  myParticleSystem->createParticle();
-	  myParticleSystem->createParticle();*/
 	  
   }
 
@@ -274,22 +227,11 @@ PlayState::keyPressed
   if (e.key == OIS::KC_T) {
   }
   if (e.key == OIS::KC_G) {
-	// test de particulas
-	//sunParticle->setEmitting(true);
-	  btVector3 linearVelocity = _player->getRigitBody()->getLinearVelocity();
-	  btScalar x=linearVelocity.getX();
-	  btScalar y=linearVelocity.getY();
-	  btScalar z=linearVelocity.getZ();
-	  if ((y<0.005) && (y>-0.005))
-		int xcvgxcv=0;
   }
   if (e.key == OIS::KC_F) {
   }
   if (e.key == OIS::KC_H) {
-	// test de particulas
-	  //sunParticle->setEmitting(false);
   }
-
   ///// Fin Teclas para pruebas ----------------------
 
   
@@ -382,25 +324,6 @@ void PlayState::CreateInitialWorld() {
 	// ---
 
 	//Nori
-	/*
-	btCollisionShape *_fallShape_nori = new btBoxShape(btVector3(1.0f, 1.75f, 1.0f));
-	Entity *entity = _sceneMgr->createEntity("nori", "Nori.mesh");
-	//SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode(name);
-	_player = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode("nori"));
-	_player->attachObject(entity);
-  
-	// cuerpo rigido para bullet
-	MyMotionState* fallMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,10,0)), _player);
-	btScalar mass_nori = 1;
-	btVector3 fallInertia_nori(-0,0,0);
-	_fallShape_nori->calculateLocalInertia(mass_nori,fallInertia_nori);
-	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass_nori,fallMotionState,_fallShape_nori,fallInertia_nori);
-	_fallRigidBody = new btRigidBody(fallRigidBodyCI);
-	_world->addRigidBody(_fallRigidBody);
-	_player->setPosition(0.0f,10.0f,0.0f);
-	// add rigid body to nori
-	_player->setRigitBody(_fallRigidBody);
-	*/
 	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh",0.0f,10.0f,0.0f,1);
 	
 	// piedra cesped
@@ -441,16 +364,6 @@ void PlayState::CreateInitialWorld() {
 
 }
 
-void
-PlayState::moveCamera(direction aDirection)
-{/*
-	if (_movingCamera==false)
-	{
-		_movingCamera=true;
-	}
-
-*/}
-
 Actor *
 PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEntity, string meshName,
 					double aMotionPosX,double aMotionPosY,double aMotionPosZ, btScalar aMass)
@@ -476,25 +389,7 @@ PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEnt
 	
 	return newActor;
 
-
 }
-
-/*
-void
-PlayState::initCameras()
-{
-	//_cameras = {Ogre::Vector3(_posCamX,_posCamY,_posCamX)};
-	std::vector<Ogre::Vector3>::iterator it;
-	it=_cameras.begin();
-	_cameras.insert(it,(Ogre::Vector3(-_posCamZ,_posCamY,_posCamX)));
-	it=_cameras.begin();
-	_cameras.insert(it,(Ogre::Vector3(_posCamX,_posCamY,-_posCamZ)));
-	it=_cameras.begin();
-	_cameras.insert(it,(Ogre::Vector3(_posCamZ,_posCamY,_posCamX)));
-	it=_cameras.begin();
-	_cameras.insert(it,(Ogre::Vector3(_posCamX,_posCamY,_posCamZ)));
-}
-*/
 
 // End Adding methods -------------------------------------
 
