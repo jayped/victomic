@@ -70,7 +70,6 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   bool frameEnded (const Ogre::FrameEvent& evt);
   void createScene();
   void createStage();
-  void moveCamera(direction dir);
   void initCameras();
   Actor *addActor(double aShapeX,double aShapeY,double aShapeZ, std::string nameEntity, std::string meshName,
 					double aMotionPosX,double aMotionPosY,double aMotionPosZ, btScalar aMass);
@@ -129,8 +128,6 @@ private:
   //double _cameraAngle;
   MakeCamera *_makeCamera;
   bool _storeMove[4]; //0. down, 1. right, 2. up, 3. left.
-	ParticleSystem* sunParticle;
-	SceneNode* particleNode;
 
 	private:
     bool isInitialMove;
