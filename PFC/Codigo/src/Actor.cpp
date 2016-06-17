@@ -15,13 +15,22 @@ void Actor::init()
 {
 	_currentSpeed=0.0F;
 	_state = _stay;
+	
 	Ogre::Root *_root = Ogre::Root::getSingletonPtr();
 	Ogre::SceneManager *_sceneMgr = _root->getSceneManager("SceneManager");
+
+	// Particulas de caminar
 	smokeParticle = _sceneMgr->createParticleSystem("Smoke", "Smoke");
 	smokeParticle->setEmitting(false);
 	particleNode = this->createChildSceneNode("Particle");
 	particleNode->attachObject(smokeParticle);
-	//particleNode->setPosition(this->getPosition());
+
+	// Particulas de saltar
+	jumpParticle = _sceneMgr->createParticleSystem("jumpSmoke", "jumpSmoke");
+	jumpParticle->setEmitting(false);
+	jumpParticleNode = this->createChildSceneNode("ParticleJump");
+	jumpParticleNode->attachObject(jumpParticle);
+
 }
 
 void
@@ -45,6 +54,7 @@ Actor::move(int aDirection, int aCameraPosition)
 	////////////////////////////
 	//particleNode->setPosition(this->getPosition());
 	smokeParticle->setEmitting(true);
+	jumpParticleNode->setPosition(Ogre::Vector3(0,0,0));
 
 	direction lDirection = (direction) aDirection;
 	_fallRigidBody->activate(true);
@@ -90,6 +100,28 @@ Actor::move(int aDirection, int aCameraPosition)
 	{
 		_fallRigidBody->translate(btVector3(_moveSpeed,0,0));
 	}
+
+		// up
+	if (lDirection == _up)
+	{
+		jumpParticleNode->setPosition(jumpParticleNode->getPosition().x, jumpParticleNode->getPosition().y, -.5);
+	}
+	// left
+	if (lDirection == _left)
+	{
+		jumpParticleNode->setPosition(.5, jumpParticleNode->getPosition().y, jumpParticleNode->getPosition().z);
+	}
+	// down
+	if (lDirection == _down)
+	{
+		jumpParticleNode->setPosition(jumpParticleNode->getPosition().x, jumpParticleNode->getPosition().y, .5);
+	}
+	// right
+	if (lDirection == _right)
+	{
+		jumpParticleNode->setPosition(-.5, jumpParticleNode->getPosition().y, jumpParticleNode->getPosition().z);
+	}
+
 }
 
 void
@@ -154,9 +186,12 @@ Actor::orientate(bool aRotate[], int aCameraPosition)
 void
 Actor::jump()
 {
-	btVector3 impulse(_jumpX,_jumpY,_jumpZ);
-	_fallRigidBody->activate(true);
-	_fallRigidBody->applyCentralImpulse(impulse);
+	if (_state == _stay)
+	{
+		btVector3 impulse(_jumpX,_jumpY,_jumpZ);
+		_fallRigidBody->activate(true);
+		_fallRigidBody->applyCentralImpulse(impulse);
+	}
 }
 
 void Actor::resetSpeed()
@@ -171,7 +206,18 @@ Actor::getState()
 	btScalar y=linearVelocity.getY();
 
 	if (y<=-0.5)_state = _falling;
-	if ( ((y>-0.5) && (y<0.5)) && (_state==_falling)) _state = _stay;
+	
+	if ( ((y>-0.5) && (y<0.5)) && (_state==_stay))
+	{
+		jumpParticle->setEmitting(false);
+	}
+	
+	if ( ((y>-0.5) && (y<0.5)) && (_state==_falling))
+	{
+		_state = _stay;
+		jumpParticle->setEmitting(true);
+	}
+
 	if (y>=0.5) _state = _jumping;
 
 	if (_state != _stay)
