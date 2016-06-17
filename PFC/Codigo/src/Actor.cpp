@@ -15,6 +15,13 @@ void Actor::init()
 {
 	_currentSpeed=0.0F;
 	_state = _stay;
+	Ogre::Root *_root = Ogre::Root::getSingletonPtr();
+	Ogre::SceneManager *_sceneMgr = _root->getSceneManager("SceneManager");
+	smokeParticle = _sceneMgr->createParticleSystem("Smoke", "Smoke");
+	smokeParticle->setEmitting(false);
+	particleNode = this->createChildSceneNode("Particle");
+	particleNode->attachObject(smokeParticle);
+	//particleNode->setPosition(this->getPosition());
 }
 
 void
@@ -33,6 +40,12 @@ Actor::getRigitBody()
 void
 Actor::move(int aDirection, int aCameraPosition)
 {
+	////////////////////////////
+			// Particulas para desplazamiento de nori.
+	////////////////////////////
+	//particleNode->setPosition(this->getPosition());
+	smokeParticle->setEmitting(true);
+
 	direction lDirection = (direction) aDirection;
 	_fallRigidBody->activate(true);
 	
@@ -79,6 +92,11 @@ Actor::move(int aDirection, int aCameraPosition)
 	}
 }
 
+void
+Actor::stop()
+{
+	smokeParticle->setEmitting(false);
+}
 void
 Actor::orientate(bool aRotate[], int aCameraPosition)
 {
@@ -155,6 +173,9 @@ Actor::getState()
 	if (y<=-0.5)_state = _falling;
 	if ( ((y>-0.5) && (y<0.5)) && (_state==_falling)) _state = _stay;
 	if (y>=0.5) _state = _jumping;
+
+	if (_state != _stay)
+		smokeParticle->setEmitting(false);
 
 	return _state;
 
