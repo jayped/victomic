@@ -23,6 +23,7 @@ public:
 	btRigidBody* getRigitBody();
 	void destroyRigitBody();
 	void move(int aDirection, int aCameraPosition);
+	void stop();
 	void orientate(bool aRotate[], int aCameraPosition);
 	void jump();
 	void resetSpeed();
@@ -32,6 +33,7 @@ private:
 	btRigidBody* _fallRigidBody;
 	double _currentSpeed;
 	states _state;
-	
+	Ogre::ParticleSystem *smokeParticle;
+	Ogre::SceneNode *particleNode;
 };
 #endif
