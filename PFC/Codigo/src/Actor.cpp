@@ -83,22 +83,22 @@ Actor::move(int aDirection, int aCameraPosition)
 	// up
 	if (lDirection == lUp)
 	{
-		_fallRigidBody->translate(btVector3(0,0,-_moveSpeed));
+		_fallRigidBody->translate(btVector3(0,0,-_moveSpeed*_moveSpeedRelative));
 	}
 	// left
 	if (lDirection == lLeft)
 	{
-		_fallRigidBody->translate(btVector3(-_moveSpeed,0,0));
+		_fallRigidBody->translate(btVector3(-_moveSpeed*_moveSpeedRelative,0,0));
 	}
 	// down
 	if (lDirection == lDown)
 	{
-		_fallRigidBody->translate(btVector3(0,0,_moveSpeed));
+		_fallRigidBody->translate(btVector3(0,0,_moveSpeed*_moveSpeedRelative));
 	}
 	// right
 	if (lDirection == lRight)
 	{
-		_fallRigidBody->translate(btVector3(_moveSpeed,0,0));
+		_fallRigidBody->translate(btVector3(_moveSpeed*_moveSpeedRelative,0,0));
 	}
 
 		// up
@@ -205,26 +205,32 @@ Actor::getState()
 	btVector3 linearVelocity = getRigitBody()->getLinearVelocity();
 	btScalar y=linearVelocity.getY();
 
-	if (y<=-0.5)_state = _falling;
+	if (y<=-_stayEpsilon)_state = _falling;
 	
-	if ( ((y>-0.5) && (y<0.5)) && (_state==_stay))
+	if ( ((y>-_stayEpsilon) && (y<_stayEpsilon)) && (_state==_stay))
 	{
 		jumpParticle->setEmitting(false);
 	}
 	
-	if ( ((y>-0.5) && (y<0.5)) && (_state==_falling))
+	if ( ((y>-_stayEpsilon) && (y<_stayEpsilon)) && (_state==_falling))
 	{
 		_state = _stay;
 		jumpParticle->setEmitting(true);
 	}
 
-	if (y>=0.5) _state = _jumping;
+	if (y>=_stayEpsilon) _state = _jumping;
 
 	if (_state != _stay)
 		smokeParticle->setEmitting(false);
 
 	return _state;
 
+}
+
+void
+Actor::setSpeedRelative(double aSpeedRelative)
+{
+	_moveSpeedRelative = aSpeedRelative;
 }
 
 /*
