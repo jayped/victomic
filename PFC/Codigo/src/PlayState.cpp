@@ -114,7 +114,8 @@ PlayState::frameStarted
 
 	_world->stepSimulation(deltaT, 1); // Actualizar simulacion Bullet
 
-	_player->setSpeedRelative(deltaT);
+	_player->setSpeedRelative(deltaT);
+
 	// mira siempre al centro del escenario
 	_makeCamera->lookAt(Ogre::Vector3(0,0,0));
 	
@@ -157,7 +158,7 @@ PlayState::frameStarted
 	// Mueve la camara, mientras no se alcance un punto clave
 	if (_makeCamera->isMoving())
 	{
-		_makeCamera->move();
+		_makeCamera->move(deltaT);
 	}
 
 	// Actualiza el estado del personaje
