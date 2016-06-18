@@ -7,6 +7,8 @@
 #define _posCamY 24
 #define _posCamZ 50
 
+#define _cameraMoveSpeed 200
+
 using namespace Ogre;
 
 class MakeCamera : public Ogre::Camera
@@ -20,7 +22,7 @@ public:
     
 	void init();
 	bool isMoving();
-	void move();
+	void move(double aSpeedRelative);
 	void setCameraDirection(direction aDirection);
 	void setMoving(int aDirection);
 	int getCameraPosition();
