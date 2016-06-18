@@ -219,11 +219,14 @@ PlayState::keyPressed
   if (e.key == OIS::KC_A) {
 	  Ogre::Vector3 localpos = _camera->getPosition();
 	  localpos.z-=1;
+	  _makeCamera->setCameraDistance(localpos.z);
+
 	  _camera->setPosition(localpos);
   }
   if (e.key == OIS::KC_Z) {
 	  Ogre::Vector3 localpos = _camera->getPosition();
 	  localpos.z+=1;
+	  _makeCamera->setCameraDistance(localpos.z);
 	  _camera->setPosition(localpos);
   }
 
