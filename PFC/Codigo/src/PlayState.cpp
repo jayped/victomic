@@ -107,12 +107,14 @@ PlayState::frameStarted
 (const Ogre::FrameEvent& evt)
 {
 	// Sincronización
-	Ogre::Vector3 vt(0,0,0);     Ogre::Real tSpeed = 20.0;  
+	Ogre::Vector3 vt(0,0,0);
+	Ogre::Real tSpeed = 20.0;  
 	Ogre::Real deltaT = evt.timeSinceLastFrame;
 	int fps = 1.0 / deltaT;
-	
+
 	_world->stepSimulation(deltaT, 1); // Actualizar simulacion Bullet
 
+	_player->setSpeedRelative(deltaT);
 	// mira siempre al centro del escenario
 	_makeCamera->lookAt(Ogre::Vector3(0,0,0));
 	
@@ -145,7 +147,7 @@ PlayState::frameStarted
 	if ( (_storeMove[0]==true) || (_storeMove[1]==true) || (_storeMove[2]==true) || (_storeMove[3]==true) )
 		_player->orientate(_storeMove, _makeCamera->getCameraPosition());
 
-	// personaje se para
+	// nori se para
 	if ( (_storeMove[0]==false) && (_storeMove[1]==false) && (_storeMove[2]==false) && (_storeMove[3]==false) )
 		_player->stop();
   
