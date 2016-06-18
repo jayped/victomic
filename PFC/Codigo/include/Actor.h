@@ -5,7 +5,9 @@
 #define _jumpX 0 //-15
 #define _jumpY 9
 #define _jumpZ 0
-#define _moveSpeed .01 // .003 sin sombras .004 800x600. hay que hacerlo respecto de los frames
+//#define _moveSpeed .01 // .003 sin sombras .004 800x600. hay que hacerlo respecto de los frames
+#define _moveSpeed 6
+#define _stayEpsilon 0.8
 
 class Actor : public Ogre::SceneNode
 {
@@ -28,6 +30,7 @@ public:
 	void jump();
 	void resetSpeed();
 	states getState();
+	void setSpeedRelative(double aSpeedRelative);
 
 private:
 	btRigidBody* _fallRigidBody;
@@ -37,5 +40,6 @@ private:
 	Ogre::SceneNode *particleNode;
 	Ogre::ParticleSystem *jumpParticle;
 	Ogre::SceneNode *jumpParticleNode;
+	double _moveSpeedRelative;
 };
 #endif
