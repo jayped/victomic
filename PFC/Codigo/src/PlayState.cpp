@@ -79,17 +79,11 @@ PlayState::enter ()
 	CreateInitialWorld();
 	// End Bullet
 
-    //animación Nori
-    _animState = _sceneMgr->getEntity("nori")->getAnimationState("Walking");
-    _animState->setEnabled(false); 
-    //Fin animación Nori
-	_lives = 0;
 }
 
 void
 PlayState::exit ()
 {
-
     _sceneMgr->clearScene();
     //_overlay->hide();
 }
@@ -152,18 +146,11 @@ PlayState::frameStarted
 	if ( (_storeMove[0]==true) || (_storeMove[1]==true) || (_storeMove[2]==true) || (_storeMove[3]==true) )
     {
 		_player->orientate(_storeMove, _makeCamera->getCameraPosition());
-        //Nori se está moviendo, así que lo animamos
-       
-        _animState->setEnabled(true);
-        _animState->setLoop(true);
     }
 	// nori se para
 	if ( (_storeMove[0]==false) && (_storeMove[1]==false) && (_storeMove[2]==false) && (_storeMove[3]==false) )
     {
 		_player->stop();
-         //Nori está parado, así que paramos la animación
-        _animState->setEnabled(false);
-        _animState->setTimePosition(0.0);
     }
 	// nori no se cae
 	_player->getRigitBody()->setAngularVelocity(btVector3(0,0,0));
@@ -175,13 +162,8 @@ PlayState::frameStarted
 	}
 
 	// Actualiza el estado del personaje
-    _player->getState();
+    _player->updateState(deltaT);
 
-    //añadimos deltaT a la animación
-    if (_animState->getEnabled() && !_animState->hasEnded()) 
-    {
-        _animState->addTime(deltaT);
-    } 
 	return true;
 }
 
@@ -226,7 +208,6 @@ PlayState::keyPressed
 	  Ogre::Vector3 localpos = _camera->getPosition();
 	  localpos.y+=1;
 	  _camera->setPosition(localpos);
-	  _lives++;
   }
   if (e.key == OIS::KC_DOWN) {
 	  Ogre::Vector3 localpos = _camera->getPosition();
@@ -348,7 +329,7 @@ void PlayState::CreateInitialWorld() {
 	// ---
 
 	//Nori
-	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh",0.0f,10.0f,0.0f,1);
+	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",0.0f,10.0f,0.0f,1);
 	
 	// piedra cesped
 	btCollisionShape *_blockShape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
@@ -389,7 +370,7 @@ void PlayState::CreateInitialWorld() {
 }
 
 Actor *
-PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEntity, string meshName,
+PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEntity, string meshName, string nameAnimation,
 					double aMotionPosX,double aMotionPosY,double aMotionPosZ, btScalar aMass)
 {
 
@@ -397,8 +378,8 @@ PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEnt
 	Entity *entity = _sceneMgr->createEntity(nameEntity, meshName);
 	//SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode(name);
 	Actor *newActor = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode(nameEntity));
-	newActor->init();
 	newActor->attachObject(entity);
+	newActor->init();
   
 	// cuerpo rigido para bullet
 	MyMotionState* newFallMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(aMotionPosX,aMotionPosY,aMotionPosZ)), newActor);
@@ -410,7 +391,7 @@ PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEnt
 	newActor->setPosition(aMotionPosX,aMotionPosY,aMotionPosZ);
 	// add rigid body to nori
 	newActor->setRigitBody(newFallRigidBody);
-	
+
 	return newActor;
 
 }
