@@ -79,6 +79,10 @@ PlayState::enter ()
 	CreateInitialWorld();
 	// End Bullet
 
+    //animación Nori
+    _animState = _sceneMgr->getEntity("nori")->getAnimationState("Walking");
+    _animState->setEnabled(false); 
+    //Fin animación Nori
 	_lives = 0;
 }
 
@@ -146,12 +150,21 @@ PlayState::frameStarted
 	
 	// orienta a nori segun movimiento.
 	if ( (_storeMove[0]==true) || (_storeMove[1]==true) || (_storeMove[2]==true) || (_storeMove[3]==true) )
+    {
 		_player->orientate(_storeMove, _makeCamera->getCameraPosition());
-
+        //Nori se está moviendo, así que lo animamos
+       
+        _animState->setEnabled(true);
+        _animState->setLoop(true);
+    }
 	// nori se para
 	if ( (_storeMove[0]==false) && (_storeMove[1]==false) && (_storeMove[2]==false) && (_storeMove[3]==false) )
+    {
 		_player->stop();
-  
+         //Nori está parado, así que paramos la animación
+        _animState->setEnabled(false);
+        _animState->setTimePosition(0.0);
+    }
 	// nori no se cae
 	_player->getRigitBody()->setAngularVelocity(btVector3(0,0,0));
 	
@@ -162,8 +175,13 @@ PlayState::frameStarted
 	}
 
 	// Actualiza el estado del personaje
-	_player->getState();
+    _player->getState();
 
+    //añadimos deltaT a la animación
+    if (_animState->getEnabled() && !_animState->hasEnded()) 
+    {
+        _animState->addTime(deltaT);
+    } 
 	return true;
 }
 

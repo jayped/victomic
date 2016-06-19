@@ -90,6 +90,8 @@ private:
 
   btCollisionShape* _groundShape;  btCollisionShape* _fallShape;
   btRigidBody* _groundRigidBody;  btRigidBody* _fallRigidBody;
+   
+  Ogre::AnimationState *_animState;
   
   void CreateInitialWorld();
   // end bullet
