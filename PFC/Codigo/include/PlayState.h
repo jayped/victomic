@@ -30,20 +30,6 @@
 #include <btBulletDynamicsCommon.h>
 #include "Actor.h"
 #include "MakeCamera.h"
-#define _posCamX 0 //-15
-#define _posCamY 24
-#define _posCamZ 50
-#define _epsilon 0.1
-#define _epsilonghost 0.2
-#define _impulse_x -1
-#define _impulse_y 10
-#define _init_lives 3
-#define _block1 18
-#define _block2 10
-#define _bonusItemDelay 15
-#define _canLaunch 5
-#define _cameraMax 3
-#define _cameraMin 0
 
 using namespace Ogre;
 
@@ -71,7 +57,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void createScene();
   void createStage();
   void initCameras();
-  Actor *addActor(double aShapeX,double aShapeY,double aShapeZ, std::string nameEntity, std::string meshName,
+  Actor *addActor(double aShapeX,double aShapeY,double aShapeZ, std::string nameEntity, std::string meshName, std::string nameAnimation,
 					double aMotionPosX,double aMotionPosY,double aMotionPosZ, btScalar aMass);
 
   // Heredados de Ogre::Singleton.
@@ -104,30 +90,16 @@ private:
   Ogre::OverlayManager* _overlayMgr;
   OIS::Mouse* _mouse;
 
-  int _score;
-  int _hiscore;
-  Ogre::OverlayElement *_scoreOverlay;
-  Ogre::OverlayElement *_roundOverlay;
-  Ogre::OverlayElement *_livesOverlay;
   GameManager *_gameMgr;
   Ogre::Overlay *_overlay;
   Ogre::Real _introCounter;
-  int _bottleCounter;
-  Ogre::RaySceneQuery *_raySceneQuery;
   Ogre::RenderWindow* _win;
-  int _lives;
-  int _round;
   Ogre::Overlay *_overlayMouse;
   Ogre::Real _playCounter;
   Ogre::Real _canCounter;
   Ogre::Real _flashCounter;
   bool _exitGame;
-  //bool _movingCamera; // true: la camara se esta moviendo
-  //int _currentCamera; // punto actual de la camara 0..3
-  //direction _cameraDirection;
   Actor *_player;
-  //std::vector<Ogre::Vector3> _cameras;
-  //double _cameraAngle;
   MakeCamera *_makeCamera;
   bool _storeMove[4]; //0. down, 1. right, 2. up, 3. left.
 
