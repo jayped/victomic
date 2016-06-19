@@ -31,13 +31,6 @@ PlayState::enter ()
 		_sceneMgr = _root->getSceneManager("SceneManager");
 		_sceneMgr->setAmbientLight(Ogre::ColourValue(0.7, 0.7, 0.7));
 		
-		_sceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
-		Ogre::Light* light = _sceneMgr->createLight("light1");
-		light->setType(Ogre::Light::LT_DIRECTIONAL);
-		light->setDirection(Ogre::Vector3(0.80,-1,0));
-		light->setPosition(Ogre::Vector3(0,0,0));
-		_sceneMgr->getRootSceneNode()->attachObject(light);
-		
 		_camera = _sceneMgr->getCamera("IntroCamera");
 		_makeCamera = reinterpret_cast<MakeCamera*>(_camera);
 		_makeCamera->init();
@@ -46,16 +39,24 @@ PlayState::enter ()
 		_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 100.0));
 		_win = _root->getAutoCreatedWindow();
 
-		//Create the Background
-		_sceneMgr->setSkyBox(true, "skyMat", 100.0F, true);
-
 		double width = _viewport->getActualWidth();
 		double height = _viewport->getActualHeight();
 		_makeCamera->setAspectRatio(width / height);
 		
 	}
 
-     isStop = false;
+	// Luz del escenario.
+	_sceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+	Ogre::Light* light = _sceneMgr->createLight("light1");
+	light->setType(Ogre::Light::LT_DIRECTIONAL);
+	light->setDirection(Ogre::Vector3(0.80,-1,0));
+	light->setPosition(Ogre::Vector3(0,0,0));
+	_sceneMgr->getRootSceneNode()->attachObject(light);
+	
+	//Create the Background
+	_sceneMgr->setSkyBox(true, "skyMat", 100.0F, true);
+
+	isStop = false;
 	_exitGame = false;
 	
 	// inicializacion de movimientos de nori.
@@ -186,7 +187,7 @@ PlayState::keyPressed
   if (e.key == OIS::KC_P) {
     pushState(PauseState::getSingletonPtr());
   }
-  
+
   if (e.key == OIS::KC_LEFT) {
 	  _makeCamera->setMoving(_left);
   }
@@ -227,6 +228,11 @@ PlayState::keyPressed
 	  localpos.z+=1;
 	  _makeCamera->setCameraDistance(localpos.z);
 	  _camera->setPosition(localpos);
+  }
+
+  // Tecla r --> endgame.
+  if (e.key == OIS::KC_R) {
+    changeState(ReplayState::getSingletonPtr());
   }
 
   if (e.key == OIS::KC_T) {
