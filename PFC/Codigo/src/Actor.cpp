@@ -31,6 +31,11 @@ void Actor::init()
 	jumpParticleNode = this->createChildSceneNode("ParticleJump");
 	jumpParticleNode->attachObject(jumpParticle);
 
+    //animación Nori
+	Ogre::Entity *_actorEntity = reinterpret_cast<Ogre::Entity *>(this->getAttachedObject("nori"));
+	_animation = _actorEntity->getAnimationState("Walking");
+    _animation->setEnabled(false); 
+
 }
 
 void
@@ -54,6 +59,11 @@ Actor::move(int aDirection, int aCameraPosition)
 	////////////////////////////
 	//particleNode->setPosition(this->getPosition());
 	smokeParticle->setEmitting(true);
+	
+	// animacion de nori
+	_animation->setEnabled(true);
+	_animation->setLoop(true);
+
 	jumpParticleNode->setPosition(Ogre::Vector3(0,0,0));
 
 	direction lDirection = (direction) aDirection;
@@ -128,6 +138,9 @@ void
 Actor::stop()
 {
 	smokeParticle->setEmitting(false);
+	_animation->setEnabled(false);
+	_animation->setTimePosition(0.0);
+
 }
 void
 Actor::orientate(bool aRotate[], int aCameraPosition)
@@ -181,6 +194,7 @@ Actor::orientate(bool aRotate[], int aCameraPosition)
 
 	_fallRigidBody->activate(true);
 	_fallRigidBody->setWorldTransform(transform);
+
 }
 
 void
@@ -200,28 +214,41 @@ void Actor::resetSpeed()
 }
 
 Actor::states
-Actor::getState()
+Actor::updateState(Ogre::Real aAnimationTime)
 {
 	btVector3 linearVelocity = getRigitBody()->getLinearVelocity();
 	btScalar y=linearVelocity.getY();
 
+	// Callendo
 	if (y<=-_stayEpsilon)_state = _falling;
 	
+	// Parado
 	if ( ((y>-_stayEpsilon) && (y<_stayEpsilon)) && (_state==_stay))
 	{
 		jumpParticle->setEmitting(false);
 	}
 	
+	// Cerca del suelo, y próximo a parar.
 	if ( ((y>-_stayEpsilon) && (y<_stayEpsilon)) && (_state==_falling))
 	{
 		_state = _stay;
 		jumpParticle->setEmitting(true);
 	}
 
+	// Saltando
 	if (y>=_stayEpsilon) _state = _jumping;
 
 	if (_state != _stay)
+	{
 		smokeParticle->setEmitting(false);
+		_animation->setEnabled(false);
+		_animation->setTimePosition(0.0);
+	}	
+
+    if (_animation->getEnabled() && !_animation->hasEnded()) 
+    {
+		_animation->addTime(aAnimationTime);
+    } 
 
 	return _state;
 
@@ -231,6 +258,15 @@ void
 Actor::setSpeedRelative(double aSpeedRelative)
 {
 	_moveSpeedRelative = aSpeedRelative;
+}
+
+void
+Actor::setAnimationTime(Ogre::Real aAnimationTime)
+{
+    if (_animation->getEnabled() && !_animation->hasEnded()) 
+    {
+		_animation->addTime(aAnimationTime);
+    } 
 }
 
 /*
