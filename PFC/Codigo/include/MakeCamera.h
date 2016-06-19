@@ -4,8 +4,8 @@
 #include <math.h>
 
 #define _posCamX 0
-#define _posCamY 19
-#define _posCamZ 40
+#define _posCamY 25
+#define _posCamZ 46
 
 #define _cameraMoveSpeed 200
 
