@@ -29,8 +29,9 @@ public:
 	void orientate(bool aRotate[], int aCameraPosition);
 	void jump();
 	void resetSpeed();
-	states getState();
+	states updateState(Ogre::Real aAnimationTime);
 	void setSpeedRelative(double aSpeedRelative);
+	void setAnimationTime(Ogre::Real aAnimationTime);
 
 private:
 	btRigidBody* _fallRigidBody;
@@ -41,5 +42,6 @@ private:
 	Ogre::ParticleSystem *jumpParticle;
 	Ogre::SceneNode *jumpParticleNode;
 	double _moveSpeedRelative;
+	Ogre::AnimationState *_animation;
 };
 #endif
