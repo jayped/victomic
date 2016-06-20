@@ -339,7 +339,7 @@ void PlayState::CreateInitialWorld() {
 	
 	// piedra cesped
 	btCollisionShape *_blockShape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
-	Entity *blockEntity = _sceneMgr->createEntity("block", "GrassCube.mesh");
+	Entity *blockEntity = _sceneMgr->createEntity("block", "Box01.mesh");
 	Actor *Actorblock = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode("block"));
 	Actorblock->attachObject(blockEntity);
   

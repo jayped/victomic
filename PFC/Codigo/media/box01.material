@@ -48,7 +48,7 @@ material Box01_M
 
             texture_unit 
             {
-                texture cesped_textura.png
+                texture world01.png
                 tex_address_mode wrap
                 scale 1.0 1.0
                 colour_op modulate
