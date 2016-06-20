@@ -317,7 +317,7 @@ void PlayState::CreateInitialWorld() {
 	// Suelo
 	_fallShape = new btBoxShape(btVector3(15.0f, 5.0f, 15.0f));
 	// bloques de choque
-	Entity *entity2 = _sceneMgr->createEntity("suelo", "GrassFloor.mesh");
+	Entity *entity2 = _sceneMgr->createEntity("suelo", "World01.mesh");
 	SceneNode *node2 = _sceneMgr->getRootSceneNode()->createChildSceneNode("suelo");
 	node2->attachObject(entity2);
 
@@ -357,7 +357,7 @@ void PlayState::CreateInitialWorld() {
 
 	// piedra roca
 	btCollisionShape *_rockShape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
-	Entity *rockEntity = _sceneMgr->createEntity("rock", "RockCube.mesh");
+	Entity *rockEntity = _sceneMgr->createEntity("rock", "RockBox.mesh");
 	Actor *ActorRock = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode("rock"));
 	ActorRock->attachObject(rockEntity);
   

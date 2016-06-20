@@ -14,18 +14,18 @@ material _missing_material_
     }
 }
 
-// GrassFloor_M genrated by blender2ogre 0.6.0
+// RockBox_M genrated by blender2ogre 0.6.0
 
-material GrassFloor_M 
+material RockBox_M 
 {
     receive_shadows on 
 
     technique
     {
-        pass GrassFloor_M
+        pass RockBox_M
         {
-            ambient 1.0 1.0 1.0 1.0
-            diffuse 0.800000011920929 0.800000011920929 0.800000011920929 1.0
+            ambient 0.800000011920929 0.800000011920929 0.800000011920929 1.0
+            diffuse 0.6400000190734865 0.6400000190734865 0.6400000190734865 1.0
             specular 0.5 0.5 0.5 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 
@@ -48,7 +48,7 @@ material GrassFloor_M
 
             texture_unit 
             {
-                texture cesped_textura.png
+                texture RockBox.png
                 tex_address_mode wrap
                 scale 1.0 1.0
                 colour_op modulate
