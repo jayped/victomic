@@ -43,6 +43,10 @@ class ReplayState : public Ogre::Singleton<ReplayState>, public GameState
   void mousePressed (const OIS::MouseEvent &e, OIS::MouseButtonID id);
   void mouseReleased (const OIS::MouseEvent &e, OIS::MouseButtonID id);
 
+  bool axisMoved( const OIS::JoyStickEvent &e, int axis );
+  bool buttonPressed( const OIS::JoyStickEvent &e, int button );
+  bool buttonReleased( const OIS::JoyStickEvent &e, int button );
+
   bool frameStarted (const Ogre::FrameEvent& evt);
   bool frameEnded (const Ogre::FrameEvent& evt);
 

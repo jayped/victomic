@@ -113,6 +113,17 @@ ReplayState::mouseReleased
 {
 }
 
+bool ReplayState::axisMoved( const OIS::JoyStickEvent &e, int axis ){
+    return true;
+}
+bool ReplayState::buttonPressed( const OIS::JoyStickEvent &e, int button ){
+    return true;
+}
+bool ReplayState::buttonReleased( const OIS::JoyStickEvent &e, int button ){
+    return true;
+}
+
+
 ReplayState*
 ReplayState::getSingletonPtr ()
 {

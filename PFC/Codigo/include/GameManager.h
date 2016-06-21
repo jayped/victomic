@@ -34,7 +34,7 @@
 
 class GameState;
 
-class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManager>, public OIS::KeyListener, public OIS::MouseListener
+class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManager>, public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener
 {
  public:
   GameManager ();
@@ -111,7 +111,11 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   bool mouseMoved (const OIS::MouseEvent &e);
   bool mousePressed (const OIS::MouseEvent &e, OIS::MouseButtonID id);
   bool mouseReleased (const OIS::MouseEvent &e, OIS::MouseButtonID id);
-  
+   
+    bool axisMoved( const OIS::JoyStickEvent &e, int axis );
+    bool buttonPressed( const OIS::JoyStickEvent &e, int button );
+    bool buttonReleased( const OIS::JoyStickEvent &e, int button );
+
   // Gestor de eventos de entrada.
   InputManager *_inputMgr;
   // Estados del juego.

@@ -187,6 +187,17 @@ IntroState::mouseReleased
 {
 }
 
+bool IntroState::axisMoved( const OIS::JoyStickEvent &e, int axis ){
+    return true;
+}
+bool IntroState::buttonPressed( const OIS::JoyStickEvent &e, int button ){
+    return true;
+}
+bool IntroState::buttonReleased( const OIS::JoyStickEvent &e, int button ){
+    return true;
+}
+
+
 IntroState*
 IntroState::getSingletonPtr ()
 {
