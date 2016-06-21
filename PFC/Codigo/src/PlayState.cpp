@@ -64,7 +64,9 @@ PlayState::enter ()
 
 	_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
   
-	//_overlay = _overlayMgr->getByName("Score");
+	_overlay = _overlayMgr->getByName("TestOverlay");
+	_overlay->show();
+	//_overlayMgr->getOverlayElement("TestValue")->setCaption("holas");
 
 	// Bullet
 	_broadphase = new btDbvtBroadphase();
@@ -72,7 +74,7 @@ PlayState::enter ()
 	_dispatcher = new btCollisionDispatcher(_collisionConf);
 	_solver = new btSequentialImpulseConstraintSolver;
 	_world = new btDiscreteDynamicsWorld(_dispatcher,_broadphase,_solver,_collisionConf);
-  
+		
 	// Establecimiento propiedades del mundo
 	_world->setGravity(btVector3(0,-9,0));
 
@@ -86,6 +88,7 @@ void
 PlayState::exit ()
 {
     _sceneMgr->clearScene();
+	_listOfActors.clear();
     //_overlay->hide();
 }
 
@@ -164,6 +167,17 @@ PlayState::frameStarted
 
 	// Actualiza el estado del personaje
     _player->updateState(deltaT);
+
+	// test de colisiones
+	//_player->colision(_TESTRIGIDBODY);
+	//btCollisionAlgorithm* pAlgorithm = _world->getDispatcher()->findAlgorithm( _player->getRigitBody()->getCollisionShape(), pBulletObj2 );
+	//btManifoldResult oManifoldResult( pBulletObj1, pBulletObj2 );
+	//pAlgorithm->processCollision( pBulletObj1, pBulletObj2, pBtWorld->getDispatchInfo(), &oManifoldResult );
+	//btPersistentManifold* pManifold = oManifoldResult.getPersistentManifold();
+	// colisiones
+	int ncolisiones = colision(_player->getRigitBody());
+	
+	_overlayMgr->getOverlayElement("TestValue")->setCaption(Ogre::StringConverter::toString(ncolisiones));
 
 	return true;
 }
@@ -306,6 +320,7 @@ PlayState::mouseReleased
 
 }
 
+
 bool PlayState::axisMoved( const OIS::JoyStickEvent &e, int axis ){
     return true;
 }
@@ -322,71 +337,39 @@ bool PlayState::buttonReleased( const OIS::JoyStickEvent &e, int button ){
 // la idea es realizar varias stages que se cargen dinamicamente.
 // cada stage se correspondera con una matriz 3d realizada en un archivo de texto o hardcodeada.
 void PlayState::CreateInitialWorld() {
-  
-	// Suelo
-	_fallShape = new btBoxShape(btVector3(15.0f, 5.0f, 15.0f));
-	// bloques de choque
-	Entity *entity2 = _sceneMgr->createEntity("suelo", "World01.mesh");
-	SceneNode *node2 = _sceneMgr->getRootSceneNode()->createChildSceneNode("suelo");
-	node2->attachObject(entity2);
-
-	btRigidBody* _wallRigidBody1;
-
-	MyMotionState* fallMotionState1 = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)), node2);
-	btScalar mass = 0;
-	btVector3 fallInertia(0,0,0);
-	_fallShape->calculateLocalInertia(mass,fallInertia);
-	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI1(mass,fallMotionState1,_fallShape,fallInertia);
-	_wallRigidBody1 = new btRigidBody(fallRigidBodyCI1);
-	_world->addRigidBody(_wallRigidBody1);
-	node2->setPosition(0.0f,0.0f,0.0f);
- 
-	// ---
-
 	//Nori
-	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",0.0f,10.0f,0.0f,1);
-	
-	// piedra cesped
-	btCollisionShape *_blockShape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
-	Entity *blockEntity = _sceneMgr->createEntity("block", "Box01.mesh");
-	Actor *Actorblock = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode("block"));
-	Actorblock->attachObject(blockEntity);
-  
-	// cuerpo rigido para bullet
-	MyMotionState* blockMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(-7,8,7)), Actorblock);
-	btScalar mass_block = 0;
-	btVector3 blockFallInertia(-0,0,0);
-	_blockShape->calculateLocalInertia(mass_block,blockFallInertia);
-	btRigidBody::btRigidBodyConstructionInfo blockFallRigidBodyCI(mass_block,blockMotionState,_blockShape,blockFallInertia);
-	btRigidBody *blockRigidBody = new btRigidBody(blockFallRigidBodyCI);
-	_world->addRigidBody(blockRigidBody);
-	Actorblock->setPosition(-7.0f,8.0f,7.0f);
-	// add rigid body to nori
-	Actorblock->setRigitBody(blockRigidBody);
+	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",0.0f,10.0f,0.0f,1,0);
+	_player->initNori();
+	// ---
+	/*
+	string name="";
+	int numname=0;
+	for (int yy = 0; yy<4; yy++)
+	{
+		for (int xx = 0; xx<15; xx++)
+		{
+			name = "actor"+ to_string(numname);
+			numname++;
+			addActor(1.0f, 1.0f, 1.0f,name, "box01.mesh","", -14+(xx*2), 6 +(yy*2), -3.0f, 0, 10);
+		}
+	}
+	*/
 
-	// piedra roca
-	btCollisionShape *_rockShape = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
-	Entity *rockEntity = _sceneMgr->createEntity("rock", "RockBox.mesh");
-	Actor *ActorRock = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode("rock"));
-	ActorRock->attachObject(rockEntity);
-  
-	// cuerpo rigido para bullet
-	MyMotionState* rockMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(7,5,7)), ActorRock);
-	btScalar mass_rock = 1;
-	btVector3 rockFallInertia(-0,0,0);
-	_rockShape->calculateLocalInertia(mass_rock,rockFallInertia);
-	btRigidBody::btRigidBodyConstructionInfo rockFallRigidBodyCI(mass_rock,rockMotionState,_rockShape,rockFallInertia);
-	btRigidBody *rockRigidBody = new btRigidBody(rockFallRigidBodyCI);
-	_world->addRigidBody(rockRigidBody);
-	ActorRock->setPosition(7.0f,5.0f,7.0f);
-	// add rigid body to nori
-	ActorRock->setRigitBody(rockRigidBody);
+	addActor(15.0f, 5.0f, 15.0f,"suelo", "World01.mesh","",0.0f,0.0f,0.0f,0,11);
+	addActor(1.0f, 1.0f, 1.0f,"block", "box01.mesh","",-7.0f,8.0f,7.0f,0,10);
+	
+	addActor(1.0f, 1.0f, 1.0f,"rock1", "FragileRockBox.mesh","",0.0f,8.0f,8.0f,0,6);
+	addActor(1.0f, 1.0f, 1.0f,"rock2", "SolidBox.mesh","",		2.0f,8.0f,8.0f,0,6);
+	addActor(1.0f, -.33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",	4.0f,10.0f,7.0f,0,6);
+	addActor(1.0f, -.33f, 1.0f,"rock4", "SwitchBox.mesh","",		6.0f,10.0f,7.0f,0,6);
+	addActor(1.0f, 1.0f, 1.0f,"rock5", "TransparentBox.mesh","",8.0f,8.0f,8.0f,0,6);
+
 
 }
 
 Actor *
 PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEntity, string meshName, string nameAnimation,
-					double aMotionPosX,double aMotionPosY,double aMotionPosZ, btScalar aMass)
+					double aMotionPosX,double aMotionPosY,double aMotionPosZ, btScalar aMass, int aFlags)
 {
 
 	btCollisionShape *newFallShape = new btBoxShape(btVector3(aShapeX, aShapeY, aShapeZ));
@@ -406,9 +389,87 @@ PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEnt
 	newActor->setPosition(aMotionPosX,aMotionPosY,aMotionPosZ);
 	// add rigid body to nori
 	newActor->setRigitBody(newFallRigidBody);
+	newFallRigidBody->setFlags(aFlags);
+
+	// añadido el actor a la lista general de actores.
+	_actorsIt = _listOfActors.end();
+	_listOfActors.insert(_actorsIt,newActor);
 
 	return newActor;
 
+}
+
+int
+PlayState::colision(btCollisionObject *aObject)
+{
+
+	btRigidBody* rigidCollision = NULL;
+	int colisionesNori=0;
+	int numManifolds = _world->getDispatcher()->getNumManifolds();
+	for (int i = 0; i < numManifolds; i++)
+	{
+		btPersistentManifold* contactManifold = _world->getDispatcher()->getManifoldByIndexInternal(i);
+		btRigidBody* obA = (btRigidBody*)contactManifold->getBody0();
+		btRigidBody* obB = (btRigidBody*)contactManifold->getBody1();
+		
+		int numContacts = contactManifold->getNumContacts();
+		for (int j = 0; j < numContacts; j++)
+		{
+			btManifoldPoint& pt = contactManifold->getContactPoint(j);
+			if (pt.getDistance() < 0.f)
+			{
+				int flagA = obA->getFlags();
+				int flagB = obB->getFlags();
+				int x = 0;
+				/*
+				if (obA->getFlags() == 0){
+					if (obB->getFlags() == 6)
+					{
+						colisionesNori = numContacts;
+						double centroDeMasasA = obA->getCenterOfMassPosition().getY();
+						double centroDeMasasB = obB->getCenterOfMassPosition().getY();
+						if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.76) &&
+							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 2.74))
+							//obA->applyCentralImpulse(btVector3(0,0.5,0));
+						{
+							Actor *iteratorDelete;
+							for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
+							{
+								iteratorDelete = *it;
+								if (iteratorDelete->getRigitBody()==obB)
+								{
+									Ogre::SceneNode *_paraBorrar = dynamic_cast<Ogre::SceneNode*> (iteratorDelete);
+									//_sceneMgr->getRootSceneNode()->detachObject(_paraBorrar);
+									int numeroHijos = _paraBorrar->numAttachedObjects();
+									Entity *ent = static_cast<Entity*>(_paraBorrar->detachObject(unsigned short (0)));
+									_sceneMgr->destroyEntity(ent);
+									_sceneMgr->destroySceneNode(_paraBorrar);
+								}
+								 
+							}
+							_world->removeRigidBody(obB);
+							delete obB;
+						}
+					}
+				
+				
+				
+				}
+*/
+				if (obB->getFlags() == 0){
+					if (obA->getFlags() == 6)
+					{
+						obB->applyCentralImpulse(btVector3(0,0.5,0));
+						double centroDeMasasA = obA->getCenterOfMassPosition().getY();
+						double centroDeMasasB = obB->getCenterOfMassPosition().getY();
+					}
+				}
+
+			}
+		}
+	}
+
+	return colisionesNori;//numManifolds;
 }
 
 // End Adding methods -------------------------------------
