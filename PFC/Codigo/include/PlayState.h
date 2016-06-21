@@ -62,7 +62,8 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void createStage();
   void initCameras();
   Actor *addActor(double aShapeX,double aShapeY,double aShapeZ, std::string nameEntity, std::string meshName, std::string nameAnimation,
-					double aMotionPosX,double aMotionPosY,double aMotionPosZ, btScalar aMass);
+					double aMotionPosX,double aMotionPosY,double aMotionPosZ, btScalar aMass, int aFlags);
+  int colision(btCollisionObject *aObject);
 
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
@@ -106,7 +107,10 @@ private:
   Actor *_player;
   MakeCamera *_makeCamera;
   bool _storeMove[4]; //0. down, 1. right, 2. up, 3. left.
-
+  btRigidBody *_TESTRIGIDBODY;
+  std::list<Actor *> _listOfActors;
+  std::list<Actor *>::iterator _actorsIt;
+	
 	private:
     bool isInitialMove;
     bool isStop;
