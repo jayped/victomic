@@ -16,6 +16,10 @@ void Actor::init()
 	_currentSpeed=0.0F;
 	_state = _stay;
 	
+}
+
+void Actor::initNori()
+{
 	Ogre::Root *_root = Ogre::Root::getSingletonPtr();
 	Ogre::SceneManager *_sceneMgr = _root->getSceneManager("SceneManager");
 
@@ -35,7 +39,6 @@ void Actor::init()
 	Ogre::Entity *_actorEntity = reinterpret_cast<Ogre::Entity *>(this->getAttachedObject("nori"));
 	_animation = _actorEntity->getAnimationState("Walking");
     _animation->setEnabled(false); 
-
 }
 
 void
