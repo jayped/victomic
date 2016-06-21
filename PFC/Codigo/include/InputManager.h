@@ -25,7 +25,7 @@
 #include <OIS/OIS.h>
 
 // Gestor para los eventos de entrada (teclado y ratón).
-class InputManager : public Ogre::Singleton<InputManager>, public OIS::KeyListener, public OIS::MouseListener {
+class InputManager : public Ogre::Singleton<InputManager>, public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener {
  public:
   InputManager ();
   virtual ~InputManager ();
@@ -38,44 +38,72 @@ class InputManager : public Ogre::Singleton<InputManager>, public OIS::KeyListen
 			 const std::string& instanceName);
   void addMouseListener (OIS::MouseListener *mouseListener,
 			   const std::string& instanceName );
+  void addJoystickListener( OIS::JoyStickListener *joystickListener, 
+                const std::string& instanceName );
 
   void removeKeyListener (const std::string& instanceName);
   void removeMouseListener (const std::string& instanceName);
+  void removeJoystickListener( const std::string& instanceName );
+
   void removeKeyListener (OIS::KeyListener *keyListener);
   void removeMouseListener (OIS::MouseListener *mouseListener);
+  void removeJoystickListener( OIS::JoyStickListener *joystickListener );
+
+
   
   void removeAllListeners ();
   void removeAllKeyListeners ();
   void removeAllMouseListeners ();
+  void removeAllJoystickListeners( void );
+
   
   void setWindowExtents (int width, int height);
 
   OIS::Keyboard* getKeyboard ();
   OIS::Mouse* getMouse ();
+  OIS::JoyStick* getJoystick( unsigned int index );
+
+  int getNumOfJoysticks( void );
+
+
 
   // Heredados de Ogre::Singleton.
   static InputManager& getSingleton ();
   static InputManager* getSingletonPtr ();
 
- private:
-  bool keyPressed (const OIS::KeyEvent &e);
-  bool keyReleased (const OIS::KeyEvent &e);
+private:
+    bool keyPressed (const OIS::KeyEvent &e);
+    bool keyReleased (const OIS::KeyEvent &e);
   
-  bool mouseMoved (const OIS::MouseEvent &e);
-  bool mousePressed (const OIS::MouseEvent &e, 
-		     OIS::MouseButtonID id);
-  bool mouseReleased (const OIS::MouseEvent &e,
-		      OIS::MouseButtonID id);
-  
-  OIS::InputManager *_inputSystem;
-  OIS::Keyboard *_keyboard;
-  OIS::Mouse *_mouse;
+    bool mouseMoved (const OIS::MouseEvent &e);
+    bool mousePressed (const OIS::MouseEvent &e, OIS::MouseButtonID id);
+    bool mouseReleased (const OIS::MouseEvent &e, OIS::MouseButtonID id);
 
-  std::map<std::string, OIS::KeyListener*> _keyListeners;
-  std::map<std::string, OIS::MouseListener*> _mouseListeners;
-  std::map<std::string, OIS::KeyListener*>::iterator itKeyListener;
-  std::map<std::string, OIS::MouseListener*>::iterator itMouseListener;
-  std::map<std::string, OIS::KeyListener*>::iterator itKeyListenerEnd;
-  std::map<std::string, OIS::MouseListener*>::iterator itMouseListenerEnd;
+    bool povMoved( const OIS::JoyStickEvent &e, int pov );
+    bool axisMoved( const OIS::JoyStickEvent &e, int axis );
+    bool sliderMoved( const OIS::JoyStickEvent &e, int sliderID );
+    bool buttonPressed( const OIS::JoyStickEvent &e, int button );
+    bool buttonReleased( const OIS::JoyStickEvent &e, int button );
+  
+    OIS::InputManager *_inputSystem;
+    OIS::Keyboard *_keyboard;
+    OIS::Mouse *_mouse;
+
+    std::vector<OIS::JoyStick*> mJoysticks;
+    std::vector<OIS::JoyStick*>::iterator itJoystick;
+    std::vector<OIS::JoyStick*>::iterator itJoystickEnd;
+
+    std::map<std::string, OIS::KeyListener*> _keyListeners;
+    std::map<std::string, OIS::MouseListener*> _mouseListeners;
+    std::map<std::string, OIS::JoyStickListener*> mJoystickListeners;
+
+    std::map<std::string, OIS::KeyListener*>::iterator itKeyListener;
+    std::map<std::string, OIS::MouseListener*>::iterator itMouseListener;
+    std::map<std::string, OIS::JoyStickListener*>::iterator itJoystickListener;
+
+    std::map<std::string, OIS::KeyListener*>::iterator itKeyListenerEnd;
+    std::map<std::string, OIS::MouseListener*>::iterator itMouseListenerEnd;
+    std::map<std::string, OIS::JoyStickListener*>::iterator itJoystickListenerEnd;
+
 };
 #endif
