@@ -21,6 +21,7 @@ public:
     
 	enum states {_stay, _jumping, _falling};
 	void init();
+	void initNori();
 	void setRigitBody(btRigidBody *myRigitBody);
 	btRigidBody* getRigitBody();
 	void destroyRigitBody();
