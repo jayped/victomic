@@ -20,8 +20,7 @@ public:
     ~Actor();
     
 	enum states {_stay, _jumping, _falling};
-	void init();
-	void initNori();
+	void init(int aType);
 	void setRigitBody(btRigidBody *myRigitBody);
 	btRigidBody* getRigitBody();
 	void destroyRigitBody();
