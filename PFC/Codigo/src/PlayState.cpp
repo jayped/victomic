@@ -339,7 +339,7 @@ bool PlayState::buttonReleased( const OIS::JoyStickEvent &e, int button ){
 void PlayState::CreateInitialWorld() {
 	//Nori
 	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",0.0f,10.0f,0.0f,1,0);
-	_player->initNori();
+	//_player->initNori();
 	// ---
 	/*
 	string name="";
@@ -360,10 +360,10 @@ void PlayState::CreateInitialWorld() {
 	
 	addActor(1.0f, 1.0f, 1.0f,"rock1", "FragileRockBox.mesh","",0.0f,8.0f,8.0f,0,6);
 	addActor(1.0f, 1.0f, 1.0f,"rock2", "SolidBox.mesh","",		2.0f,8.0f,8.0f,0,6);
-	addActor(1.0f, -.33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",	4.0f,10.0f,7.0f,0,6);
-	addActor(1.0f, -.33f, 1.0f,"rock4", "SwitchBox.mesh","",		6.0f,10.0f,7.0f,0,6);
+	addActor(1.0f, -.33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",	4.0f,10.0f,8.0f,0,6);
+	addActor(1.0f, -.33f, 1.0f,"rock4", "SwitchBox.mesh","",		6.0f,10.0f,8.0f,0,6);
 	addActor(1.0f, 1.0f, 1.0f,"rock5", "TransparentBox.mesh","",8.0f,8.0f,8.0f,0,6);
-
+	addActor(1.0f, 1.0f, 1.0f,"rock6", "RockBox.mesh","",8.0f,10.0f,8.0f,1,6);
 
 }
 
@@ -377,7 +377,7 @@ PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEnt
 	//SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode(name);
 	Actor *newActor = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode(nameEntity));
 	newActor->attachObject(entity);
-	newActor->init();
+	newActor->init(aFlags);
   
 	// cuerpo rigido para bullet
 	MyMotionState* newFallMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(aMotionPosX,aMotionPosY,aMotionPosZ)), newActor);
