@@ -11,34 +11,52 @@ Actor::Actor(Ogre::SceneManager *creator, const Ogre::String & name):Ogre::Scene
 Actor::~Actor()
 {
 }
-void Actor::init()
+void Actor::init(int aType)
 {
 	_currentSpeed=0.0F;
 	_state = _stay;
 	
-}
+				Ogre::Root *_root = Ogre::Root::getSingletonPtr();
+				Ogre::SceneManager *_sceneMgr = _root->getSceneManager("SceneManager");
+				Ogre::Entity *_actorEntity;
+	switch (aType)
+	{
+		case 0: //Nori
 
-void Actor::initNori()
-{
-	Ogre::Root *_root = Ogre::Root::getSingletonPtr();
-	Ogre::SceneManager *_sceneMgr = _root->getSceneManager("SceneManager");
+				// Particulas de caminar
+				smokeParticle = _sceneMgr->createParticleSystem("Smoke", "Smoke");
+				smokeParticle->setEmitting(false);
+				particleNode = this->createChildSceneNode("Particle");
+				particleNode->attachObject(smokeParticle);
 
-	// Particulas de caminar
-	smokeParticle = _sceneMgr->createParticleSystem("Smoke", "Smoke");
-	smokeParticle->setEmitting(false);
-	particleNode = this->createChildSceneNode("Particle");
-	particleNode->attachObject(smokeParticle);
+				// Particulas de saltar
+				jumpParticle = _sceneMgr->createParticleSystem("jumpSmoke", "jumpSmoke");
+				jumpParticle->setEmitting(false);
+				jumpParticleNode = this->createChildSceneNode("ParticleJump");
+				jumpParticleNode->attachObject(jumpParticle);
 
-	// Particulas de saltar
-	jumpParticle = _sceneMgr->createParticleSystem("jumpSmoke", "jumpSmoke");
-	jumpParticle->setEmitting(false);
-	jumpParticleNode = this->createChildSceneNode("ParticleJump");
-	jumpParticleNode->attachObject(jumpParticle);
-
-    //animación Nori
-	Ogre::Entity *_actorEntity = reinterpret_cast<Ogre::Entity *>(this->getAttachedObject("nori"));
-	_animation = _actorEntity->getAnimationState("Walking");
-    _animation->setEnabled(false); 
+				//animación Nori
+				_actorEntity = reinterpret_cast<Ogre::Entity *>(this->getAttachedObject("nori"));
+				_animation = _actorEntity->getAnimationState("Walking");
+				_animation->setEnabled(false);
+				break;
+		case 1: // Bloque Suelo de Escenario
+			break;
+		case 2: // Bloque Construccion de Escenario
+			break;
+		case 3: // Piedra movil
+			break;
+		case 4: // Bloque fragil
+			break;
+		case 5: // Interruptor
+			break;
+		case 6: // Bloque transparente
+			break;
+		case 7: // Bloque solido
+			break;
+		case 8: // Meta de escenario
+			break;
+	}
 }
 
 void
