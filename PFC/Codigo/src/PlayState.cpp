@@ -64,8 +64,8 @@ PlayState::enter ()
 
 	_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
   
-	_overlay = _overlayMgr->getByName("TestOverlay");
-	_overlay->show();
+	//_overlay = _overlayMgr->getByName("TestOverlay");
+	//_overlay->show();
 	//_overlayMgr->getOverlayElement("TestValue")->setCaption("holas");
 
 	// Bullet
@@ -124,22 +124,38 @@ PlayState::frameStarted
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_ESCAPE)) return false;
 
 	/// Movimiento de Nori
-	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_K)) {
+	if (_gameMgr->isDownMov()) {
 		_player->move((int)_down, _makeCamera->getCameraPosition());
 		_storeMove[0]=true;
 	}
-	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_L)) {
+    else
+    {
+        _storeMove[0]=false;
+    }
+	if (_gameMgr->isRightMov()) {
 		_player->move((int)_right, _makeCamera->getCameraPosition());
 		_storeMove[1]=true;
 	}
-	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_I)) {
+    else
+    {
+        _storeMove[1]=false;
+    }
+	if (_gameMgr->isUpMov()) {
 		_player->move((int)_up, _makeCamera->getCameraPosition());
 		_storeMove[2]=true;
 	}
-	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_J)) {
+    else
+    {
+        _storeMove[2]=false;
+    }
+	if (_gameMgr->isLeftMov()) {
 		_player->move((int)_left, _makeCamera->getCameraPosition());
 		_storeMove[3]=true;
 	}
+    else
+    {
+        _storeMove[3]=false;
+    }
 	// fin movimiento nori.
   
 	// [!] Key Test
@@ -270,22 +286,6 @@ PlayState::keyReleased
     _root->getAutoCreatedWindow()->removeAllViewports();
 	_exitGame = true;
   }
-
-  	/// Movimiento de Nori
-	if (e.key == OIS::KC_K) {
-		_storeMove[0]=false;
-	}
-	if (e.key == OIS::KC_L) {
-		_storeMove[1]=false;
-	}
-	if (e.key == OIS::KC_I) {
-		_storeMove[2]=false;
-	}
-	if (e.key == OIS::KC_J) {
-		_storeMove[3]=false;
-	}
-
-
 }
 
 void

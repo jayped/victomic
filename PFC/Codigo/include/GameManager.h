@@ -32,6 +32,8 @@
 
 #include "InputManager.h"
 
+#define JOYSTICK_MAX_AXIS 32767
+
 class GameState;
 
 class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManager>, public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener
@@ -89,6 +91,11 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   void playGun();
   void playEnd();
 
+    bool isRightMov();
+    bool isLeftMov();
+    bool isUpMov();
+    bool isDownMov();
+
  protected:
   Ogre::Root* _root;
   Ogre::SceneManager* _sceneManager;
@@ -118,6 +125,11 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
 
   // Gestor de eventos de entrada.
   InputManager *_inputMgr;
+    
+    bool _isRightMov;
+    bool _isLeftMov;
+    bool _isUpMov;
+    bool _isDownMov;
   // Estados del juego.
   std::stack<GameState*> _states;
 

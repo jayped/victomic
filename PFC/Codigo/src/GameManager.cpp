@@ -13,6 +13,10 @@ template<> GameManager* Ogre::Singleton<GameManager>::msSingleton = 0;
 GameManager::GameManager ()
 {
   _root = 0;
+  _isRightMov = false;
+  _isLeftMov = false;
+  _isDownMov = false;
+  _isUpMov = false;
 }
 
 GameManager::~GameManager ()
@@ -304,20 +308,44 @@ GameManager::frameEnded
   return _states.top()->frameEnded(evt);
 }
 
-bool
-GameManager::keyPressed 
-(const OIS::KeyEvent &e)
-{
-  _states.top()->keyPressed(e);
-  return true;
+bool GameManager::keyPressed (const OIS::KeyEvent &e){
+    
+    _states.top()->keyPressed(e);
+
+    if (e.key == OIS::KC_K) {
+        _isDownMov = true;
+    }
+    if (e.key == OIS::KC_L) {
+        _isRightMov = true;
+    }
+    if (e.key == OIS::KC_J) {
+        _isLeftMov = true;
+    }
+    if (e.key == OIS::KC_I) {
+        _isUpMov = true;
+    }
+
+    return true;
 }
 
-bool
-GameManager::keyReleased
-(const OIS::KeyEvent &e)
-{
-  _states.top()->keyReleased(e);
-  return true;
+bool GameManager::keyReleased(const OIS::KeyEvent &e){
+    
+    _states.top()->keyReleased(e);
+
+    if (e.key == OIS::KC_K) {
+        _isDownMov = false;
+    }
+    if (e.key == OIS::KC_L) {
+        _isRightMov = false;
+    }
+    if (e.key == OIS::KC_J) {
+        _isLeftMov = false;
+    }
+    if (e.key == OIS::KC_I) {
+        _isUpMov = false;
+    }
+    
+    return true;
 }
 
 bool
@@ -345,13 +373,122 @@ GameManager::mouseReleased
 }
 
 bool GameManager::axisMoved( const OIS::JoyStickEvent &e, int axis ){
+    
+    if(axis == 0 && e.state.mAxes[axis].abs < 0){
+        //stick analógico hacia arriba
+        if(e.state.mAxes[axis].abs <= -JOYSTICK_MAX_AXIS*0.6){
+            if(_isUpMov == false)
+                _isUpMov = true;
+        }
+    }
+    if(axis == 0 && e.state.mAxes[axis].abs > 0){
+        //stick analógico hacia abajo
+        if(e.state.mAxes[axis].abs >= JOYSTICK_MAX_AXIS*0.6){
+            if(_isDownMov == false)
+                _isDownMov = true;
+        }
+    }
+    if(axis == 1 && e.state.mAxes[axis].abs < 0){
+        //stick analógico hacia la izquierda
+        if(e.state.mAxes[axis].abs <= -JOYSTICK_MAX_AXIS*0.6){
+            if(_isLeftMov == false)
+                _isLeftMov = true;
+        }
+    }
+    if(axis == 1 && e.state.mAxes[axis].abs > 0){
+        //stick analógico hacia la derecha
+        if(e.state.mAxes[axis].abs >= JOYSTICK_MAX_AXIS*0.6){
+            if(_isRightMov == false)
+                _isRightMov = true;
+        }
+    }
+
+    if(axis == 0 && abs(e.state.mAxes[axis].abs) <= JOYSTICK_MAX_AXIS*0.3){
+        //Ni arriba ni abajo
+        _isUpMov = false;
+        _isDownMov = false;
+    }
+    if(axis == 1 && abs(e.state.mAxes[axis].abs) <= JOYSTICK_MAX_AXIS*0.3){
+        //Ni izquierda ni derecha
+        _isRightMov = false;
+        _isLeftMov = false;
+    }
+
     return true;
 }
 bool GameManager::buttonPressed( const OIS::JoyStickEvent &e, int button ){
+    OIS::KeyCode keyPressed = OIS::KC_UNASSIGNED;
+
+    switch(button){
+        case 0:
+            //Se pulsa el botón 1
+            //Si está en el estado intro, empezará a jugar, y si está en estado play, saltará
+             keyPressed = OIS::KC_SPACE;
+            break;
+        case 1:
+            //Se pulsa el botón 2
+            //Si está jugando se irá al estado pausa
+            keyPressed = OIS::KC_P;
+            break;
+        case 2:
+            //Se pulsa el botón 3
+            break;
+        case 3:
+            //Se pulsa el botón 4
+            break;
+        case 4:
+            //Se pulsa L1
+            //Si está jugando la cámara girará a la izquierda
+            keyPressed = OIS::KC_LEFT;
+            break;
+        case 5:
+            //Se pulsa R1
+            //Si está jugando la cámara girará a la derecha
+            keyPressed = OIS::KC_RIGHT;
+            break;
+        case 6:
+            //Se pulsa BACK
+            keyPressed = OIS::KC_ESCAPE;
+            break;
+        case 7:
+            //Se pulsa START
+            keyPressed = OIS::KC_SPACE;
+            break;            
+        case 8:
+            //Se pulsa el stick analógico de la izquierda
+            break;
+        case 9:
+            //Se pulsa el stick analógico de la derecha
+            break;
+        default:
+            break;
+    }
+    if( keyPressed !=  OIS::KC_UNASSIGNED && keyPressed !=  OIS::KC_ESCAPE){
+        OIS::KeyEvent kevent(NULL, keyPressed, 1);
+        _states.top()->keyPressed( kevent );
+    }  
+    else if(keyPressed ==  OIS::KC_ESCAPE){
+        OIS::KeyEvent kevent(NULL, keyPressed, 1);
+        _states.top()->keyReleased( kevent );
+    }
     return true;
 }
 bool GameManager::buttonReleased( const OIS::JoyStickEvent &e, int button ){
+    //_states.top()->buttonReleased(e, button);
     return true;
+}
+
+bool GameManager::isRightMov(){
+    return _isRightMov;
+}
+bool GameManager::isLeftMov(){
+    return _isLeftMov;
+}
+bool GameManager::isUpMov(){
+    return _isUpMov;
+}
+bool GameManager::isDownMov(){
+    return _isDownMov;
 }
 
 bool
