@@ -64,8 +64,8 @@ PlayState::enter ()
 
 	_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
   
-	//_overlay = _overlayMgr->getByName("TestOverlay");
-	//_overlay->show();
+	_overlay = _overlayMgr->getByName("TestOverlay");
+	_overlay->show();
 	//_overlayMgr->getOverlayElement("TestValue")->setCaption("holas");
 
 	// Bullet
@@ -193,7 +193,7 @@ PlayState::frameStarted
 	// colisiones
 	int ncolisiones = colision(_player->getRigitBody());
 	
-	_overlayMgr->getOverlayElement("TestValue")->setCaption(Ogre::StringConverter::toString(ncolisiones));
+	//_overlayMgr->getOverlayElement("TestValue")->setCaption(Ogre::StringConverter::toString(ncolisiones));
 
 	return true;
 }
