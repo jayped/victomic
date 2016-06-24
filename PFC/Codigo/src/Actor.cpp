@@ -16,9 +16,14 @@ void Actor::init(int aType)
 	_currentSpeed=0.0F;
 	_state = _stay;
 	
-				Ogre::Root *_root = Ogre::Root::getSingletonPtr();
-				Ogre::SceneManager *_sceneMgr = _root->getSceneManager("SceneManager");
-				Ogre::Entity *_actorEntity;
+	Ogre::Root *_root = Ogre::Root::getSingletonPtr();
+	Ogre::SceneManager *_sceneMgr = _root->getSceneManager("SceneManager");
+	Ogre::Entity *_actorEntity;
+	
+	_activated = false;
+	_counter = 1;
+	_type = aType;
+
 	switch (aType)
 	{
 		case 0: //Nori
@@ -289,6 +294,42 @@ Actor::setAnimationTime(Ogre::Real aAnimationTime)
 		_animation->addTime(aAnimationTime);
     } 
 }
+
+void
+Actor::setActivated(bool aActivated)
+{
+	_activated = aActivated;
+}
+
+bool
+Actor::getActivated()
+{
+	return _activated;
+}
+
+double
+Actor::getCounter()
+{
+	return _counter;
+}
+
+void
+Actor::updateCounter(double aDeltaT)
+{
+	_counter-=aDeltaT;
+}
+
+int
+Actor::getType()
+{
+	return _type;
+}
+
+
+
+
+
+
 
 /*
 void
