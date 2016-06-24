@@ -193,6 +193,7 @@ PlayState::frameStarted
 	// colisiones
 	int ncolisiones = colision(_player->getRigitBody());
 	
+	processActors(deltaT);
 	//_overlayMgr->getOverlayElement("TestValue")->setCaption(Ogre::StringConverter::toString(ncolisiones));
 
 	return true;
@@ -338,7 +339,7 @@ bool PlayState::buttonReleased( const OIS::JoyStickEvent &e, int button ){
 // cada stage se correspondera con una matriz 3d realizada en un archivo de texto o hardcodeada.
 void PlayState::CreateInitialWorld() {
 	//Nori
-	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",0.0f,10.0f,0.0f,1,0);
+	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",0.0f,10.0f,0.0f,0.0f,10.0f,0.0f,1,0);
 	//_player->initNori();
 	// ---
 	/*
@@ -350,26 +351,45 @@ void PlayState::CreateInitialWorld() {
 		{
 			name = "actor"+ to_string(numname);
 			numname++;
-			addActor(1.0f, 1.0f, 1.0f,name, "box01.mesh","", -14+(xx*2), 6 +(yy*2), -3.0f, 0, 10);
+			addActor(1.0f, 1.0f, 1.0f,name, "box01.mesh","", -14+(xx*2), 6 +(yy*2), -10.0f+(yy*2), -14+(xx*2), 6 +(yy*2), -10.0f+(yy*2),0, 10);
 		}
 	}
 	*/
 
-	addActor(15.0f, 5.0f, 15.0f,"suelo", "World01.mesh","",0.0f,0.0f,0.0f,0,11);
-	addActor(1.0f, 1.0f, 1.0f,"block", "box01.mesh","",-7.0f,8.0f,7.0f,0,10);
+	addActor(15.0f, 5.0f, 15.0f,"suelo", "World01.mesh","",		0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0,1);
+	addActor(1.0f, 1.0f, 1.0f,"block", "box01.mesh","",			-7.0f,8.0f,7.0f,-7.0f,8.0f,7.0f,0,2);
+	addActor(1.0f, 1.0f, 1.0f,"rock6", "RockBox.mesh","",		-7.0f,12.0f,7.0f,-7.0f,12.0f,7.0f,1,3);
+	addActor(1.0f, 1.0f, 1.0f,"rockc6", "RockBox.mesh","",		-7.0f,14.0f,7.0f,-7.0f,14.0f,7.0f,1,3);
+	addActor(1.0f, 1.0f, 1.0f,"rockd6", "RockBox.mesh","",		14.0f,6.0f,4.0f,14.0f,6.0f,4.0f,1,3);
+	addActor(1.0f, .33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",		4.0f,6.0f-.66,-14.0f,4.0f,6.0f-.66,-14.0f,0,8);
 	
-	addActor(1.0f, 1.0f, 1.0f,"rock1", "FragileRockBox.mesh","",0.0f,8.0f,8.0f,0,6);
-	addActor(1.0f, 1.0f, 1.0f,"rock2", "SolidBox.mesh","",		2.0f,8.0f,8.0f,0,6);
-	addActor(1.0f, -.33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",	4.0f,10.0f,8.0f,0,6);
-	addActor(1.0f, -.33f, 1.0f,"rock4", "SwitchBox.mesh","",		6.0f,10.0f,8.0f,0,6);
-	addActor(1.0f, 1.0f, 1.0f,"rock5", "TransparentBox.mesh","",8.0f,8.0f,8.0f,0,6);
-	addActor(1.0f, 1.0f, 1.0f,"rock6", "RockBox.mesh","",8.0f,10.0f,8.0f,1,6);
+	addActor(1.0f, 1.0f, 1.0f,"dww", "RockBox.mesh","",	4.0f,	10.0f,		0.0f,	4.0f,	10.0f,		0.0f,1,3);
+	addActor(1.0f, 1.0f, 1.0f,"d", "FragileRockBox.mesh","",	4.0f,	6.0f,		0.0f,	4.0f,	6.0f,		0.0f,0,4);
+	addActor(1.0f, 1.0f, 1.0f,"dd", "FragileRockBox.mesh","",	6.0f,	6.0f,		0.0f,	6.0f,	6.0f,		0.0f,0,4);
+	addActor(1.0f, .33f, 1.0f,"e", "SwitchBox.mesh","",		    -10.0f,	6.0f-.66,	-14.0f,	-10.0f,	6.0f-.66,	-14.0f-.66,0,5);
+	
+	addActor(.0f, .0f, .0f,"g", "TransparentBox.mesh","",	-6.0f,	6.0f,		-14.0f,	-6.0f,	6.0f,		-14.0f,0,6);
+	addActor(1.0f, 1.0f, 1.0f,"h", "SolidBox.mesh","",			-2.0f,	6.0f,		-14.0f,	-2.0f,	6.0f,		-14.0f,0,7);
+	
+	//addActor(1.0f, 1.0f, 1.0f,"a", "box01.mesh","",			-7.0f,10.0f,7.0f,-7.0f,10.0f,7.0f,0,2);
+	//addActor(1.0f, 1.0f, 1.0f,"b", "RockBox.mesh","",		0.0f,14.0f,0.0f,0.0f,14.0f,0.0f,1,3);
+	//addActor(1.0f, 1.0f, 1.0f,"c", "RockBox.mesh","",		0.0f,16.0f,0.0f,0.0f,16.0f,0.0f,1,3);
+	//addActor(1.0f, .33f, 1.0f,"f", "SwitchBaseBox.mesh","",		4.0f,6.0f-.66,-10.0f,4.0f,6.0f-.66,-10.0f,0,8);
+	
+	// 1: // Bloque Suelo de Escenario
+	// 2: // Bloque Construccion de Escenario
+	// 3: // Piedra movil
+	// 4: // Bloque fragil
+	// 5: // Interruptor
+	// 6: // Bloque transparente
+	// 7: // Bloque solido
+	// 8: // Meta de escenario
 
 }
 
 Actor *
 PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEntity, string meshName, string nameAnimation,
-					double aMotionPosX,double aMotionPosY,double aMotionPosZ, btScalar aMass, int aFlags)
+					double aMotionPosX,double aMotionPosY,double aMotionPosZ, double aObjectPosX,double aObjectPosY,double aObjectPosZ, btScalar aMass, int aFlags)
 {
 
 	btCollisionShape *newFallShape = new btBoxShape(btVector3(aShapeX, aShapeY, aShapeZ));
@@ -386,7 +406,7 @@ PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEnt
 	btRigidBody::btRigidBodyConstructionInfo newFallRigidBodyCI(aMass,newFallMotionState,newFallShape,newFallInertia);
 	btRigidBody *newFallRigidBody = new btRigidBody(newFallRigidBodyCI);
 	_world->addRigidBody(newFallRigidBody);
-	newActor->setPosition(aMotionPosX,aMotionPosY,aMotionPosZ);
+	newActor->setPosition(aObjectPosX,aObjectPosY,aObjectPosZ);
 	// add rigid body to nori
 	newActor->setRigitBody(newFallRigidBody);
 	newFallRigidBody->setFlags(aFlags);
@@ -421,10 +441,87 @@ PlayState::colision(btCollisionObject *aObject)
 				int flagA = obA->getFlags();
 				int flagB = obB->getFlags();
 				int x = 0;
-				/*
-				if (obA->getFlags() == 0){
-					if (obB->getFlags() == 6)
+				
+				// 3: // Piedra movil
+				// 4: // Bloque fragil
+				// 5: // Interruptor
+				// 6: // Bloque transparente
+				// 7: // Bloque solido
+				// 8: // Meta de escenario
+
+				// 3 Piedra movil
+				if ((obA->getFlags() == 0) && (obB->getFlags() == 3))
+				{
+					colisionesNori = numContacts;
+					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
+					double centroDeMasasB = obB->getCenterOfMassPosition().getY();
+					if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.76) &&
+							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 2.04))
 					{
+						int x=0;
+					}
+				}				
+
+				// 4 Bloque fragil
+				if ((obA->getFlags() == 0) && (obB->getFlags() == 4))
+				{
+					colisionesNori = numContacts;
+					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
+					double centroDeMasasB = obB->getCenterOfMassPosition().getY();
+					if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.76) &&
+							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 2.04))
+					{
+						colisionesNori = numContacts;
+						double centroDeMasasA = obA->getCenterOfMassPosition().getY();
+						double centroDeMasasB = obB->getCenterOfMassPosition().getY();
+						if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.76) &&
+							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 2.74))
+							//obA->applyCentralImpulse(btVector3(0,0.5,0));
+						{
+							Actor *iteratorDelete;
+							for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
+							{
+								iteratorDelete = *it;
+								if (iteratorDelete->getRigitBody()==obB)
+								{
+									iteratorDelete->setActivated(true); // marcado para eliminar en unos segundos.
+								}
+								 
+							}
+						}
+					}
+				}				
+
+				// 5 Interruptor
+				if ((obA->getFlags() == 0) && (obB->getFlags() == 5))
+				{
+					colisionesNori = numContacts;
+					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
+					double centroDeMasasB = obB->getCenterOfMassPosition().getY();
+					if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.07) &&
+							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 2.04))
+					{
+						int x=0;
+					}
+				}				
+
+				// 8 Meta de escenario
+				if ((obA->getFlags() == 0) && (obB->getFlags() == 8))
+				{
+					colisionesNori = numContacts;
+					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
+					double centroDeMasasB = obB->getCenterOfMassPosition().getY();
+					if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.07) &&
+							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 2.04))
+					{
+						// Codigo final fase.
+						changeState(ReplayState::getSingletonPtr());
+					}
+				}				
+
+				/*
+				if ((obA->getFlags() == 0) && (obB->getFlags() == 3))
+				{
 						colisionesNori = numContacts;
 						double centroDeMasasA = obA->getCenterOfMassPosition().getY();
 						double centroDeMasasB = obB->getCenterOfMassPosition().getY();
@@ -450,26 +547,96 @@ PlayState::colision(btCollisionObject *aObject)
 							_world->removeRigidBody(obB);
 							delete obB;
 						}
-					}
+					}*/
 				
 				
 				
-				}
-*/
-				if (obB->getFlags() == 0){
-					if (obA->getFlags() == 6)
-					{
-						obB->applyCentralImpulse(btVector3(0,0.5,0));
-						double centroDeMasasA = obA->getCenterOfMassPosition().getY();
-						double centroDeMasasB = obB->getCenterOfMassPosition().getY();
-					}
-				}
+				
+
 
 			}
 		}
 	}
 
 	return colisionesNori;//numManifolds;
+}
+
+// LLamada en cada frame, modifica el estado de cada elemento de escena, segun ocurran ciertos eventos.
+void
+PlayState::processActors(double aDeltaT)
+{
+	Actor *delActor;
+	Actor *iterActor;
+	std::list<Actor *> delList;
+	std::list<Actor *>::iterator _delIt;
+
+	for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
+	{
+		Actor *lActor;
+		lActor = *it;
+		int actorType = lActor->getType();
+		
+		// 4: // Bloque fragil
+		// 5: // Interruptor
+		// 8: // Meta de escenario
+		switch (actorType)
+		{
+			case 4:
+				if (lActor->getActivated())
+				{
+					lActor->updateCounter(aDeltaT);
+					if ((int)Math::Ceil(lActor->getCounter()*100)  % 2 == 0)
+						lActor->setVisible(true);			
+					else
+						lActor->setVisible(false);			
+
+					if (lActor->getCounter()<0)
+					{
+						Ogre::SceneNode *_paraBorrar = dynamic_cast<Ogre::SceneNode*> (lActor);
+						int numeroHijos = _paraBorrar->numAttachedObjects();
+						Entity *ent = static_cast<Entity*>(_paraBorrar->detachObject(unsigned short (0)));
+						_sceneMgr->destroyEntity(ent);
+						_sceneMgr->destroySceneNode(_paraBorrar);
+						
+						_world->removeRigidBody(lActor->getRigitBody());
+						activateAllActors();
+
+						_delIt = delList.end();
+						delList.insert(_delIt,lActor);
+					}
+				}
+				break;
+			case 5:
+				break;
+			case 6:
+				_world->removeRigidBody(lActor->getRigitBody());
+				activateAllActors();
+				break;
+			case 8:
+				break;
+		}
+
+	}
+
+	for (std::list<Actor *>::iterator it=delList.begin(); it != delList.end(); ++it)
+	{
+		Actor *iteratorDelete=*it;
+		_listOfActors.remove(iteratorDelete);
+	}
+}
+
+void
+PlayState::activateAllActors()
+{
+	Actor *iterActor;
+	std::list<Actor *> delList;
+	std::list<Actor *>::iterator _delIt;
+
+	for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
+	{
+		iterActor = *it;
+		iterActor->getRigitBody()->activate(true);
+	}				
 }
 
 // End Adding methods -------------------------------------
