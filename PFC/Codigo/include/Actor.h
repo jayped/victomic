@@ -32,16 +32,24 @@ public:
 	states updateState(Ogre::Real aAnimationTime);
 	void setSpeedRelative(double aSpeedRelative);
 	void setAnimationTime(Ogre::Real aAnimationTime);
+	void setActivated(bool aActivated);
+	bool getActivated();
+	double getCounter();
+	void updateCounter(double aDeltaT);
+	int getType();
 
 private:
 	btRigidBody* _fallRigidBody;
 	double _currentSpeed;
 	states _state;
+	int _type;
 	Ogre::ParticleSystem *smokeParticle;
 	Ogre::SceneNode *particleNode;
 	Ogre::ParticleSystem *jumpParticle;
 	Ogre::SceneNode *jumpParticleNode;
 	double _moveSpeedRelative;
 	Ogre::AnimationState *_animation;
+	bool _activated; // usado para determinados objetos que detectan si el personaje lo pisa.
+	double _counter; // usado para cronometrar determinados eventos con el actor.
 };
 #endif
