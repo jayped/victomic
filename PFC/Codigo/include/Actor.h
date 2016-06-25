@@ -20,7 +20,7 @@ public:
     ~Actor();
     
 	enum states {_stay, _jumping, _falling};
-	void init(int aType);
+	void init(int aType, int aActorID);
 	void setRigitBody(btRigidBody *myRigitBody);
 	btRigidBody* getRigitBody();
 	void destroyRigitBody();
@@ -37,8 +37,10 @@ public:
 	double getCounter();
 	void updateCounter(double aDeltaT);
 	int getType();
+	void generateParticles();
 
 private:
+	int _actorID;
 	btRigidBody* _fallRigidBody;
 	double _currentSpeed;
 	states _state;
