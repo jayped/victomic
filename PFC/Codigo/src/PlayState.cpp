@@ -339,7 +339,7 @@ bool PlayState::buttonReleased( const OIS::JoyStickEvent &e, int button ){
 // cada stage se correspondera con una matriz 3d realizada en un archivo de texto o hardcodeada.
 void PlayState::CreateInitialWorld() {
 	//Nori
-	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",0.0f,10.0f,0.0f,0.0f,10.0f,0.0f,1,0);
+	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",0.0f,10.0f,0.0f,1,0);
 	//_player->initNori();
 	// ---
 	/*
@@ -356,20 +356,24 @@ void PlayState::CreateInitialWorld() {
 	}
 	*/
 
-	addActor(15.0f, 5.0f, 15.0f,"suelo", "World01.mesh","",		0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0,1);
-	addActor(1.0f, 1.0f, 1.0f,"block", "box01.mesh","",			-7.0f,8.0f,7.0f,-7.0f,8.0f,7.0f,0,2);
-	addActor(1.0f, 1.0f, 1.0f,"rock6", "RockBox.mesh","",		-7.0f,12.0f,7.0f,-7.0f,12.0f,7.0f,1,3);
-	addActor(1.0f, 1.0f, 1.0f,"rockc6", "RockBox.mesh","",		-7.0f,14.0f,7.0f,-7.0f,14.0f,7.0f,1,3);
-	addActor(1.0f, 1.0f, 1.0f,"rockd6", "RockBox.mesh","",		14.0f,6.0f,4.0f,14.0f,6.0f,4.0f,1,3);
-	addActor(1.0f, .33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",		4.0f,6.0f-.66,-14.0f,4.0f,6.0f-.66,-14.0f,0,8);
+	addActor(15.0f, 5.0f, 15.0f,"suelo", "World01.mesh","",		0.0f,	0.0f,	0.0f,	0,	1);
+	addActor(1.0f, 1.0f, 1.0f,"block", "box01.mesh","",			-7.0f,	8.0f,	7.0f,	0,	2);
+	addActor(1.0f, 1.0f, 1.0f,"rock6", "RockBox.mesh","",		-7.0f,	12.0f,	7.0f,	1,	3);
+	addActor(1.0f, 1.0f, 1.0f,"rockc6", "RockBox.mesh","",		-7.0f,	14.0f,	7.0f,	1,	3);
+	addActor(1.0f, 1.0f, 1.0f,"rockd6", "RockBox.mesh","",		14.0f,	6.0f,	4.0f,	1,	3);
+	addActor(1.0f, .33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",	4.0f,	6.0f-.66,-14.0f,0,	8);
 	
 	//addActor(1.0f, 1.0f, 1.0f,"dww", "RockBox.mesh","",			4.0f,	10.0f,		0.0f,	4.0f,	10.0f,		0.0f,1,3);
-	addActor(1.0f, 1.0f, 1.0f,"d1", "FragileRockBox.mesh","",	-5.0f,	8.0f,		7.0f,	-5.0f,	8.0f,		7.0f,0,4);
-	addActor(1.0f, 1.0f, 1.0f,"dd2", "FragileRockBox.mesh","",	-3.0f,	8.0f,		7.0f,	-3.0f,	8.0f,		7.0f,0,4);
-	addActor(1.0f, .33f, 1.0f,"e", "SwitchBox.mesh","",		    -10.0f,	6.0f-.66,	-14.0f,	-10.0f,	6.0f-.66,	-14.0f-.66,0,5);
+	addActor(1.0f, 1.0f, 1.0f,"d1", "FragileRockBox.mesh","",	-5.0f,	8.0f,	7.0f,	0,	4);
+	addActor(1.0f, 1.0f, 1.0f,"dd2", "FragileRockBox.mesh","",	-3.0f,	8.0f,	7.0f,	0,	4);
+	addActor(1.0f, .33f, 1.0f,"e", "SwitchBox.mesh","",		    -10.0f,	6.0f-.66,-14.0f,0,	5);
 	
-	addActor(.0f, .0f, .0f,"g", "TransparentBox.mesh","",	-6.0f,	6.0f,		-14.0f,	-6.0f,	6.0f,		-14.0f,0,6);
-	addActor(1.0f, 1.0f, 1.0f,"h", "SolidBox.mesh","",			-2.0f,	6.0f,		-14.0f,	-2.0f,	6.0f,		-14.0f,0,7);
+	addActor(.0f, .0f, .0f,"g1", "TransparentBox.mesh","",		-6.0f,	8.0f,	-10.0f,	0,	6);
+	addActor(.0f, .0f, .0f,"g2", "TransparentBox.mesh","",		-2.0f,	8.0f,	-10.0f,	0,	6);
+	addActor(.0f, .0f, .0f,"g3", "TransparentBox.mesh","",		2.0f,	8.0f,	-10.0f,	0,	6);
+	addActor(.0f, .0f, .0f,"g4", "TransparentBox.mesh","",		6.0f,	8.0f,	-10.0f,	0,	6);
+	addActor(.0f, .0f, .0f,"g5", "TransparentBox.mesh","",		10.0f,	8.0f,	-10.0f,	0,	6);
+	//addActor(1.0f, 1.0f, 1.0f,"h", "SolidBox.mesh","",			-2.0f,	8.0f,	-14.0f,	0,	7);
 	
 	//addActor(1.0f, 1.0f, 1.0f,"a", "box01.mesh","",			-7.0f,10.0f,7.0f,-7.0f,10.0f,7.0f,0,2);
 	//addActor(1.0f, 1.0f, 1.0f,"b", "RockBox.mesh","",		0.0f,14.0f,0.0f,0.0f,14.0f,0.0f,1,3);
@@ -389,11 +393,12 @@ void PlayState::CreateInitialWorld() {
 
 Actor *
 PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEntity, string meshName, string nameAnimation,
-					double aMotionPosX,double aMotionPosY,double aMotionPosZ, double aObjectPosX,double aObjectPosY,double aObjectPosZ, btScalar aMass, int aFlags)
+					double aMotionPosX,double aMotionPosY,double aMotionPosZ, btScalar aMass, int aFlags)
 {
 
 	btCollisionShape *newFallShape = new btBoxShape(btVector3(aShapeX, aShapeY, aShapeZ));
 	Entity *entity = _sceneMgr->createEntity(nameEntity, meshName);
+	
 	//SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode(name);
 	Actor *newActor = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode(nameEntity));
 	newActor->attachObject(entity);
@@ -406,7 +411,7 @@ PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEnt
 	btRigidBody::btRigidBodyConstructionInfo newFallRigidBodyCI(aMass,newFallMotionState,newFallShape,newFallInertia);
 	btRigidBody *newFallRigidBody = new btRigidBody(newFallRigidBodyCI);
 	_world->addRigidBody(newFallRigidBody);
-	newActor->setPosition(aObjectPosX,aObjectPosY,aObjectPosZ);
+	newActor->setPosition(aMotionPosX,aMotionPosY,aMotionPosZ);
 	// add rigid body to nori
 	newActor->setRigitBody(newFallRigidBody);
 	newFallRigidBody->setFlags(aFlags);
@@ -507,13 +512,46 @@ PlayState::colision(btCollisionObject *aObject)
 				// 5 Interruptor
 				if ((obA->getFlags() == 0) && (obB->getFlags() == 5))
 				{
+					Actor *delActor;
+					Actor *iterActor;
+					std::list<Actor *> delList;
+					std::list<Actor *>::iterator _delIt;
+
 					colisionesNori = numContacts;
 					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
 					double centroDeMasasB = obB->getCenterOfMassPosition().getY();
 					if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.07) &&
 							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 2.04))
 					{
-						int x=0;
+						Actor *iteratorDelete;
+						for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
+						{
+							iteratorDelete = *it;
+							if (iteratorDelete->getType() == 6)
+							{
+								Ogre::SceneNode *_paraBorrar = dynamic_cast<Ogre::SceneNode*> (iteratorDelete);
+								int numeroHijos = _paraBorrar->numAttachedObjects();
+								Entity *ent = static_cast<Entity*>(_paraBorrar->detachObject(unsigned short (0)));
+								_sceneMgr->destroyEntity(ent);
+								//_sceneMgr->destroySceneNode(_paraBorrar);
+						
+								_world->removeRigidBody(iteratorDelete->getRigitBody());
+								activateAllActors();
+
+								_delIt = delList.end();
+								delList.insert(_delIt,iteratorDelete);
+
+							}
+						}
+						
+						for (std::list<Actor *>::iterator it=delList.begin(); it != delList.end(); ++it)
+						{
+							Actor *iteratorDelete=*it;
+							Ogre::SceneNode *lSceneNode = dynamic_cast<Ogre::SceneNode*> (iteratorDelete);
+							_listOfActors.remove(iteratorDelete);
+							addActor(1.0f, 1.0f, 1.0f,"actor"+iteratorDelete->getActorID(), "SolidBox.mesh","", lSceneNode->getPosition().x, lSceneNode->getPosition().y, lSceneNode->getPosition().z, 0, 7);
+							_sceneMgr->destroySceneNode(lSceneNode);
+						}
 					}
 				}				
 
@@ -635,6 +673,7 @@ PlayState::processActors(double aDeltaT)
 
 	}
 
+	// Eliminación de actores en la lista de eliminados.
 	for (std::list<Actor *>::iterator it=delList.begin(); it != delList.end(); ++it)
 	{
 		Actor *iteratorDelete=*it;
