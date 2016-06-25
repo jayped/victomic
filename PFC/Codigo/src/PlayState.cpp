@@ -364,8 +364,8 @@ void PlayState::CreateInitialWorld() {
 	addActor(1.0f, .33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",		4.0f,6.0f-.66,-14.0f,4.0f,6.0f-.66,-14.0f,0,8);
 	
 	//addActor(1.0f, 1.0f, 1.0f,"dww", "RockBox.mesh","",			4.0f,	10.0f,		0.0f,	4.0f,	10.0f,		0.0f,1,3);
-	addActor(1.0f, 1.0f, 1.0f,"d1", "FragileRockBox.mesh","",	4.0f,	8.0f,		0.0f,	4.0f,	8.0f,		0.0f,0,4);
-	addActor(1.0f, 1.0f, 1.0f,"dd2", "FragileRockBox.mesh","",	6.0f,	8.0f,		0.0f,	6.0f,	8.0f,		0.0f,0,4);
+	addActor(1.0f, 1.0f, 1.0f,"d1", "FragileRockBox.mesh","",	-5.0f,	8.0f,		7.0f,	-5.0f,	8.0f,		7.0f,0,4);
+	addActor(1.0f, 1.0f, 1.0f,"dd2", "FragileRockBox.mesh","",	-3.0f,	8.0f,		7.0f,	-3.0f,	8.0f,		7.0f,0,4);
 	addActor(1.0f, .33f, 1.0f,"e", "SwitchBox.mesh","",		    -10.0f,	6.0f-.66,	-14.0f,	-10.0f,	6.0f-.66,	-14.0f-.66,0,5);
 	
 	addActor(.0f, .0f, .0f,"g", "TransparentBox.mesh","",	-6.0f,	6.0f,		-14.0f,	-6.0f,	6.0f,		-14.0f,0,6);
@@ -463,33 +463,46 @@ PlayState::colision(btCollisionObject *aObject)
 				}				
 
 				// 4 Bloque fragil
+				// 4.1 Player
 				if ((obA->getFlags() == 0) && (obB->getFlags() == 4))
 				{
 					colisionesNori = numContacts;
 					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
 					double centroDeMasasB = obB->getCenterOfMassPosition().getY();
 					if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.76) &&
-							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 2.04))
+						(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 2.74))
 					{
-						colisionesNori = numContacts;
-						double centroDeMasasA = obA->getCenterOfMassPosition().getY();
-						double centroDeMasasB = obB->getCenterOfMassPosition().getY();
-						if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.76) &&
-							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 2.74))
-							//obA->applyCentralImpulse(btVector3(0,0.5,0));
+						Actor *iteratorDelete;
+						for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
 						{
-							Actor *iteratorDelete;
-							for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
+							iteratorDelete = *it;
+							if (iteratorDelete->getRigitBody()==obB)
 							{
-								iteratorDelete = *it;
-								if (iteratorDelete->getRigitBody()==obB)
-								{
-									iteratorDelete->setActivated(true); // marcado para eliminar en unos segundos.
-								}
+								iteratorDelete->setActivated(true); // marcado para eliminar en unos segundos.
 							}
 						}
 					}
-				}				
+				}
+				// 4.2 Piedra movil
+				if ((obA->getFlags() == 3) && (obB->getFlags() == 4))
+				{
+ 					colisionesNori = numContacts;
+					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
+					double centroDeMasasB = obB->getCenterOfMassPosition().getY();
+					if ( (centroDeMasasA-centroDeMasasB < 2.10) &&
+						(centroDeMasasA-centroDeMasasB > 1.10))
+					{
+						Actor *iteratorDelete;
+						for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
+						{
+							iteratorDelete = *it;
+							if (iteratorDelete->getRigitBody()==obB)
+							{
+								iteratorDelete->setActivated(true); // marcado para eliminar en unos segundos.
+							}
+						}
+					}
+				}			
 
 				// 5 Interruptor
 				if ((obA->getFlags() == 0) && (obB->getFlags() == 5))
