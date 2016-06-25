@@ -62,7 +62,8 @@ void Actor::init(int aType, int aActorID)
 		case 5: // Interruptor
 			break;
 		case 6: // Bloque transparente
-			break;
+				this->getAttachedObject((int)0)->setCastShadows(false);
+				break;
 		case 7: // Bloque solido
 			break;
 		case 8: // Meta de escenario
@@ -331,6 +332,11 @@ Actor::getType()
 	return _type;
 }
 
+int
+Actor::getActorID()
+{
+	return _actorID;
+}
 
 void
 Actor::generateParticles()
