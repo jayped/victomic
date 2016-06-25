@@ -10,12 +10,14 @@ Actor::Actor(Ogre::SceneManager *creator, const Ogre::String & name):Ogre::Scene
 }
 Actor::~Actor()
 {
+	int x=0;
 }
-void Actor::init(int aType)
+void Actor::init(int aType, int aActorID)
 {
 	_currentSpeed=0.0F;
 	_state = _stay;
-	
+	_actorID = aActorID;
+
 	Ogre::Root *_root = Ogre::Root::getSingletonPtr();
 	Ogre::SceneManager *_sceneMgr = _root->getSceneManager("SceneManager");
 	Ogre::Entity *_actorEntity;
@@ -52,7 +54,11 @@ void Actor::init(int aType)
 		case 3: // Piedra movil
 			break;
 		case 4: // Bloque fragil
-			break;
+				smokeParticle = _sceneMgr->createParticleSystem("FragileRock"+std::to_string(_actorID), "FragileRock");
+				particleNode = this->createChildSceneNode("FragileRockParticle"+std::to_string(_actorID));
+				smokeParticle->setEmitting(false);
+				particleNode->attachObject(smokeParticle);
+				break;
 		case 5: // Interruptor
 			break;
 		case 6: // Bloque transparente
@@ -326,7 +332,11 @@ Actor::getType()
 }
 
 
-
+void
+Actor::generateParticles()
+{
+	smokeParticle->setEmitting(true);
+}
 
 
 
