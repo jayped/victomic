@@ -363,9 +363,9 @@ void PlayState::CreateInitialWorld() {
 	addActor(1.0f, 1.0f, 1.0f,"rockd6", "RockBox.mesh","",		14.0f,6.0f,4.0f,14.0f,6.0f,4.0f,1,3);
 	addActor(1.0f, .33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",		4.0f,6.0f-.66,-14.0f,4.0f,6.0f-.66,-14.0f,0,8);
 	
-	addActor(1.0f, 1.0f, 1.0f,"dww", "RockBox.mesh","",	4.0f,	10.0f,		0.0f,	4.0f,	10.0f,		0.0f,1,3);
-	addActor(1.0f, 1.0f, 1.0f,"d", "FragileRockBox.mesh","",	4.0f,	6.0f,		0.0f,	4.0f,	6.0f,		0.0f,0,4);
-	addActor(1.0f, 1.0f, 1.0f,"dd", "FragileRockBox.mesh","",	6.0f,	6.0f,		0.0f,	6.0f,	6.0f,		0.0f,0,4);
+	//addActor(1.0f, 1.0f, 1.0f,"dww", "RockBox.mesh","",			4.0f,	10.0f,		0.0f,	4.0f,	10.0f,		0.0f,1,3);
+	addActor(1.0f, 1.0f, 1.0f,"d1", "FragileRockBox.mesh","",	4.0f,	8.0f,		0.0f,	4.0f,	8.0f,		0.0f,0,4);
+	addActor(1.0f, 1.0f, 1.0f,"dd2", "FragileRockBox.mesh","",	6.0f,	8.0f,		0.0f,	6.0f,	8.0f,		0.0f,0,4);
 	addActor(1.0f, .33f, 1.0f,"e", "SwitchBox.mesh","",		    -10.0f,	6.0f-.66,	-14.0f,	-10.0f,	6.0f-.66,	-14.0f-.66,0,5);
 	
 	addActor(.0f, .0f, .0f,"g", "TransparentBox.mesh","",	-6.0f,	6.0f,		-14.0f,	-6.0f,	6.0f,		-14.0f,0,6);
@@ -397,7 +397,7 @@ PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEnt
 	//SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode(name);
 	Actor *newActor = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode(nameEntity));
 	newActor->attachObject(entity);
-	newActor->init(aFlags);
+	newActor->init(aFlags,_listOfActors.size());
   
 	// cuerpo rigido para bullet
 	MyMotionState* newFallMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(aMotionPosX,aMotionPosY,aMotionPosZ)), newActor);
@@ -486,7 +486,6 @@ PlayState::colision(btCollisionObject *aObject)
 								{
 									iteratorDelete->setActivated(true); // marcado para eliminar en unos segundos.
 								}
-								 
 							}
 						}
 					}
@@ -590,6 +589,10 @@ PlayState::processActors(double aDeltaT)
 					else
 						lActor->setVisible(false);			
 
+					if (lActor->getCounter()<0.5)
+					{
+						lActor->generateParticles();
+					}
 					if (lActor->getCounter()<0)
 					{
 						Ogre::SceneNode *_paraBorrar = dynamic_cast<Ogre::SceneNode*> (lActor);
