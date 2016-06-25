@@ -38,6 +38,7 @@ public:
 	void updateCounter(double aDeltaT);
 	int getType();
 	void generateParticles();
+	int getActorID();
 
 private:
 	int _actorID;
