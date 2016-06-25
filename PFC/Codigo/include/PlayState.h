@@ -112,8 +112,9 @@ private:
   btRigidBody *_TESTRIGIDBODY;
   std::list<Actor *> _listOfActors;
   std::list<Actor *>::iterator _actorsIt;
-	
-	private:
+  int _counterActorsID;
+
+  	private:
     bool isInitialMove;
     bool isStop;
 
