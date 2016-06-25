@@ -604,6 +604,7 @@ PlayState::processActors(double aDeltaT)
 
 					if (lActor->getCounter()<0.5)
 					{
+						lActor->setVisible(true);
 						lActor->generateParticles();
 					}
 					if (lActor->getCounter()<0)
