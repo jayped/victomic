@@ -15,18 +15,21 @@ particle_system FragileRock
 	emitter Box
 	{
 		position 0 0 0
-		width 1
-		height 1
-		depth 1
-		angle 35
+		width 1.7
+		height 1.7
+		depth 1.7
+		angle 10
 		emission_rate 1000
 		time_to_live 1
 		direction 0 -1 0
-		velocity_min 3
-		velocity_max 6 	
+		velocity_min 6
+		velocity_max 9 	
 	}
 	
-	
+	affector ColourImage
+	{
+		image fragilecolors.png
+	}
 
    	affector Rotator
    	{
