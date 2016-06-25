@@ -7,7 +7,7 @@ particle_system FragileRock
 	particle_width  	1
 	particle_height 	1
 	cull_each       	true
-	quota           	10000
+	quota           	1000
 	billboard_type  	point
 	sorted				true
     
@@ -19,11 +19,16 @@ particle_system FragileRock
 		height 1
 		depth 1
 		angle 35
-		emission_rate 10000
+		emission_rate 1000
 		time_to_live 1
 		direction 0 -1 0
-		velocity_min 3
-		velocity_max 5 	
+		velocity_min 6
+		velocity_max 10 	
+	}
+	
+	affector ColourImage
+	{
+		image fragilecolors.png
 	}
 
    	affector Rotator
