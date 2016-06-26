@@ -435,6 +435,7 @@ bool GameManager::buttonPressed( const OIS::JoyStickEvent &e, int button ){
             break;
         case 3:
             //Se pulsa el botón 4
+			keyPressed = OIS::KC_R;
             break;
         case 4:
             //Se pulsa L1
