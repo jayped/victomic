@@ -45,17 +45,6 @@ PlayState::enter ()
 		
 	}
 
-	// Luz del escenario.
-	_sceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
-	Ogre::Light* light = _sceneMgr->createLight("light1");
-	light->setType(Ogre::Light::LT_DIRECTIONAL);
-	light->setDirection(Ogre::Vector3(0.80,-1,0));
-	light->setPosition(Ogre::Vector3(0,0,0));
-	_sceneMgr->getRootSceneNode()->attachObject(light);
-	
-	//Create the Background
-	_sceneMgr->setSkyBox(true, "skyMat", 100.0F, true);
-
 	isStop = false;
 	_exitGame = false;
 	_counterActorsID = 0;
@@ -356,8 +345,49 @@ bool PlayState::buttonReleased( const OIS::JoyStickEvent &e, int button ){
 // la idea es realizar varias stages que se cargen dinamicamente.
 // cada stage se correspondera con una matriz 3d realizada en un archivo de texto o hardcodeada.
 void PlayState::CreateInitialWorld() {
+	
+	// Carga de mundo.
+	loadWorldEnvironment(Ogre::SHADOWTYPE_STENCIL_ADDITIVE,Ogre::Light::LT_DIRECTIONAL, Ogre::Vector3(0.80,-1,0), Ogre::Vector3(0,0,0), "skyMat","lightW01");
+	addActor(15.0f, 5.0f, 15.0f,"suelo", "World01.mesh","",		0.0f,	0.0f,	0.0f,	0,	1);
+	
+	Stage s;
+	int ***textStage;
+	textStage = s.getActors();
+
+	for (int z=0; z<15; z++)
+		for (int y=0; y<6; y++)
+			for (int x=0; x<15; x++)
+			{
+				switch (textStage[x][y][z])
+				{
+				case 2:
+					addActor(1.0f, 1.0f, 1.0f,"actor", "box01.mesh","",				-14+(x*2), 6+(y*2), 14-(z*2), 0, 2);
+					break;
+				case 3:
+					addActor(1.0f, 1.0f, 1.0f,"actor", "RockBox.mesh","",			-14+(x*2), 6+(y*2), 14-(z*2), 1, 3);
+					break;
+				case 4:
+					addActor(1.0f, 1.0f, 1.0f,"actor", "FragileRockBox.mesh","",	-14+(x*2), 6+(y*2), 14-(z*2), 0, 4);
+					break;
+				case 5:
+					addActor(1.0f, .33f, 1.0f,"actor", "SwitchBox.mesh","",			-14+(x*2), 6.0f-.66+(y*2), 14-(z*2), 0, 5);
+					break;
+				case 6:
+					addActor(.0f, .0f, .0f,"actor", "TransparentBox.mesh","",		-14+(x*2), 6+(y*2), 14-(z*2), 0, 6);
+					break;
+				case 8:
+					addActor(1.0f, .33f, 1.0f,"actor", "SwitchBaseBox.mesh","",		-14+(x*2), 6.0f-.66+(y*2), 14-(z*2), 0, 8);
+					break;
+				case 10:
+					_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",-14+(x*2), 6+(y*2), 14-(z*2), 1, 10);
+					break;
+				
+				}
+			}
+
+
 	//Nori
-	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",0.0f,10.0f,0.0f,1,0);
+//	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",0.0f,10.0f,0.0f,1,10);
 	//_player->initNori();
 	// ---
 	/*
@@ -374,23 +404,24 @@ void PlayState::CreateInitialWorld() {
 	}
 	*/
 
-	addActor(15.0f, 5.0f, 15.0f,"suelo", "World01.mesh","",		0.0f,	0.0f,	0.0f,	0,	1);
-	addActor(1.0f, 1.0f, 1.0f,"block", "box01.mesh","",			-7.0f,	8.0f,	7.0f,	0,	2);
-	addActor(1.0f, 1.0f, 1.0f,"rock6", "RockBox.mesh","",		-7.0f,	12.0f,	7.0f,	1,	3);
+//	addActor(15.0f, 5.0f, 15.0f,"suelo", "World01.mesh","",		0.0f,	0.0f,	0.0f,	0,	1);
+//	addActor(1.0f, 1.0f, 1.0f,"block", "box01.mesh","",			-7.0f,	8.0f,	7.0f,	0,	2);
+//	addActor(1.0f, 1.0f, 1.0f,"rock6", "RockBox.mesh","",		-7.0f,	12.0f,	7.0f,	1,	3);
+//	addActor(1.0f, .33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",	4.0f,	6.0f-.66,-14.0f,0,	8);
+//	addActor(1.0f, 1.0f, 1.0f,"dd2", "FragileRockBox.mesh","",	-3.0f,	8.0f,	7.0f,	0,	4);
+//	addActor(1.0f, .33f, 1.0f,"e", "SwitchBox.mesh","",		    -5.0f,	6.0f-.66,7.0f,	0,	5);
+	
+//	addActor(.0f, .0f, .0f,"g1", "TransparentBox.mesh","",		-6.0f,	8.0f,	0.0f,	0,	6);
+//	addActor(.0f, .0f, .0f,"g2", "TransparentBox.mesh","",		-2.0f,	8.0f,	0.0f,	0,	6);
+//	addActor(.0f, .0f, .0f,"g3", "TransparentBox.mesh","",		2.0f,	8.0f,	0.0f,	0,	6);
+//	addActor(.0f, .0f, .0f,"g4", "TransparentBox.mesh","",		6.0f,	8.0f,	0.0f,	0,	6);
+//	addActor(.0f, .0f, .0f,"g5", "TransparentBox.mesh","",		10.0f,	8.0f,	0.0f,	0,	6);
+	
 	//addActor(1.0f, 1.0f, 1.0f,"rockc6", "RockBox.mesh","",		-7.0f,	14.0f,	7.0f,	1,	3);
 	//addActor(1.0f, 1.0f, 1.0f,"rockd6", "RockBox.mesh","",		14.0f,	6.0f,	4.0f,	1,	3);
-	addActor(1.0f, .33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",	4.0f,	6.0f-.66,-14.0f,0,	8);
 	
 	//addActor(1.0f, 1.0f, 1.0f,"dww", "RockBox.mesh","",			4.0f,	10.0f,		0.0f,	4.0f,	10.0f,		0.0f,1,3);
 	//addActor(1.0f, 1.0f, 1.0f,"d1", "FragileRockBox.mesh","",	-5.0f,	8.0f,	7.0f,	0,	4);
-	addActor(1.0f, 1.0f, 1.0f,"dd2", "FragileRockBox.mesh","",	-3.0f,	8.0f,	7.0f,	0,	4);
-	addActor(1.0f, .33f, 1.0f,"e", "SwitchBox.mesh","",		    -5.0f,	6.0f-.66,7.0f,	0,	5);
-	
-	addActor(.0f, .0f, .0f,"g1", "TransparentBox.mesh","",		-6.0f,	8.0f,	0.0f,	0,	6);
-	addActor(.0f, .0f, .0f,"g2", "TransparentBox.mesh","",		-2.0f,	8.0f,	0.0f,	0,	6);
-	addActor(.0f, .0f, .0f,"g3", "TransparentBox.mesh","",		2.0f,	8.0f,	0.0f,	0,	6);
-	addActor(.0f, .0f, .0f,"g4", "TransparentBox.mesh","",		6.0f,	8.0f,	0.0f,	0,	6);
-	addActor(.0f, .0f, .0f,"g5", "TransparentBox.mesh","",		10.0f,	8.0f,	0.0f,	0,	6);
 	//addActor(1.0f, 1.0f, 1.0f,"h", "SolidBox.mesh","",			-2.0f,	8.0f,	-14.0f,	0,	7);
 	
 	//addActor(1.0f, 1.0f, 1.0f,"a", "box01.mesh","",			-7.0f,10.0f,7.0f,-7.0f,10.0f,7.0f,0,2);
@@ -406,6 +437,11 @@ void PlayState::CreateInitialWorld() {
 	// 6: // Bloque transparente
 	// 7: // Bloque solido
 	// 8: // Meta de escenario
+	// 10:// Nori
+	// test matriz definicion de mundos
+	//int x[15][6][15];
+
+
 
 }
 
@@ -415,10 +451,10 @@ PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEnt
 {
 
 	btCollisionShape *newFallShape = new btBoxShape(btVector3(aShapeX, aShapeY, aShapeZ));
-	Entity *entity = _sceneMgr->createEntity(nameEntity, meshName);
+	Entity *entity = _sceneMgr->createEntity(nameEntity+to_string(_counterActorsID), meshName);
 	
 	//SceneNode *node = _sceneMgr->getRootSceneNode()->createChildSceneNode(name);
-	Actor *newActor = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode(nameEntity));
+	Actor *newActor = reinterpret_cast<Actor *>(_sceneMgr->getRootSceneNode()->createChildSceneNode(nameEntity+to_string(_counterActorsID)));
 	newActor->attachObject(entity);
 	newActor->init(aFlags,_counterActorsID);
 	_counterActorsID++;
@@ -474,7 +510,7 @@ PlayState::colision(btCollisionObject *aObject)
 				// 8: // Meta de escenario
 
 				// 3 Piedra movil
-				if ((obA->getFlags() == 0) && (obB->getFlags() == 3))
+				if ((obA->getFlags() == 10) && (obB->getFlags() == 3))
 				{
 					colisionesNori = numContacts;
 					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
@@ -488,7 +524,7 @@ PlayState::colision(btCollisionObject *aObject)
 
 				// 4 Bloque fragil
 				// 4.1 Player
-				if ((obA->getFlags() == 0) && (obB->getFlags() == 4))
+				if ((obA->getFlags() == 10) && (obB->getFlags() == 4))
 				{
 					colisionesNori = numContacts;
 					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
@@ -530,7 +566,7 @@ PlayState::colision(btCollisionObject *aObject)
 
 				// 5 Interruptor
 				// 5.1 nori
-				if ((obA->getFlags() == 0) && (obB->getFlags() == 5))
+				if ((obA->getFlags() == 10) && (obB->getFlags() == 5))
 				{
 					Actor *delActor;
 					Actor *iterActor;
@@ -585,7 +621,7 @@ PlayState::colision(btCollisionObject *aObject)
 
 
 				// 8 Meta de escenario
-				if ((obA->getFlags() == 0) && (obB->getFlags() == 8))
+				if ((obA->getFlags() == 10) && (obB->getFlags() == 8))
 				{
 					colisionesNori = numContacts;
 					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
@@ -771,6 +807,26 @@ PlayState::nextStage()
 	// TO-DO
 }
 
+void
+PlayState::loadWorldEnvironment(Ogre::ShadowTechnique aShadowTechnique, Ogre::Light::LightTypes aLightType, Ogre::Vector3 aLightDirection, Ogre::Vector3 aLightPosition, string aSkyMap, string aNameLight)
+{
+	// Luz del escenario.
+	_sceneMgr->setShadowTechnique(aShadowTechnique); // 
+	
+	Ogre::Light* light;
+	if (!_sceneMgr->hasLight(aNameLight))
+		light = _sceneMgr->createLight(aNameLight);
+	else
+		light = _sceneMgr->getLight(aNameLight);
+
+	light->setType(aLightType);
+	light->setDirection(aLightDirection);
+	light->setPosition(aLightPosition);
+	_sceneMgr->getRootSceneNode()->attachObject(light);
+	//Create the Background
+	_sceneMgr->setSkyBox(true, aSkyMap, 100.0F, true);
+
+}
 // End Adding methods -------------------------------------
 
 PlayState*
