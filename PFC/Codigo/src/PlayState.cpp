@@ -61,6 +61,8 @@ PlayState::enter ()
 	_counterActorsID = 0;
 	_controlBlock = false;
 	_stage = 1;
+	_goalCounter=2.5;
+	_nextStage=false;
 
 	// carga de stage de archivo
 	// TO-DO
@@ -204,6 +206,12 @@ PlayState::frameStarted
 	
 	processActors(deltaT);
 	//_overlayMgr->getOverlayElement("TestValue")->setCaption(Ogre::StringConverter::toString(ncolisiones));
+
+	if (_nextStage)
+		_goalCounter-=deltaT;
+
+	if (_goalCounter<0)
+		changeState(ReplayState::getSingletonPtr());
 
 	return true;
 }
@@ -595,12 +603,13 @@ PlayState::colision(btCollisionObject *aObject)
 								iteratorDelete = *it;
 								if (iteratorDelete->getRigitBody()==obB)
 								{
+									// lanza acciones de objetivo cumplido para el actor goal
 									iteratorDelete->goal();
 								}
 							}
-
 							_player->goal();
 							_controlBlock=true;
+							_nextStage = true;
 						}
 					}
 				}				
