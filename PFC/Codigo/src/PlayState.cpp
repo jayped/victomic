@@ -59,6 +59,11 @@ PlayState::enter ()
 	isStop = false;
 	_exitGame = false;
 	_counterActorsID = 0;
+	_controlBlock = false;
+	_stage = 1;
+
+	// carga de stage de archivo
+	// TO-DO
 
 	// inicializacion de movimientos de nori.
 	for (int i =0; i<4; i++) _storeMove[i] = false;	
@@ -125,7 +130,7 @@ PlayState::frameStarted
 	if (InputManager::getSingletonPtr()->getKeyboard()->isKeyDown(OIS::KC_ESCAPE)) return false;
 
 	/// Movimiento de Nori
-	if (_gameMgr->isDownMov()) {
+	if (_gameMgr->isDownMov() && !_controlBlock) {
 		_player->move((int)_down, _makeCamera->getCameraPosition());
 		_storeMove[0]=true;
 	}
@@ -133,7 +138,7 @@ PlayState::frameStarted
     {
         _storeMove[0]=false;
     }
-	if (_gameMgr->isRightMov()) {
+	if (_gameMgr->isRightMov() && !_controlBlock) {
 		_player->move((int)_right, _makeCamera->getCameraPosition());
 		_storeMove[1]=true;
 	}
@@ -141,7 +146,7 @@ PlayState::frameStarted
     {
         _storeMove[1]=false;
     }
-	if (_gameMgr->isUpMov()) {
+	if (_gameMgr->isUpMov() && !_controlBlock) {
 		_player->move((int)_up, _makeCamera->getCameraPosition());
 		_storeMove[2]=true;
 	}
@@ -149,7 +154,7 @@ PlayState::frameStarted
     {
         _storeMove[2]=false;
     }
-	if (_gameMgr->isLeftMov()) {
+	if (_gameMgr->isLeftMov() && !_controlBlock) {
 		_player->move((int)_left, _makeCamera->getCameraPosition());
 		_storeMove[3]=true;
 	}
@@ -174,7 +179,10 @@ PlayState::frameStarted
 		_player->stop();
     }
 	// nori no se cae
-	_player->getRigitBody()->setAngularVelocity(btVector3(0,0,0));
+	if (!_controlBlock)
+		_player->getRigitBody()->setAngularVelocity(btVector3(0,0,0));
+	else
+		_player->getRigitBody()->setAngularVelocity(btVector3(0,_player->getRigitBody()->getAngularVelocity().getY(),0));
 	
 	// Mueve la camara, mientras no se alcance un punto clave
 	if (_makeCamera->isMoving())
@@ -216,19 +224,19 @@ PlayState::keyPressed
 (const OIS::KeyEvent &e)
 {
   // Tecla p --> PauseState.
-  if (e.key == OIS::KC_P) {
+  if (e.key == OIS::KC_P && !_controlBlock) {
     pushState(PauseState::getSingletonPtr());
   }
 
-  if (e.key == OIS::KC_LEFT) {
+  if (e.key == OIS::KC_LEFT && !_controlBlock) {
 	  _makeCamera->setMoving(_left);
   }
   
-  if (e.key == OIS::KC_RIGHT) {
+  if (e.key == OIS::KC_RIGHT && !_controlBlock) {
 	  _makeCamera->setMoving(_right);
 	}
   
-  if (e.key == OIS::KC_SPACE) {
+  if (e.key == OIS::KC_SPACE && !_controlBlock) {
 	  _player->jump();
 	  
   }
@@ -268,6 +276,7 @@ PlayState::keyPressed
   }
 
   if (e.key == OIS::KC_T) {
+	  _controlBlock = !_controlBlock;
   }
   if (e.key == OIS::KC_G) {
   }
@@ -352,7 +361,7 @@ void PlayState::CreateInitialWorld() {
 		{
 			name = "actor"+ to_string(numname);
 			numname++;
-			addActor(1.0f, 1.0f, 1.0f,name, "box01.mesh","", -14+(xx*2), 6 +(yy*2), -10.0f+(yy*2), -14+(xx*2), 6 +(yy*2), -10.0f+(yy*2),0, 10);
+			addActor(1.0f, 1.0f, 1.0f,name, "box01.mesh","", -14+(xx*2), 6 +(yy*2), -10.0f+(yy*2),0, 10);
 		}
 	}
 	*/
@@ -405,7 +414,7 @@ PlayState::addActor(double aShapeX,double aShapeY,double aShapeZ, string nameEnt
 	newActor->attachObject(entity);
 	newActor->init(aFlags,_counterActorsID);
 	_counterActorsID++;
-  
+	
 	// cuerpo rigido para bullet
 	MyMotionState* newFallMotionState = new MyMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(aMotionPosX,aMotionPosY,aMotionPosZ)), newActor);
 	btVector3 newFallInertia(-0,0,0);
@@ -577,7 +586,22 @@ PlayState::colision(btCollisionObject *aObject)
 							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 2.04))
 					{
 						// Codigo final fase.
-						changeState(ReplayState::getSingletonPtr());
+						//changeState(ReplayState::getSingletonPtr());
+						if (!_controlBlock)
+						{
+							Actor *iteratorDelete;
+							for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
+							{
+								iteratorDelete = *it;
+								if (iteratorDelete->getRigitBody()==obB)
+								{
+									iteratorDelete->goal();
+								}
+							}
+
+							_player->goal();
+							_controlBlock=true;
+						}
 					}
 				}				
 			}
@@ -627,6 +651,9 @@ PlayState::processActors(double aDeltaT)
 					{
 						lActor->setVisible(true);
 						lActor->generateParticles();
+						//Ogre::SceneNode *_paraBorrar = dynamic_cast<Ogre::SceneNode*> (lActor);
+						//_world->removeRigidBody(lActor->getRigitBody());
+						//activateAllActors();
 					}
 					if (lActor->getCounter()<0)
 					{
@@ -724,6 +751,15 @@ PlayState::activateAllActors()
 		iterActor = *it;
 		iterActor->getRigitBody()->activate(true);
 	}				
+}
+
+void
+PlayState::nextStage()
+{
+	_stage++;
+	
+	// guardado de progreso.
+	// TO-DO
 }
 
 // End Adding methods -------------------------------------
