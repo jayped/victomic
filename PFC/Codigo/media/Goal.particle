@@ -1,0 +1,40 @@
+// Example particle systems
+
+// Goal
+particle_system Goal
+{
+	material        	goalParticle
+	particle_width  	0.5
+	particle_height 	0.5
+	cull_each       	true
+	quota           	500
+	billboard_type  	point
+	sorted				true
+    
+	// Area emitter
+	emitter Box
+	{
+		position 0 0 0
+		width 1.7
+		height 1.7
+		depth 1.7
+		angle 10
+		emission_rate 500
+		time_to_live 1
+		direction 0 1 0
+		velocity_min 10
+		velocity_max 15 	
+	}
+	
+	affector ColourImage
+	{
+		image goalcolors.png
+	}
+
+
+   	affector Scaler
+   	{
+       	rate 0.1
+   	}
+
+}
