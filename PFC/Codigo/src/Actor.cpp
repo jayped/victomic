@@ -67,6 +67,10 @@ void Actor::init(int aType, int aActorID)
 		case 7: // Bloque solido
 			break;
 		case 8: // Meta de escenario
+				smokeParticle = _sceneMgr->createParticleSystem("GoalParticle"+std::to_string(_actorID), "Goal");
+				particleNode = this->createChildSceneNode("GoalParticle"+std::to_string(_actorID));
+				smokeParticle->setEmitting(false);
+				particleNode->attachObject(smokeParticle);
 			break;
 	}
 }
@@ -88,7 +92,7 @@ void
 Actor::move(int aDirection, int aCameraPosition)
 {
 	////////////////////////////
-			// Particulas para desplazamiento de nori.
+	// Particulas para desplazamiento de nori.
 	////////////////////////////
 	//particleNode->setPosition(this->getPosition());
 	smokeParticle->setEmitting(true);
@@ -173,7 +177,6 @@ Actor::stop()
 	smokeParticle->setEmitting(false);
 	_animation->setEnabled(false);
 	_animation->setTimePosition(0.0);
-
 }
 void
 Actor::orientate(bool aRotate[], int aCameraPosition)
@@ -239,6 +242,22 @@ Actor::jump()
 		_fallRigidBody->activate(true);
 		_fallRigidBody->applyCentralImpulse(impulse);
 	}
+}
+
+void
+Actor::goal()
+{
+	if (_type==0)
+	{
+	jumpParticle->setEmitting(false);
+	btVector3 impulse(_jumpX,_jumpY,_jumpZ);
+	_fallRigidBody->activate(true);
+	_fallRigidBody->applyCentralImpulse(impulse);
+	_fallRigidBody->setAngularVelocity(btVector3(0,3,0));
+	}
+	else
+		smokeParticle->setEmitting(true);
+	//_fallRigidBody->applyTorqueImpulse(btVector3(0,5,0));
 }
 
 void Actor::resetSpeed()
