@@ -30,6 +30,8 @@
 #include <btBulletDynamicsCommon.h>
 #include "Actor.h"
 #include "MakeCamera.h"
+#include "Stage.h"
+#include "World.h"
 
 using namespace Ogre;
 
@@ -67,6 +69,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void processActors(double aDeltaT);
   void activateAllActors();
   void nextStage();
+  void loadWorldEnvironment(Ogre::ShadowTechnique aShadowTechnique, Ogre::Light::LightTypes aLightType, Ogre::Vector3 aLightDirection, Ogre::Vector3 aLightPosition, std::string aSkyMap, std::string aNameLight);
 
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
