@@ -251,6 +251,7 @@ Actor::goal()
 	{
 	jumpParticle->setEmitting(false);
 	btVector3 impulse(_jumpX,_jumpY,_jumpZ);
+	_fallRigidBody->clearForces();
 	_fallRigidBody->activate(true);
 	_fallRigidBody->applyCentralImpulse(impulse);
 	_fallRigidBody->setAngularVelocity(btVector3(0,3,0));
