@@ -28,6 +28,7 @@ public:
 	void stop();
 	void orientate(bool aRotate[], int aCameraPosition);
 	void jump();
+	void goal();
 	void resetSpeed();
 	states updateState(Ogre::Real aAnimationTime);
 	void setSpeedRelative(double aSpeedRelative);
