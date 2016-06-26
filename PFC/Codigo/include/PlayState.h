@@ -66,6 +66,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   int colision(btCollisionObject *aObject);
   void processActors(double aDeltaT);
   void activateAllActors();
+  void nextStage();
 
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
@@ -113,6 +114,8 @@ private:
   std::list<Actor *> _listOfActors;
   std::list<Actor *>::iterator _actorsIt;
   int _counterActorsID;
+  bool _controlBlock; // Bloqueo de controles de usuario. Usado en escenas de transicion.
+  int _stage;
 
   	private:
     bool isInitialMove;
