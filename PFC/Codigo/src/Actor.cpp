@@ -28,7 +28,7 @@ void Actor::init(int aType, int aActorID)
 
 	switch (aType)
 	{
-		case 0: //Nori
+		case 10: //Nori
 
 				// Particulas de caminar
 				smokeParticle = _sceneMgr->createParticleSystem("Smoke", "Smoke");
@@ -43,7 +43,7 @@ void Actor::init(int aType, int aActorID)
 				jumpParticleNode->attachObject(jumpParticle);
 
 				//animación Nori
-				_actorEntity = reinterpret_cast<Ogre::Entity *>(this->getAttachedObject("nori"));
+				_actorEntity = reinterpret_cast<Ogre::Entity *>(this->getAttachedObject((int)0));
 				_animation = _actorEntity->getAnimationState("Walking");
 				_animation->setEnabled(false);
 				break;
@@ -247,7 +247,7 @@ Actor::jump()
 void
 Actor::goal()
 {
-	if (_type==0)
+	if (_type==10)
 	{
 	jumpParticle->setEmitting(false);
 	btVector3 impulse(_jumpX,_jumpY,_jumpZ);
