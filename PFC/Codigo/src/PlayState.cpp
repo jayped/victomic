@@ -7,6 +7,7 @@
 #include <math.h>
 #include <cmath>
 #include "BulletCollision/NarrowPhaseCollision/btRaycastCallback.h"
+#include <fstream>
 
 using namespace std;
 
@@ -43,9 +44,12 @@ PlayState::enter ()
 		double height = _viewport->getActualHeight();
 		_makeCamera->setAspectRatio(width / height);
 		
-		_stage = 1;
+		_currentStage = 1;
+		_currentWorld = 1;
 		
 	}
+
+	_currentStage = _gameMgr->_currentStage;	
 
 	isStop = false;
 	_exitGame = false;
@@ -56,7 +60,7 @@ PlayState::enter ()
 
 	// carga de stage de archivo
 	// TO-DO
-	// loadStage();
+	// loadStage(); // al traer Stage trae tambien el mundo al que pertenece.
 
 	// inicializacion de movimientos de nori.
 	for (int i =0; i<4; i++) _storeMove[i] = false;	
@@ -66,7 +70,7 @@ PlayState::enter ()
 	_overlay = _overlayMgr->getByName("TestOverlay");
 	_overlay->show();
 	//_overlayMgr->getOverlayElement("TestValue")->setCaption("holas");
-	_overlayMgr->getOverlayElement("TestValue")->setCaption(Ogre::StringConverter::toString(_stage));
+	_overlayMgr->getOverlayElement("TestValue")->setCaption("Stage: " + Ogre::StringConverter::toString(_currentWorld) +"-"+ Ogre::StringConverter::toString(_currentStage));
 
 	// Bullet
 	_broadphase = new btDbvtBroadphase();
@@ -807,7 +811,10 @@ PlayState::activateAllActors()
 void
 PlayState::nextStage()
 {
-	_stage++;
+	_currentStage++;
+	_gameMgr->updateStage(_currentStage);
+	_overlay = _overlayMgr->getByName("TestOverlay");
+	_overlay->hide();
 	
 	// guardado de progreso.
 	// TO-DO
