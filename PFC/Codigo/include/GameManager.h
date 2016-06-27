@@ -44,8 +44,7 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
 
 
   // maxima puntuacion del juego.
-  int _hiscore;
-  int _score;
+  int _currentStage;
   SoundFXPtr _shotEffect;
   SoundFXPtr _introEffect;
   SoundFXPtr _coinEffect;
@@ -72,8 +71,8 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   static GameManager& getSingleton ();
   static GameManager* getSingletonPtr ();
   bool _initSDL ();
-  void updateScore(int aNewScore);
-  void loadHiScore();
+  void updateStage(int aCurrentStage);
+  void loadStage();
   
   void playShot();
   void stopShot();
