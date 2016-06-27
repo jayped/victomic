@@ -43,18 +43,20 @@ PlayState::enter ()
 		double height = _viewport->getActualHeight();
 		_makeCamera->setAspectRatio(width / height);
 		
+		_stage = 1;
+		
 	}
 
 	isStop = false;
 	_exitGame = false;
 	_counterActorsID = 0;
 	_controlBlock = false;
-	_stage = 1;
 	_goalCounter=2.5;
 	_nextStage=false;
 
 	// carga de stage de archivo
 	// TO-DO
+	// loadStage();
 
 	// inicializacion de movimientos de nori.
 	for (int i =0; i<4; i++) _storeMove[i] = false;	
@@ -64,6 +66,7 @@ PlayState::enter ()
 	_overlay = _overlayMgr->getByName("TestOverlay");
 	_overlay->show();
 	//_overlayMgr->getOverlayElement("TestValue")->setCaption("holas");
+	_overlayMgr->getOverlayElement("TestValue")->setCaption(Ogre::StringConverter::toString(_stage));
 
 	// Bullet
 	_broadphase = new btDbvtBroadphase();
@@ -76,7 +79,7 @@ PlayState::enter ()
 	_world->setGravity(btVector3(0,-9,0));
 
 	// Creacion de los elementos iniciales del mundo
-	CreateInitialWorld();
+	CreateCurrentWorld(1);
 	// End Bullet
 
 }
@@ -194,14 +197,15 @@ PlayState::frameStarted
 	int ncolisiones = colision(_player->getRigitBody());
 	
 	processActors(deltaT);
-	//_overlayMgr->getOverlayElement("TestValue")->setCaption(Ogre::StringConverter::toString(ncolisiones));
 
 	if (_nextStage)
 		_goalCounter-=deltaT;
 
 	if (_goalCounter<0)
+	{
+		nextStage();
 		changeState(ReplayState::getSingletonPtr());
-
+	}
 	return true;
 }
 
@@ -344,11 +348,13 @@ bool PlayState::buttonReleased( const OIS::JoyStickEvent &e, int button ){
 // se encargara de cargar los mundos segun la stage en la que nos encontremos.
 // la idea es realizar varias stages que se cargen dinamicamente.
 // cada stage se correspondera con una matriz 3d realizada en un archivo de texto o hardcodeada.
-void PlayState::CreateInitialWorld() {
+void PlayState::CreateCurrentWorld(int aCurrentStage) {
 	
+	// Busqueda en std::list Stages la pantalla correspondiente y nos da numero de mundo y matriz con elementos
+	int lWorld = 1; // [!] a cargar del objeto Stage
+
 	// Carga de mundo.
-	loadWorldEnvironment(Ogre::SHADOWTYPE_STENCIL_ADDITIVE,Ogre::Light::LT_DIRECTIONAL, Ogre::Vector3(0.80,-1,0), Ogre::Vector3(0,0,0), "skyMat","lightW01");
-	addActor(15.0f, 5.0f, 15.0f,"suelo", "World01.mesh","",		0.0f,	0.0f,	0.0f,	0,	1);
+	loadWorldEnvironment(lWorld);
 	
 	Stage s;
 	int ***textStage;
@@ -808,8 +814,56 @@ PlayState::nextStage()
 }
 
 void
-PlayState::loadWorldEnvironment(Ogre::ShadowTechnique aShadowTechnique, Ogre::Light::LightTypes aLightType, Ogre::Vector3 aLightDirection, Ogre::Vector3 aLightPosition, string aSkyMap, string aNameLight)
+PlayState::loadWorldEnvironment(int aWorld)
 {
+	
+	Ogre::ShadowTechnique aShadowTechnique = Ogre::SHADOWTYPE_STENCIL_ADDITIVE;
+	Ogre::Light::LightTypes aLightType = Ogre::Light::LT_DIRECTIONAL;
+	Ogre::Vector3 aLightDirection = Ogre::Vector3(0.80,-1,0);
+	Ogre::Vector3 aLightPosition = Ogre::Vector3(0,0,0);
+	string aSkyMap = "skyMat";
+	string aNameLight = "lightW01";
+	string floorMeshName = "World01.mesh";
+	
+	switch (aWorld)
+	{
+		case 1:
+			aShadowTechnique = Ogre::SHADOWTYPE_STENCIL_ADDITIVE;
+			aLightType = Ogre::Light::LT_DIRECTIONAL;
+			aLightDirection = Ogre::Vector3(0.80,-1,0);
+			aLightPosition = Ogre::Vector3(0,0,0);
+			aSkyMap = "skyMat";
+			aNameLight = "lightW01";
+			break;
+		case 2: // [!] CAMBIA
+			aShadowTechnique = Ogre::SHADOWTYPE_STENCIL_ADDITIVE;
+			aLightType = Ogre::Light::LT_DIRECTIONAL;
+			aLightDirection = Ogre::Vector3(0,0,0);
+			aLightPosition = Ogre::Vector3(0,0,0);
+			aSkyMap = "";
+			aNameLight = "lightW02";
+			break;
+		case 3: // [!] CAMBIA
+			aShadowTechnique = Ogre::SHADOWTYPE_STENCIL_ADDITIVE;
+			aLightType = Ogre::Light::LT_DIRECTIONAL;
+			aLightDirection = Ogre::Vector3(0,0,0);
+			aLightPosition = Ogre::Vector3(0,0,0);
+			aSkyMap = "";
+			aNameLight = "lightW03";
+			break;
+		case 4: // [!] CAMBIA
+			aShadowTechnique = Ogre::SHADOWTYPE_STENCIL_ADDITIVE;
+			aLightType = Ogre::Light::LT_DIRECTIONAL;
+			aLightDirection = Ogre::Vector3(0,0,0);
+			aLightPosition = Ogre::Vector3(0,0,0);
+			aSkyMap = "";
+			aNameLight = "lightW04";
+			break;
+	}
+
+
+
+
 	// Luz del escenario.
 	_sceneMgr->setShadowTechnique(aShadowTechnique); // 
 	
@@ -825,8 +879,22 @@ PlayState::loadWorldEnvironment(Ogre::ShadowTechnique aShadowTechnique, Ogre::Li
 	_sceneMgr->getRootSceneNode()->attachObject(light);
 	//Create the Background
 	_sceneMgr->setSkyBox(true, aSkyMap, 100.0F, true);
+	
+	addActor(15.0f, 5.0f, 15.0f,"suelo", floorMeshName,"",		0.0f,	0.0f,	0.0f,	0,	1);
 
 }
+
+int
+PlayState::loadPlayerProgress()
+{
+	return 1;
+}
+
+void
+PlayState::savePlayerProgress()
+{}
+
+
 // End Adding methods -------------------------------------
 
 PlayState*
