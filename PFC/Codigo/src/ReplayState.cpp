@@ -27,11 +27,11 @@ ReplayState::enter ()
   _ReplayOverlay = _overlayMgr->getOverlayElement("reScoreLabel");
   _ReplayOverlay->setCaption("Score");
   _ReplayOverlay = _overlayMgr->getOverlayElement("reScoreDataLabel");
-  _ReplayOverlay->setCaption(Ogre::StringConverter::toString(_gameMgr->_score));
+  _ReplayOverlay->setCaption(Ogre::StringConverter::toString(_gameMgr->_currentStage));
   _ReplayOverlay = _overlayMgr->getOverlayElement("reHiscoreLabel");
   _ReplayOverlay->setCaption("HiScore");
   _ReplayOverlay = _overlayMgr->getOverlayElement("reHiscoreDataLabel");
-  _ReplayOverlay->setCaption(Ogre::StringConverter::toString(_gameMgr->_hiscore));
+  //_ReplayOverlay->setCaption(Ogre::StringConverter::toString(_gameMgr->_hiscore));
   _ReplayOverlay = _overlayMgr->getOverlayElement("reInfoLabel");
   _ReplayOverlay->setCaption("PRESS SPACE TO REPLAY...");
 
