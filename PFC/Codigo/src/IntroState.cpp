@@ -69,10 +69,9 @@ IntroState::enter ()
 		nodeG->attachObject(grEnt);
 		_sceneMgr->getRootSceneNode()->addChild(nodeG);
 
-		// carga de hiscore
-		_gameMgr->_hiscore=0;
-	
-		_gameMgr->loadHiScore();
+		// carga de Pantalla por la que va el jugador. en caso de no haber progreso se inicia en la 1
+		_gameMgr->_currentStage=1;
+		_gameMgr->loadStage();
 
 
 }
