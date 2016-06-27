@@ -120,7 +120,8 @@ private:
   std::list<Actor *>::iterator _actorsIt;
   int _counterActorsID;
   bool _controlBlock; // Bloqueo de controles de usuario. Usado en escenas de transicion.
-  int _stage;
+  int _currentStage;
+  int _currentWorld;
   double _goalCounter; // calcula el tiempo entre fases
   bool _nextStage; // control de acciones para siguiente fase
   	private:
