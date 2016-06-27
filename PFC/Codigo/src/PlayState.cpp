@@ -361,30 +361,30 @@ void PlayState::CreateInitialWorld() {
 				switch (textStage[x][y][z])
 				{
 				case 2:
-					addActor(1.0f, 1.0f, 1.0f,"actor", "box01.mesh","",				-14+(x*2), 6+(y*2), 14-(z*2), 0, 2);
+					addActor(1.0f, 1.0f, 1.0f,"actor", "box01.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
 					break;
 				case 3:
-					addActor(1.0f, 1.0f, 1.0f,"actor", "RockBox.mesh","",			-14+(x*2), 6+(y*2), 14-(z*2), 1, 3);
+					addActor(1.0f, 1.0f, 1.0f,"actor", "RockBox.mesh","",			-14+(x*2), 16-(y*2), 14-(z*2), 1, 3);
 					break;
 				case 4:
-					addActor(1.0f, 1.0f, 1.0f,"actor", "FragileRockBox.mesh","",	-14+(x*2), 6+(y*2), 14-(z*2), 0, 4);
+					addActor(1.0f, 1.0f, 1.0f,"actor", "FragileRockBox.mesh","",	-14+(x*2), 16-(y*2), 14-(z*2), 0, 4);
 					break;
 				case 5:
-					addActor(1.0f, .33f, 1.0f,"actor", "SwitchBox.mesh","",			-14+(x*2), 6.0f-.66+(y*2), 14-(z*2), 0, 5);
+					addActor(1.0f, .33f, 1.0f,"actor", "SwitchBox.mesh","",			-14+(x*2), 16.0f-.66-(y*2), 14-(z*2), 0, 5);
 					break;
 				case 6:
-					addActor(.0f, .0f, .0f,"actor", "TransparentBox.mesh","",		-14+(x*2), 6+(y*2), 14-(z*2), 0, 6);
+					addActor(.0f, .0f, .0f,"actor", "TransparentBox.mesh","",		-14+(x*2), 16-(y*2), 14-(z*2), 0, 6);
 					break;
 				case 8:
-					addActor(1.0f, .33f, 1.0f,"actor", "SwitchBaseBox.mesh","",		-14+(x*2), 6.0f-.66+(y*2), 14-(z*2), 0, 8);
+					addActor(1.0f, .33f, 1.0f,"actor", "SwitchBaseBox.mesh","",		-14+(x*2), 16.0f-.66-(y*2), 14-(z*2), 0, 8);
 					break;
 				case 10:
-					_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",-14+(x*2), 6+(y*2), 14-(z*2), 1, 10);
+					_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",-14+(x*2), 16-(y*2), 14-(z*2), 1, 10);
 					break;
 				
 				}
 			}
-
+			
 
 	//Nori
 //	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",0.0f,10.0f,0.0f,1,10);
@@ -403,20 +403,20 @@ void PlayState::CreateInitialWorld() {
 		}
 	}
 	*/
-
-//	addActor(15.0f, 5.0f, 15.0f,"suelo", "World01.mesh","",		0.0f,	0.0f,	0.0f,	0,	1);
-//	addActor(1.0f, 1.0f, 1.0f,"block", "box01.mesh","",			-7.0f,	8.0f,	7.0f,	0,	2);
-//	addActor(1.0f, 1.0f, 1.0f,"rock6", "RockBox.mesh","",		-7.0f,	12.0f,	7.0f,	1,	3);
-//	addActor(1.0f, .33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",	4.0f,	6.0f-.66,-14.0f,0,	8);
-//	addActor(1.0f, 1.0f, 1.0f,"dd2", "FragileRockBox.mesh","",	-3.0f,	8.0f,	7.0f,	0,	4);
-//	addActor(1.0f, .33f, 1.0f,"e", "SwitchBox.mesh","",		    -5.0f,	6.0f-.66,7.0f,	0,	5);
+	/* ///////////////////////inicial
+	addActor(15.0f, 5.0f, 15.0f,"suelo", "World01.mesh","",		0.0f,	0.0f,	0.0f,	0,	1);
+	addActor(1.0f, 1.0f, 1.0f,"block", "box01.mesh","",			-7.0f,	8.0f,	7.0f,	0,	2);
+	addActor(1.0f, 1.0f, 1.0f,"rock6", "RockBox.mesh","",		-7.0f,	12.0f,	7.0f,	1,	3);
+	addActor(1.0f, .33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",	4.0f,	6.0f-.66,-14.0f,0,	8);
+	addActor(1.0f, 1.0f, 1.0f,"dd2", "FragileRockBox.mesh","",	-3.0f,	8.0f,	7.0f,	0,	4);
+	addActor(1.0f, .33f, 1.0f,"e", "SwitchBox.mesh","",		    -5.0f,	6.0f-.66,7.0f,	0,	5);
 	
-//	addActor(.0f, .0f, .0f,"g1", "TransparentBox.mesh","",		-6.0f,	8.0f,	0.0f,	0,	6);
-//	addActor(.0f, .0f, .0f,"g2", "TransparentBox.mesh","",		-2.0f,	8.0f,	0.0f,	0,	6);
-//	addActor(.0f, .0f, .0f,"g3", "TransparentBox.mesh","",		2.0f,	8.0f,	0.0f,	0,	6);
-//	addActor(.0f, .0f, .0f,"g4", "TransparentBox.mesh","",		6.0f,	8.0f,	0.0f,	0,	6);
-//	addActor(.0f, .0f, .0f,"g5", "TransparentBox.mesh","",		10.0f,	8.0f,	0.0f,	0,	6);
-	
+	addActor(.0f, .0f, .0f,"g1", "TransparentBox.mesh","",		-6.0f,	8.0f,	0.0f,	0,	6);
+	addActor(.0f, .0f, .0f,"g2", "TransparentBox.mesh","",		-2.0f,	8.0f,	0.0f,	0,	6);
+	addActor(.0f, .0f, .0f,"g3", "TransparentBox.mesh","",		2.0f,	8.0f,	0.0f,	0,	6);
+	addActor(.0f, .0f, .0f,"g4", "TransparentBox.mesh","",		6.0f,	8.0f,	0.0f,	0,	6);
+	addActor(.0f, .0f, .0f,"g5", "TransparentBox.mesh","",		10.0f,	8.0f,	0.0f,	0,	6);
+	////////////////////// */
 	//addActor(1.0f, 1.0f, 1.0f,"rockc6", "RockBox.mesh","",		-7.0f,	14.0f,	7.0f,	1,	3);
 	//addActor(1.0f, 1.0f, 1.0f,"rockd6", "RockBox.mesh","",		14.0f,	6.0f,	4.0f,	1,	3);
 	
