@@ -69,7 +69,9 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void processActors(double aDeltaT);
   void activateAllActors();
   void nextStage();
-  void loadWorldEnvironment(Ogre::ShadowTechnique aShadowTechnique, Ogre::Light::LightTypes aLightType, Ogre::Vector3 aLightDirection, Ogre::Vector3 aLightPosition, std::string aSkyMap, std::string aNameLight);
+  void loadWorldEnvironment(int aWorld);
+  int loadPlayerProgress();
+  void savePlayerProgress();
 
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
@@ -90,7 +92,7 @@ private:
    
   Ogre::AnimationState *_animState;
   
-  void CreateInitialWorld();
+  void CreateCurrentWorld(int aCurrentStage);
   // end bullet
 
  protected:
