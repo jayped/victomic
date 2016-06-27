@@ -166,46 +166,37 @@ GameManager::configure ()
 }
 
 void
-GameManager::updateScore(int aNewScore)
+GameManager::updateStage(int aCurrentStage)
 {
 
-	string line;
 	ofstream myWritefile;
-	ifstream myReadFile;
-	const char* linechar;
  
-	// check score
-	_score = aNewScore;
-	if (aNewScore > _hiscore)
-	{
-		_hiscore = aNewScore;
-		myWritefile.open("pacmanhiscore.txt");
-		myWritefile << Ogre::StringConverter::toString(_hiscore);
-	}
-
+	myWritefile.open("currentStage.txt");
+	myWritefile << Ogre::StringConverter::toString(aCurrentStage);
+	_currentStage = aCurrentStage;
 	myWritefile.close();
 }
 
 void
-GameManager::loadHiScore()
+GameManager::loadStage()
 {
 	string line;
 	ofstream myWritefile;
 	ifstream myReadFile;
 	const char* linechar;
  
-	myReadFile.open ("pacmanhiscore.txt");
+	myReadFile.open ("currentStage.txt");
 	if (myReadFile.is_open())
 	{
 		std::getline(myReadFile,line);
 		myReadFile.close();
  		linechar = line.c_str();
-		_hiscore = atoi(linechar);
+		_currentStage = atoi(linechar);
 	}
 	else
 	{
-		myWritefile.open("pacmanhiscore.txt");
-		myWritefile << Ogre::StringConverter::toString(_hiscore);
+		myWritefile.open("currentStage.txt");
+		myWritefile << Ogre::StringConverter::toString(_currentStage);
 	}
 
 	
