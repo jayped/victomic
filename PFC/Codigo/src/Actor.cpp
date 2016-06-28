@@ -302,6 +302,7 @@ Actor::updateState(Ogre::Real aAnimationTime)
 	// Cerca del suelo, y próximo a parar.
 	if ( ((y>-_stayEpsilon) && (y<_stayEpsilon)) && (_state==_falling))
 	{
+		_gameMgr->playEndJump();
 		_state = _stay;
 		jumpParticle->setEmitting(true);
 	}
