@@ -706,6 +706,12 @@ PlayState::processActors(double aDeltaT)
 					{
 						lActor->setVisible(true);
 						lActor->generateParticles();
+						if (!lActor->Dead())
+						{
+							_gameMgr->playBreak();
+							lActor->Dead(true);
+						}
+						
 						//Ogre::SceneNode *_paraBorrar = dynamic_cast<Ogre::SceneNode*> (lActor);
 						//_world->removeRigidBody(lActor->getRigitBody());
 						//activateAllActors();
