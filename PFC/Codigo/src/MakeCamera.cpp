@@ -19,6 +19,8 @@ MakeCamera::init()
 	_cameraDirection = _stop;
 	_cameraPosition = 0;
 	_cameraDistance = _posCamZ;
+	_gameMgr = GameManager::getSingletonPtr();
+	
 }
 
 void
@@ -41,6 +43,7 @@ MakeCamera::setMoving(int aDirection)
 		if ((_cameraPosition) < 0) _cameraPosition=3;
 
 		_cameraDirection = (direction) aDirection;
+		_gameMgr->playCamera();
 	}
 
 }
