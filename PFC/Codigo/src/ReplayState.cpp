@@ -37,7 +37,7 @@ ReplayState::enter ()
 
   overlay->show();
   _ReplayOverlay->show();
-_gameMgr->playEnd();
+	//_gameMgr->playEnd();
 
   _exitGame = false;
 }
@@ -47,6 +47,7 @@ ReplayState::exit ()
 {
   overlay->hide();
   _ReplayOverlay->hide();
+  	_gameMgr->playMenu();
 
 }
 
