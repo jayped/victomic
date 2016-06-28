@@ -2,6 +2,8 @@
 #define ACTOR_H
 #include <Ogre.h>
 #include <btBulletDynamicsCommon.h>
+#include "GameManager.h"
+
 #define _jumpX 0 //-15
 #define _jumpY 9
 #define _jumpZ 0
@@ -40,7 +42,9 @@ public:
 	int getType();
 	void generateParticles();
 	int getActorID();
-
+	bool Dead() const { return _dead; }
+	void Dead(int aDead) { _dead = aDead; }
+    
 private:
 	int _actorID;
 	btRigidBody* _fallRigidBody;
@@ -55,5 +59,8 @@ private:
 	Ogre::AnimationState *_animation;
 	bool _activated; // usado para determinados objetos que detectan si el personaje lo pisa.
 	double _counter; // usado para cronometrar determinados eventos con el actor.
+	GameManager *_gameMgr;
+	bool _dead; // marca para actores que estan muriendo.
+  
 };
 #endif
