@@ -45,19 +45,23 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
 
   // maxima puntuacion del juego.
   int _currentStage;
-  SoundFXPtr _shotEffect;
-  SoundFXPtr _introEffect;
-  SoundFXPtr _coinEffect;
-  SoundFXPtr _deathEffect;
-  SoundFXPtr _scoreEffect;
+  SoundFXPtr _jumpEffect;
+  SoundFXPtr _menuEffect;
+  SoundFXPtr _breakEffect;
+  SoundFXPtr _switchEffect;
+  SoundFXPtr _goalEffect;
+  SoundFXPtr _cameraEffect;
+  SoundFXPtr _walkEffect;
+
   SoundFXPtr _bonusEffect;
   SoundFXPtr _musicStartEffect;
   SoundFXPtr _gunEffect;
   SoundFXPtr _endEffect;
+  
 
   SoundFXManager* _pSoundFXManager;
 
-  SoundFXPtr getSoundFXPtr () { return _shotEffect; }
+  //SoundFXPtr getSoundFXPtr () { return _jumpEffect; }
 
   // Para el estado inicial.
   void start (GameState* state);
@@ -74,21 +78,20 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   void updateStage(int aCurrentStage);
   void loadStage();
   
-  void playShot();
-  void stopShot();
-  
-  void playIntro();
-  
-  void playCoin();
-  void stopCoin();
-  
-  void playDeath();
-  void stopDeath();
-  void playScore();
-  void playBonus();
+  void playJump();
+  void stopJump();
+  void playMenu();
+  void playBreak();
+  void stopBreak();
+  void playSwitch();
+  void stopSwitch();
+  void playGoal();
+  void playCamera();
+  void playWalk();
+  void stopWalk();
+
   void playMusicStart();
-  void playGun();
-  void playEnd();
+  void stopMusicStart();
 
     bool isRightMov();
     bool isLeftMov();
