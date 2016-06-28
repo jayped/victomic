@@ -84,8 +84,10 @@ IntroState::exit()
   Ogre::Overlay *overlay = _overlayMgr->getByName("Splash");
   overlay->hide();
   _uhfOverlayElement->hide();
-  _gameMgr->stopCoin();
-		
+  //_gameMgr->stopCoin(); // [!] Lanzar el sonido de logo.
+  _gameMgr->stopMusicStart();
+	_gameMgr->playMenu();
+
 }
 
 void
@@ -116,11 +118,11 @@ IntroState::frameStarted
 	
 	if ((_onConsole>2) && !_isOn)
 	{
-		_gameMgr->playCoin();
+		//_gameMgr->playCoin();
 	}
 	if ((_onConsole>3) && !_isOn)
 	{
-		_gameMgr->stopCoin();
+		//_gameMgr->stopCoin();
 		_isOn=true;
 		nodeG->detachObject((unsigned short)0);
 		overlay->show();
