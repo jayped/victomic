@@ -2,6 +2,7 @@
 #define MAKECAMERA_H
 #include <Ogre.h>
 #include <math.h>
+#include "GameManager.h"
 
 #define _posCamX 0
 #define _posCamY 25
@@ -34,5 +35,7 @@ protected:
 	direction _cameraDirection;
 	int _cameraPosition; // 4 posiciones posibles en las 4 caras del cubo.
 	int _cameraDistance;
+	GameManager *_gameMgr;
+
 };
 #endif
