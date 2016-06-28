@@ -70,6 +70,7 @@ GameManager::start
   _goalEffect = _pSoundFXManager->load("sound_goal.wav");
   _musicStartEffect = _pSoundFXManager->load("musicstart.wav");
   _cameraEffect = _pSoundFXManager->load("sound_camera.wav");
+  _endjumpEffect = _pSoundFXManager->load("sound_endjump.wav");
   
   
 
@@ -271,6 +272,18 @@ void
 GameManager::stopWalk()
 {
 	_walkEffect->stop();
+}
+
+void
+GameManager::playEndJump()
+{
+	_endjumpEffect->play();
+}
+
+void
+GameManager::stopEndJump()
+{
+	_endjumpEffect->stop();
 }
 
 // End sonidos
