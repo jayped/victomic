@@ -62,16 +62,15 @@ GameManager::start
 
   // CARGA DE SONIDOS
   
-  _shotEffect = _pSoundFXManager->load("shot.wav");
-  _introEffect = _pSoundFXManager->load("musicgame.wav");
-  _coinEffect = _pSoundFXManager->load("coin.wav");
-  _deathEffect = _pSoundFXManager->load("death.wav");
-  _scoreEffect = _pSoundFXManager->load("puntua.wav");
-  _bonusEffect = _pSoundFXManager->load("bonus.wav");
+  _jumpEffect = _pSoundFXManager->load("sound_jump.wav");
+  _menuEffect = _pSoundFXManager->load("sound_menu.wav");
+  _breakEffect = _pSoundFXManager->load("sound_break.wav");
+  _walkEffect = _pSoundFXManager->load("sound_walk.wav");
+  //_switchEffect = _pSoundFXManager->load("sound_switch.wav");
+  _goalEffect = _pSoundFXManager->load("sound_goal.wav");
   _musicStartEffect = _pSoundFXManager->load("musicstart.wav");
-  _gunEffect = _pSoundFXManager->load("gun.wav");
-  _endEffect = _pSoundFXManager->load("end.wav");
-
+  _cameraEffect = _pSoundFXManager->load("sound_camera.wav");
+  
   
 
   // Transición al estado inicial.
@@ -204,72 +203,79 @@ GameManager::loadStage()
 
 // Sonidos
 void
-GameManager::playShot()
+GameManager::playJump()
 {
-	_shotEffect->play();
+	_jumpEffect->play();
 }
 void
-GameManager::stopShot()
+GameManager::stopJump()
 {
-	_shotEffect->stop();
+	_jumpEffect->stop();
 }
 void
-GameManager::playIntro()
+GameManager::playMenu()
 {
-	_introEffect->play();
+	_menuEffect->play();
 }
 void
-GameManager::playCoin()
+GameManager::playBreak()
 {
-	_coinEffect->play();
+	_breakEffect->play();
 }
 void
-GameManager::stopCoin()
+GameManager::stopBreak()
 {
-	_coinEffect->stop();
+	_breakEffect->stop();
 }
 void
-GameManager::playDeath()
+GameManager::playSwitch()
 {
-	_deathEffect->play();
+	_switchEffect->play();
 }
 void
-GameManager::stopDeath()
+GameManager::stopSwitch()
 {
-	_deathEffect->stop();
+	_switchEffect->stop();
 }
 
 void
-GameManager::playScore()
+GameManager::playGoal()
 {
-	_scoreEffect->play();
+	_goalEffect->play();
 }
 
-void
-GameManager::playBonus()
-{
-	_bonusEffect->play();
-}
 void
 GameManager::playMusicStart()
 {
 	_musicStartEffect->play();
 }
-
 void
-GameManager::playGun()
+GameManager::stopMusicStart()
 {
-	_gunEffect->play();
+	_musicStartEffect->stop();
 }
 
 void
-GameManager::playEnd()
+GameManager::playCamera()
 {
-	_endEffect->play();
+	_cameraEffect->play();
 }
+
+void
+GameManager::playWalk()
+{
+	_walkEffect->play(-1);
+}
+
+void
+GameManager::stopWalk()
+{
+	_walkEffect->stop();
+}
+
+// End sonidos
 
 GameManager*
-// End sonidos
 GameManager::getSingletonPtr ()
 {
   return msSingleton;
