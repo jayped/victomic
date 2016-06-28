@@ -14,6 +14,7 @@ Actor::~Actor()
 }
 void Actor::init(int aType, int aActorID)
 {
+
 	_currentSpeed=0.0F;
 	_state = _stay;
 	_actorID = aActorID;
@@ -21,10 +22,12 @@ void Actor::init(int aType, int aActorID)
 	Ogre::Root *_root = Ogre::Root::getSingletonPtr();
 	Ogre::SceneManager *_sceneMgr = _root->getSceneManager("SceneManager");
 	Ogre::Entity *_actorEntity;
-	
+	_gameMgr = GameManager::getSingletonPtr();
+		
 	_activated = false;
 	_counter = 1;
 	_type = aType;
+	_dead = false;
 
 	switch (aType)
 	{
@@ -95,8 +98,15 @@ Actor::move(int aDirection, int aCameraPosition)
 	// Particulas para desplazamiento de nori.
 	////////////////////////////
 	//particleNode->setPosition(this->getPosition());
+	if (!_activated)
+	{
+		_gameMgr->playWalk();
+		_activated=true;
+	}
+
 	smokeParticle->setEmitting(true);
-	
+	//_gameMgr->playWalk();
+
 	// animacion de nori
 	_animation->setEnabled(true);
 	_animation->setLoop(true);
@@ -174,6 +184,11 @@ Actor::move(int aDirection, int aCameraPosition)
 void
 Actor::stop()
 {
+	if (_activated)
+	{
+		_gameMgr->stopWalk();
+		_activated=false;
+	}
 	smokeParticle->setEmitting(false);
 	_animation->setEnabled(false);
 	_animation->setTimePosition(0.0);
@@ -241,6 +256,7 @@ Actor::jump()
 		btVector3 impulse(_jumpX,_jumpY,_jumpZ);
 		_fallRigidBody->activate(true);
 		_fallRigidBody->applyCentralImpulse(impulse);
+		_gameMgr->playJump();
 	}
 }
 
@@ -255,6 +271,8 @@ Actor::goal()
 	_fallRigidBody->activate(true);
 	_fallRigidBody->applyCentralImpulse(impulse);
 	_fallRigidBody->setAngularVelocity(btVector3(0,3,0));
+	_gameMgr->playGoal();
+
 	}
 	else
 		smokeParticle->setEmitting(true);
@@ -363,8 +381,6 @@ Actor::generateParticles()
 {
 	smokeParticle->setEmitting(true);
 }
-
-
 
 
 /*
