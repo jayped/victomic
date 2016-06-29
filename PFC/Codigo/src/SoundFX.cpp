@@ -12,6 +12,7 @@ SoundFX::SoundFX(Ogre::ResourceManager* creator, const Ogre::String& resource_na
   _pSound = 0;
   _path = "";
   _size = 0;
+  _channel = 0;
 }
 
 SoundFX::~SoundFX() {
@@ -20,13 +21,14 @@ SoundFX::~SoundFX() {
 }
 
 int SoundFX::play(int loop) {
-  int channel;
+  int channel=0;
+  _channel=0;
   Ogre::LogManager* pLogManager = Ogre::LogManager::getSingletonPtr();
 
   // Si el primer parámetro es un -1, maneja nuevos canales para efectos simultáneos
   //if (Mix_Playing(1)==0)
   //{
-   if ((channel = Mix_PlayChannel(-1, _pSound, loop)) == -1) {
+   if ((_channel = Mix_PlayChannel(-1, _pSound, loop)) == -1) {
     pLogManager->logMessage("SoundFX::play() Imposible reproducir el efecto de sonido.");
     throw (Ogre::Exception(Ogre::Exception::ERR_INTERNAL_ERROR,
 			   "Imposible reproducir el efecto de sonido", "SoundFX::play()"));
@@ -40,7 +42,7 @@ int SoundFX::stop() {
   Ogre::LogManager* pLogManager = Ogre::LogManager::getSingletonPtr();
 
   // Si el primer parámetro es un -1, maneja nuevos canales para efectos simultáneos
-  if ((channel = Mix_HaltChannel(-1)) == -1) {
+  if ((channel = Mix_HaltChannel(_channel)) == -1) {
     pLogManager->logMessage("SoundFX::play() Imposible reproducir el efecto de sonido.");
     throw (Ogre::Exception(Ogre::Exception::ERR_INTERNAL_ERROR,
 			   "Imposible reproducir el efecto de sonido", "SoundFX::play()"));
