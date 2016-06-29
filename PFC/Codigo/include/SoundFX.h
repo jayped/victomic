@@ -49,6 +49,7 @@ class SoundFX: public Ogre::Resource {
   Ogre::String _path; // Ruta completa al efecto de sonido.
   size_t _size;       // Tamaño del efecto (bytes).
   int _channel;		  // Canal activado con sonido.
+  bool _isStopped;
 };
 
 // Puntero inteligente a SoundFX.
