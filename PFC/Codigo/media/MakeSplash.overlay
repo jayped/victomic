@@ -1,0 +1,48 @@
+template element TextArea(MyTemplates/TextMakeStart)
+{
+    font_name MakeStart
+		metrics_mode pixels
+		char_height 40
+		colour 0.0 0.0 0.0 0.5
+}
+template element TextArea(MyTemplates/TextMakeStartS)
+{
+    font_name MakeStart
+		metrics_mode pixels
+		char_height 40
+		colour 1.0 1.0 1.0   
+}
+
+MakeSplash
+{
+    zorder 0
+
+    container Panel(splashPanel) 
+    {
+	      metrics_mode pixels
+        left 0
+        top 0
+        width 1366
+        height 768
+        vert_align top
+        horz_align left
+        material makesplashmat
+		    element TextArea(pressstartLabel) : MyTemplates/TextMakeStart
+		    {
+				  top 0
+				  left 0
+				  alignment center
+				  vert_align center
+				  horz_align center
+		    }
+		    element TextArea(pressstartLabelS) : MyTemplates/TextMakeStartS
+		    {
+				  top -6
+				  left -6
+				  alignment center
+				  vert_align center
+				  horz_align center
+		    }
+    }	  
+
+}

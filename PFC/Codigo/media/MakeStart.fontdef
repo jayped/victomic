@@ -1,0 +1,7 @@
+MakeStart
+{
+	type truetype
+	source Computerfont.ttf
+	size 35
+	resolution 96
+}
