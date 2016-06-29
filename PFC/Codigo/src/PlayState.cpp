@@ -874,6 +874,8 @@ PlayState::loadWorldEnvironment(int aWorld)
 			break;
 	}
 
+	// [!] Depende del mundo lanzara una u otra.
+	_gameMgr->playMusic();
 
 
 
