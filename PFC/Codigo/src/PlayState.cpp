@@ -93,6 +93,7 @@ PlayState::exit ()
 {
     _sceneMgr->clearScene();
 	_listOfActors.clear();
+	_gameMgr->stopMusic();
     //_overlay->hide();
 }
 
