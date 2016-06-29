@@ -72,6 +72,9 @@ GameManager::start
   _cameraEffect = _pSoundFXManager->load("sound_camera.wav");
   _endjumpEffect = _pSoundFXManager->load("sound_endjump.wav");
   
+  // lista musicas de mundos.
+  _world01Music = _pSoundFXManager->load("music_world01.wav");
+  
   
 
   // Transición al estado inicial.
@@ -284,6 +287,18 @@ void
 GameManager::stopEndJump()
 {
 	_endjumpEffect->stop();
+}
+
+void
+GameManager::playMusic()
+{
+	_world01Music->play(-1);
+}
+
+void
+GameManager::stopMusic()
+{
+	_world01Music->stop();
 }
 
 // End sonidos
