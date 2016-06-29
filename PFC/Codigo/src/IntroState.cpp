@@ -33,21 +33,15 @@ IntroState::enter ()
 		_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
 		//Ogre::Overlay *overlaytv = _overlayMgr->getByName("aTV");
 		overlay = _overlayMgr->getByName("Splash");
-		uhfoverlay = _overlayMgr->getByName("UFH");
-		_uhfOverlayElement = _overlayMgr->getOverlayElement("uhfLabel");
-		//_uhfOverlayElement->setCaption("UHF");
 
 		_startOverlay = _overlayMgr->getOverlayElement("startLabel");
 		_startOverlay->setCaption("PRESS SPACE TO START");
-		//overlaytv->show();
-		uhfoverlay->show();
 		_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
 		_pressStartCounter = 0.0;
 		_onConsole = 0.0;
 
 		_exitGame = false;
 		_isOn = false;
-		_UHFOFF = false;
 
 
 		// white noise inicial
@@ -61,15 +55,27 @@ IntroState::enter ()
 		Ogre::Plane pl1(Ogre::Vector3::UNIT_Z,30);
 		Ogre::MeshManager::getSingleton().createPlane("pl1",
 			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-			pl1,9.1f,2.2f,1,1,true,1,1,1,Ogre::Vector3::UNIT_Y);
+			pl1,7.1f,7.1f,1,1,true,1,1,1,Ogre::Vector3::UNIT_Y);
+		
+		Ogre::Plane pl2(Ogre::Vector3::UNIT_Z,30);
+		Ogre::MeshManager::getSingleton().createPlane("pl2",
+			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+			pl2,5.1f,5.1f,1,1,true,1,1,1,Ogre::Vector3::UNIT_Y);
 
 		// Añadir el plano a la escena
 		nodeG = _sceneMgr->createSceneNode("nodeG");
+		noriplane = _sceneMgr->createSceneNode("noriplane");
+		noriplane->setPosition(Ogre::Vector3(0,0,-1));
+
 		Ogre::Entity* grEnt = _sceneMgr->createEntity("pEnt", "pl1");
-		grEnt->setMaterialName("ninpondomat");
+		Ogre::Entity* grEnt2 = _sceneMgr->createEntity("pEnt2", "pl2");
+		grEnt->setMaterialName("intromat");
+		grEnt2->setMaterialName("norimat");
 		
 		nodeG->attachObject(grEnt);
+		noriplane->attachObject(grEnt2);
 		_sceneMgr->getRootSceneNode()->addChild(nodeG);
+		_sceneMgr->getRootSceneNode()->addChild(noriplane);
 
 		// carga de Pantalla por la que va el jugador. en caso de no haber progreso se inicia en la 1
 		_gameMgr->_currentStage=1;
@@ -85,7 +91,6 @@ IntroState::exit()
   _root->getAutoCreatedWindow()->removeAllViewports();
   Ogre::Overlay *overlay = _overlayMgr->getByName("Splash");
   overlay->hide();
-  _uhfOverlayElement->hide();
   //_gameMgr->stopCoin(); // [!] Lanzar el sonido de logo.
   _gameMgr->stopMusicStart();
 	_gameMgr->playMenu();
@@ -109,6 +114,7 @@ IntroState::frameStarted
 	Ogre::Real deltaT = evt.timeSinceLastFrame;
 	_pressStartCounter = _pressStartCounter + evt.timeSinceLastFrame;
 	_onConsole = _onConsole + evt.timeSinceLastFrame;
+	
 	if (_pressStartCounter>0.5)
 	{
 		_pressStartCounter = 0.0;
@@ -116,6 +122,11 @@ IntroState::frameStarted
 			_startOverlay->hide();
 		else
 			_startOverlay->show();
+	}
+	
+	if ((_onConsole>1) && !_isOn && noriplane->getPosition().y<3.5)
+	{
+		noriplane->setPosition(Ogre::Vector3(0,noriplane->getPosition().y+0.01,-1));
 	}
 	
 	if ((_onConsole>2) && !_isOn)
@@ -135,7 +146,6 @@ IntroState::frameStarted
 	if ((_onConsole>5) && !_UHFOFF)
 	{
 		_UHFOFF=true;
-		_uhfOverlayElement->hide();
 	}
 
 	
