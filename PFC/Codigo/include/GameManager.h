@@ -43,8 +43,10 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   ~GameManager (); // Limpieza de todos los estados.
 
 
-  // maxima puntuacion del juego.
+  // avance en el juego.
   int _currentStage;
+
+  //sonidos
   SoundFXPtr _jumpEffect;
   SoundFXPtr _menuEffect;
   SoundFXPtr _breakEffect;
@@ -59,6 +61,8 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   SoundFXPtr _gunEffect;
   SoundFXPtr _endEffect;
   
+  // musicas [!] cambiar por la clase Track.cpp
+  SoundFXPtr _world01Music;
 
   SoundFXManager* _pSoundFXManager;
 
@@ -92,6 +96,10 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   void stopWalk();
   void playEndJump();
   void stopEndJump();
+
+  void playMusic();
+  void stopMusic();
+
 
   void playMusicStart();
   void stopMusicStart();
