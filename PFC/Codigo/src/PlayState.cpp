@@ -685,7 +685,8 @@ PlayState::processActors(double aDeltaT)
 		Actor *lActor;
 		lActor = *it;
 		int actorType = lActor->getType();
-		
+		bool switch_activated=false;
+				
 		// 3: // Piedra movil
 		// 4: // Bloque fragil
 		// 5: // Interruptor
@@ -739,6 +740,7 @@ PlayState::processActors(double aDeltaT)
 					lType = 6; // Busca transparentes
 					lMeshName = "SolidBox.mesh";
 					lTypeToCreate=7;
+					//_gameMgr->playSwitch();
 				}
 
 				else
@@ -764,7 +766,7 @@ PlayState::processActors(double aDeltaT)
 
 						_delIt = switchList.end();
 						switchList.insert(_delIt,iteratorDelete);
-
+						switch_activated=true;
 					}
 				}
 						
@@ -781,6 +783,16 @@ PlayState::processActors(double aDeltaT)
 				}
 				
 				// Eliminar transparentes y añadir solidos.
+				if (switch_activated)
+				{
+					switch (lType)
+					{
+						case 6:_gameMgr->playSwitchOn();break;
+						case 7:_gameMgr->playSwitchOff();break;
+					}
+				}
+
+				switch_activated=false;
 				
 				break;
 			case 6:
