@@ -15,9 +15,9 @@ particle_system FragileRock
 	emitter Box
 	{
 		position 0 0 0
-		width 1.7
-		height 1.7
-		depth 1.7
+		width 2.4
+		height 2.4
+		depth 2.4
 		angle 10
 		emission_rate 1000
 		time_to_live 1
