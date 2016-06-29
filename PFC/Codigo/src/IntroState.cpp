@@ -32,10 +32,20 @@ IntroState::enter ()
 		
 		_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
 		//Ogre::Overlay *overlaytv = _overlayMgr->getByName("aTV");
-		overlay = _overlayMgr->getByName("Splash");
+		overlay = _overlayMgr->getByName("MakeSplash");
 
-		_startOverlay = _overlayMgr->getOverlayElement("startLabel");
-		_startOverlay->setCaption("PRESS SPACE TO START");
+		_startOverlay = _overlayMgr->getOverlayElement("splashPanel");
+		double width = _viewport->getActualWidth();
+		double height = _viewport->getActualHeight();
+		_startOverlay->setDimensions(width,height);
+		
+
+		_startOverlay = _overlayMgr->getOverlayElement("pressstartLabelS");
+		
+		_startOverlay->setCaption("PRESS START!");
+		_startOverlayS = _overlayMgr->getOverlayElement("pressstartLabel");
+		
+		_startOverlayS->setCaption("PRESS START!");
 		_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
 		_pressStartCounter = 0.0;
 		_onConsole = 0.0;
@@ -45,8 +55,6 @@ IntroState::enter ()
 
 
 		// white noise inicial
-		double width = _viewport->getActualWidth();
-		double height = _viewport->getActualHeight();
 		_camera->setAspectRatio(width / height);
 
 	
@@ -89,7 +97,7 @@ IntroState::exit()
 {
   _sceneMgr->clearScene();
   _root->getAutoCreatedWindow()->removeAllViewports();
-  Ogre::Overlay *overlay = _overlayMgr->getByName("Splash");
+  Ogre::Overlay *overlay = _overlayMgr->getByName("MakeSplash");
   overlay->hide();
   //_gameMgr->stopCoin(); // [!] Lanzar el sonido de logo.
   _gameMgr->stopMusicStart();
@@ -119,9 +127,15 @@ IntroState::frameStarted
 	{
 		_pressStartCounter = 0.0;
 		if (_startOverlay->isVisible())
+		{
 			_startOverlay->hide();
+			_startOverlayS->hide();
+		}
 		else
+		{
 			_startOverlay->show();
+			_startOverlayS->show();
+		}
 	}
 	
 	if ((_onConsole>1) && !_isOn && noriplane->getPosition().y<3.5)
