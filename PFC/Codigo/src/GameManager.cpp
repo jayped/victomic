@@ -66,7 +66,8 @@ GameManager::start
   _menuEffect = _pSoundFXManager->load("sound_menu.wav");
   _breakEffect = _pSoundFXManager->load("sound_break.wav");
   _walkEffect = _pSoundFXManager->load("sound_walk.wav");
-  //_switchEffect = _pSoundFXManager->load("sound_switch.wav");
+  _switchOnEffect = _pSoundFXManager->load("sound_switchOn.wav");
+  _switchOffEffect = _pSoundFXManager->load("sound_switchOff.wav");
   _goalEffect = _pSoundFXManager->load("sound_goal.wav");
   _musicStartEffect = _pSoundFXManager->load("musicstart.wav");
   _cameraEffect = _pSoundFXManager->load("sound_camera.wav");
@@ -232,14 +233,24 @@ GameManager::stopBreak()
 	_breakEffect->stop();
 }
 void
-GameManager::playSwitch()
+GameManager::playSwitchOn()
 {
-	_switchEffect->play();
+	_switchOnEffect->play();
 }
 void
-GameManager::stopSwitch()
+GameManager::stopSwitchOn()
 {
-	_switchEffect->stop();
+	_switchOnEffect->stop();
+}
+void
+GameManager::playSwitchOff()
+{
+	_switchOffEffect->play();
+}
+void
+GameManager::stopSwitchOff()
+{
+	_switchOffEffect->stop();
 }
 
 void
