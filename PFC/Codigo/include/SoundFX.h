@@ -48,6 +48,7 @@ class SoundFX: public Ogre::Resource {
   Mix_Chunk* _pSound; // Info sobre el efecto de sonido.
   Ogre::String _path; // Ruta completa al efecto de sonido.
   size_t _size;       // Tamaño del efecto (bytes).
+  int _channel;		  // Canal activado con sonido.
 };
 
 // Puntero inteligente a SoundFX.
