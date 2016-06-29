@@ -292,7 +292,10 @@ Actor::updateState(Ogre::Real aAnimationTime)
 	btScalar y=linearVelocity.getY();
 
 	// Callendo
-	if (y<=-_stayEpsilon){_state = _falling;_gameMgr->stopWalk();}
+	if (y<=-_stayEpsilon){
+		_state = _falling;
+		_gameMgr->stopWalk();
+	}
 	
 	// Parado
 	if ( ((y>-_stayEpsilon) && (y<_stayEpsilon)) && (_state==_stay))
