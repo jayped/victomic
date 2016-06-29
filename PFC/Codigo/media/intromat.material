@@ -1,0 +1,14 @@
+material intromat
+{
+	technique
+	{
+		pass
+		{
+			scene_blend src_alpha one_minus_src_alpha
+			texture_unit
+			{
+				anim_texture logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo0.PNG logo1.PNG logo2.PNG logo3.PNG logo4.PNG logo5.PNG logo6.PNG logo7.PNG logo8.PNG logo9.PNG logo10.PNG 2.5
+			}
+		}
+	}
+}
