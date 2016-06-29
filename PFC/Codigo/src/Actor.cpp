@@ -98,7 +98,7 @@ Actor::move(int aDirection, int aCameraPosition)
 	// Particulas para desplazamiento de nori.
 	////////////////////////////
 	//particleNode->setPosition(this->getPosition());
-	if (!_activated)
+	if (!_activated && _state==_stay)
 	{
 		_gameMgr->playWalk();
 		_activated=true;
@@ -256,6 +256,7 @@ Actor::jump()
 		btVector3 impulse(_jumpX,_jumpY,_jumpZ);
 		_fallRigidBody->activate(true);
 		_fallRigidBody->applyCentralImpulse(impulse);
+		_gameMgr->stopWalk();
 		_gameMgr->playJump();
 	}
 }
@@ -291,7 +292,7 @@ Actor::updateState(Ogre::Real aAnimationTime)
 	btScalar y=linearVelocity.getY();
 
 	// Callendo
-	if (y<=-_stayEpsilon)_state = _falling;
+	if (y<=-_stayEpsilon){_state = _falling;_gameMgr->stopWalk();}
 	
 	// Parado
 	if ( ((y>-_stayEpsilon) && (y<_stayEpsilon)) && (_state==_stay))
@@ -302,6 +303,7 @@ Actor::updateState(Ogre::Real aAnimationTime)
 	// Cerca del suelo, y próximo a parar.
 	if ( ((y>-_stayEpsilon) && (y<_stayEpsilon)) && (_state==_falling))
 	{
+		_activated=false;
 		_gameMgr->playEndJump();
 		_state = _stay;
 		jumpParticle->setEmitting(true);
