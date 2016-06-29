@@ -13,6 +13,7 @@ SoundFX::SoundFX(Ogre::ResourceManager* creator, const Ogre::String& resource_na
   _path = "";
   _size = 0;
   _channel = 0;
+  _isStopped = true;
 }
 
 SoundFX::~SoundFX() {
@@ -23,6 +24,8 @@ SoundFX::~SoundFX() {
 int SoundFX::play(int loop) {
   int channel=0;
   _channel=0;
+  _isStopped=false;
+
   Ogre::LogManager* pLogManager = Ogre::LogManager::getSingletonPtr();
 
   // Si el primer parámetro es un -1, maneja nuevos canales para efectos simultáneos
@@ -38,16 +41,18 @@ int SoundFX::play(int loop) {
 }
 
 int SoundFX::stop() {
-  int channel;
+  int channel=0;
   Ogre::LogManager* pLogManager = Ogre::LogManager::getSingletonPtr();
-
+  if (_isStopped==false)
+  {
   // Si el primer parámetro es un -1, maneja nuevos canales para efectos simultáneos
   if ((channel = Mix_HaltChannel(_channel)) == -1) {
     pLogManager->logMessage("SoundFX::play() Imposible reproducir el efecto de sonido.");
     throw (Ogre::Exception(Ogre::Exception::ERR_INTERNAL_ERROR,
 			   "Imposible reproducir el efecto de sonido", "SoundFX::play()"));
   }
-
+  _isStopped=true;
+  }
   return channel;
 }
 
