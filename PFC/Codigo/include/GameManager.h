@@ -50,7 +50,8 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   SoundFXPtr _jumpEffect;
   SoundFXPtr _menuEffect;
   SoundFXPtr _breakEffect;
-  SoundFXPtr _switchEffect;
+  SoundFXPtr _switchOnEffect;
+  SoundFXPtr _switchOffEffect;
   SoundFXPtr _goalEffect;
   SoundFXPtr _cameraEffect;
   SoundFXPtr _walkEffect;
@@ -88,8 +89,10 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   void playMenu();
   void playBreak();
   void stopBreak();
-  void playSwitch();
-  void stopSwitch();
+  void playSwitchOn();
+  void stopSwitchOn();
+  void playSwitchOff();
+  void stopSwitchOff();
   void playGoal();
   void playCamera();
   void playWalk();
