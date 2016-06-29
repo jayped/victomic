@@ -1,5 +1,7 @@
 #include "IntroState.h"
 #include "PlayState.h"
+#include "ReplayState.h"
+
 
 template<> IntroState* Ogre::Singleton<IntroState>::msSingleton = 0;
 
@@ -157,7 +159,7 @@ IntroState::keyPressed
   // Transición al siguiente estado.
   // Espacio --> PlayState
   if (e.key == OIS::KC_SPACE) {
-    changeState(PlayState::getSingletonPtr());
+    changeState(ReplayState::getSingletonPtr());
   }
 }
 

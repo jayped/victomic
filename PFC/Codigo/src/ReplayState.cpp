@@ -13,8 +13,10 @@ ReplayState::enter ()
 
 	  // Se recupera el gestor de escena y la cámara.
 	  _sceneMgr = _root->getSceneManager("SceneManager");
+	  
 	  _camera = _sceneMgr->getCamera("IntroCamera");
-	  _viewport = _root->getAutoCreatedWindow()->getViewport(0);
+	  //_viewport = _root->getAutoCreatedWindow()->getViewport(0);
+	  _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 	  // Nuevo background colour.
 	  //_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 1.0, 1.0));
 	  _overlayMgr = Ogre::OverlayManager::getSingletonPtr();

@@ -35,8 +35,8 @@ PlayState::enter ()
 		_camera = _sceneMgr->getCamera("IntroCamera");
 		_makeCamera = reinterpret_cast<MakeCamera*>(_camera);
 		_makeCamera->init();
-		
-		_viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
+		_viewport = _root->getAutoCreatedWindow()->getViewport(0);
+		//_viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 		_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 100.0));
 		_win = _root->getAutoCreatedWindow();
 
