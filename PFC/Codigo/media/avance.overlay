@@ -1,0 +1,21 @@
+
+Avance
+{
+    zorder 0
+	alignment center
+		
+    container Panel(avance) 
+    {
+	      metrics_mode pixels
+        left 0
+        top 0
+        width 1200
+        height 900
+        alignment center
+		vert_align center
+        horz_align center
+		material avancemat
+
+    }	  
+
+}
