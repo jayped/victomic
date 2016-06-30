@@ -119,6 +119,8 @@ PlayState::frameStarted
 	Ogre::Real deltaT = evt.timeSinceLastFrame;
 	int fps = 1.0 / deltaT;
 
+	if (deltaT!=0)
+		int fdfdf=0;
 	_world->stepSimulation(deltaT, 1); // Actualizar simulacion Bullet
 
 	_player->setSpeedRelative(deltaT);
@@ -359,7 +361,7 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
 	int lWorld = 1; // [!] a cargar del objeto Stage
 
 	// Carga de mundo.
-	loadWorldEnvironment(lWorld);
+	loadWorldEnvironment(_currentWorld);
 	
 	Stage s;
 	int ***textStage;
@@ -830,11 +832,11 @@ PlayState::activateAllActors()
 void
 PlayState::nextStage()
 {
-	_currentStage++;
+	_currentStage++;_currentWorld++;
 	_gameMgr->updateStage(_currentStage);
 	_overlay = _overlayMgr->getByName("TestOverlay");
 	_overlay->hide();
-	
+	//
 	// guardado de progreso.
 	// TO-DO
 }
@@ -847,6 +849,7 @@ PlayState::loadWorldEnvironment(int aWorld)
 	Ogre::Light::LightTypes aLightType = Ogre::Light::LT_DIRECTIONAL;
 	Ogre::Vector3 aLightDirection = Ogre::Vector3(0.80,-1,0);
 	Ogre::Vector3 aLightPosition = Ogre::Vector3(0,0,0);
+	_sceneMgr->setAmbientLight(Ogre::ColourValue(0.7, 0.7, 0.7));
 	string aSkyMap = "skyMat";
 	string aNameLight = "lightW01";
 	string floorMeshName = "World01.mesh";
@@ -858,23 +861,25 @@ PlayState::loadWorldEnvironment(int aWorld)
 			aLightType = Ogre::Light::LT_DIRECTIONAL;
 			aLightDirection = Ogre::Vector3(0.80,-1,0);
 			aLightPosition = Ogre::Vector3(0,0,0);
-			aSkyMap = "skyMat";
+			aSkyMap = "sky01Mat";
 			aNameLight = "lightW01";
+			floorMeshName = "World01.mesh";
 			break;
 		case 2: // [!] CAMBIA
 			aShadowTechnique = Ogre::SHADOWTYPE_STENCIL_ADDITIVE;
-			aLightType = Ogre::Light::LT_DIRECTIONAL;
-			aLightDirection = Ogre::Vector3(0,0,0);
-			aLightPosition = Ogre::Vector3(0,0,0);
-			aSkyMap = "";
+			aLightType = Ogre::Light::LT_POINT;
+			//aLightDirection = Ogre::Vector3(0,0,0);
+			aLightPosition = Ogre::Vector3(-20,10,-20);
+			aSkyMap = "sky02Mat";
 			aNameLight = "lightW02";
+			floorMeshName = "World02.mesh";
 			break;
 		case 3: // [!] CAMBIA
 			aShadowTechnique = Ogre::SHADOWTYPE_STENCIL_ADDITIVE;
 			aLightType = Ogre::Light::LT_DIRECTIONAL;
 			aLightDirection = Ogre::Vector3(0,0,0);
 			aLightPosition = Ogre::Vector3(0,0,0);
-			aSkyMap = "";
+			aSkyMap = "sky03Mat";
 			aNameLight = "lightW03";
 			break;
 		case 4: // [!] CAMBIA
@@ -882,7 +887,7 @@ PlayState::loadWorldEnvironment(int aWorld)
 			aLightType = Ogre::Light::LT_DIRECTIONAL;
 			aLightDirection = Ogre::Vector3(0,0,0);
 			aLightPosition = Ogre::Vector3(0,0,0);
-			aSkyMap = "";
+			aSkyMap = "sky04Mat";
 			aNameLight = "lightW04";
 			break;
 	}
