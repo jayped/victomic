@@ -41,11 +41,12 @@ IntroState::enter ()
 		
 
 		_startOverlay = _overlayMgr->getOverlayElement("pressstartLabelS");
-		
 		_startOverlay->setCaption("PRESS START!");
+		_startOverlay->setPosition(-width/4,0);
 		_startOverlayS = _overlayMgr->getOverlayElement("pressstartLabel");
-		
 		_startOverlayS->setCaption("PRESS START!");
+		_startOverlayS->setPosition((-width/4)+4,4);
+		
 		_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
 		_pressStartCounter = 0.0;
 		_onConsole = 0.0;
@@ -123,29 +124,28 @@ IntroState::frameStarted
 	_pressStartCounter = _pressStartCounter + evt.timeSinceLastFrame;
 	_onConsole = _onConsole + evt.timeSinceLastFrame;
 	
-	if (_pressStartCounter>0.5)
+	if (deltaT!=0)
+		int fdfdf=0;
+	_startOverlay->setColour(Ogre::ColourValue(0.0, 0.0, 0.0,(_startOverlay->getColour().a-(deltaT*2))));
+	_startOverlayS->setColour(Ogre::ColourValue(0.0, 0.0, 0.0,(_startOverlayS->getColour().a-(deltaT*0.6))));
+	if (_startOverlay->getColour().a<0)_startOverlay->setColour(Ogre::ColourValue(0.0, 0.0, 0.0,0));
+	if (_startOverlayS->getColour().a<0)_startOverlayS->setColour(Ogre::ColourValue(0.0, 0.0, 0.0,0));
+
+	if (_pressStartCounter>1.5)
 	{
 		_pressStartCounter = 0.0;
-		if (_startOverlay->isVisible())
-		{
-			_startOverlay->hide();
-			_startOverlayS->hide();
-		}
-		else
-		{
-			_startOverlay->show();
-			_startOverlayS->show();
-		}
-	}
+		_startOverlay->setColour(Ogre::ColourValue(0.0, 0.0, 0.0,1.0));
+		_startOverlayS->setColour(Ogre::ColourValue(0.0, 0.0, 0.0,0.3));
+ 	}
 	
 	if ((_onConsole>1) && !_isOn && noriplane->getPosition().y<3.5)
 	{
 		noriplane->setPosition(Ogre::Vector3(0,noriplane->getPosition().y+0.01,-1));
 	}
 	
-	if ((_onConsole>2) && !_isOn)
+	if (noriplane->getPosition().y>3.5)
 	{
-		//_gameMgr->playCoin();
+		noriplane->setPosition(noriplane->getPosition().x,3.5,noriplane->getPosition().z);_gameMgr->playCamera();
 	}
 	if ((_onConsole>3) && !_isOn)
 	{
