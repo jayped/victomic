@@ -1,7 +1,7 @@
 MakeStart
 {
 	type truetype
-	source Computerfont.ttf
+	source AGENCYB.TTF
 	size 35
 	resolution 96
 }

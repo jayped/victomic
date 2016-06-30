@@ -2,15 +2,15 @@ template element TextArea(MyTemplates/TextMakeStart)
 {
     font_name MakeStart
 		metrics_mode pixels
-		char_height 40
-		colour 0.0 0.0 0.0 0.5
+		char_height 60
+		colour 0.0 0.0 0.0 0.3
 }
 template element TextArea(MyTemplates/TextMakeStartS)
 {
     font_name MakeStart
 		metrics_mode pixels
-		char_height 40
-		colour 1.0 1.0 1.0   
+		char_height 60
+		colour 0.0 0.0 0.0   
 }
 
 MakeSplash
