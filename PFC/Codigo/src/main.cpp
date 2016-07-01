@@ -30,7 +30,11 @@
 
 using namespace std;
 
-int main (int argc, char *argv[])
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+    INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT)
+#else
+	int main() 
+#endif
 {
   GameManager* game = new GameManager();
   IntroState* introState = new IntroState();

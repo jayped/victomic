@@ -83,7 +83,7 @@ PlayState::enter ()
 	_world->setGravity(btVector3(0,-9,0));
 
 	// Creacion de los elementos iniciales del mundo
-	CreateCurrentWorld(1);
+	CreateCurrentWorld(_currentStage);
 	// End Bullet
 
 }
@@ -362,8 +362,8 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
 
 	// Carga de mundo.
 	loadWorldEnvironment(_currentWorld);
-	
-	Stage s;
+	StagesManager * stagesMgr = StagesManager::getSingletonPtr();
+	Stage s = stagesMgr->getStage(aCurrentStage);
 	int ***textStage;
 	textStage = s.getActors();
 

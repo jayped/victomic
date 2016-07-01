@@ -31,7 +31,7 @@
 #include "SoundFXManager.h"
 
 #include "InputManager.h"
-
+#include "StagesManager.h"
 #define JOYSTICK_MAX_AXIS 32767
 
 class GameState;
@@ -141,6 +141,7 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
 
   // Gestor de eventos de entrada.
   InputManager *_inputMgr;
+  StagesManager *_stagesMgr;
     
     bool _isRightMov;
     bool _isLeftMov;

@@ -52,6 +52,8 @@ GameManager::start
   _inputMgr = new InputManager;
   _inputMgr->initialise(_renderWindow);
 
+  _stagesMgr = new StagesManager();
+
   // Registro como key y mouse listener...
   _inputMgr->addKeyListener(this, "GameManager");
   _inputMgr->addMouseListener(this, "GameManager");

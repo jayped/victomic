@@ -1,7 +1,11 @@
+//#include "stdafx.h"
+
 #include "Stage.h"
 
 Stage::Stage()
 {
+    _stageID = 0;
+    _world = 0;
 	// 1: // Bloque Suelo de Escenario
 	// 2: // Bloque Construccion de Escenario
 	// 3: // Piedra movil
@@ -147,7 +151,8 @@ Stage::Stage()
 		{
 			_actors[z][y] = new int[15];
 			for (int x=0; x<15; x++)
-				_actors[z][y][x] = _textStage[x][y][z];
+				//_actors[z][y][x] = _textStage[x][y][z];
+                _actors[z][y][x] = 0;
 		}
 	}
 
@@ -171,4 +176,7 @@ Stage::setActors(int ***aActors)
 				_actors[x][y][z] = _textStage[x][y][z];
 				*/
 }
- 
+
+void Stage::setActors(int x, int y, int z, int value){
+    _actors[x][y][z] = value;
+}

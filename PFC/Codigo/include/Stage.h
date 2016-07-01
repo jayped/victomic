@@ -1,7 +1,7 @@
 #ifndef STAGE_H
 #define STAGE_H
 #include <Ogre.h>
-#include <btBulletDynamicsCommon.h>
+//#include <btBulletDynamicsCommon.h>
 
 // Clase que define las pantallas del juego.
 class Stage //: public Ogre::SceneNode
@@ -19,6 +19,7 @@ public:
 
 	int *** getActors();
     void setActors(int ***aActors);
+    void setActors(int x, int y, int z, int value);
 
 private:
 	int _stageID;
