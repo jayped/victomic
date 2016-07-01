@@ -401,7 +401,7 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
 					addActor(.0f, .0f, .0f,"actor", "TransparentBox.mesh","",		-14+(x*2), 16-(y*2), 14-(z*2), 0, 6);
 					break;
 				case 8:
-					addActor(1.0f, .33f, 1.0f,"actor", "SwitchBaseBox.mesh","",		-14+(x*2), 16.0f-.66-(y*2), 14-(z*2), 0, 8);
+					addActor(1.0f, .33f, 1.0f,"actor", "Goal.mesh","",		-14+(x*2), 16.0f-.66-(y*2), 14-(z*2), 0, 8);
 					break;
 				case 10:
 					_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",-14+(x*2), 16-(y*2), 14-(z*2), 1, 10);
