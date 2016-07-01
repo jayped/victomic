@@ -69,6 +69,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void processActors(double aDeltaT);
   void activateAllActors();
   void nextStage();
+  void restartStage();
   void loadWorldEnvironment(int aWorld);
   int loadPlayerProgress();
   void savePlayerProgress();
