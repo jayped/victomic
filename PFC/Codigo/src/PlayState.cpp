@@ -360,10 +360,12 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
 	int lWorld = 1; // [!] a cargar del objeto Stage
     StagesManager * stagesMgr = StagesManager::getSingletonPtr();
 	Stage * s = stagesMgr->getStage(aCurrentStage);
-    _currentWorld = s->world();
+
+	_currentWorld = s->world();
 	// Carga de mundo.
 	loadWorldEnvironment(_currentWorld);
-	
+	_overlayMgr->getOverlayElement("TestValue")->setCaption("Stage: " + Ogre::StringConverter::toString(_currentWorld) +"-"+ Ogre::StringConverter::toString(_currentStage));
+
 	int ***textStage;
 	textStage = s->getActors();
 
@@ -414,60 +416,6 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
 			}
 			
 
-	//Nori
-//	_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",0.0f,10.0f,0.0f,1,10);
-	//_player->initNori();
-	// ---
-	/*
-	string name="";
-	int numname=0;
-	for (int yy = 0; yy<4; yy++)
-	{
-		for (int xx = 0; xx<15; xx++)
-		{
-			name = "actor"+ to_string(numname);
-			numname++;
-			addActor(1.0f, 1.0f, 1.0f,name, "box01.mesh","", -14+(xx*2), 6 +(yy*2), -10.0f+(yy*2),0, 10);
-		}
-	}
-	*/
-	/* ///////////////////////inicial
-	addActor(15.0f, 5.0f, 15.0f,"suelo", "World01.mesh","",		0.0f,	0.0f,	0.0f,	0,	1);
-	addActor(1.0f, 1.0f, 1.0f,"block", "box01.mesh","",			-7.0f,	8.0f,	7.0f,	0,	2);
-	addActor(1.0f, 1.0f, 1.0f,"rock6", "RockBox.mesh","",		-7.0f,	12.0f,	7.0f,	1,	3);
-	addActor(1.0f, .33f, 1.0f,"rock3", "SwitchBaseBox.mesh","",	4.0f,	6.0f-.66,-14.0f,0,	8);
-	addActor(1.0f, 1.0f, 1.0f,"dd2", "FragileRockBox.mesh","",	-3.0f,	8.0f,	7.0f,	0,	4);
-	addActor(1.0f, .33f, 1.0f,"e", "SwitchBox.mesh","",		    -5.0f,	6.0f-.66,7.0f,	0,	5);
-	
-	addActor(.0f, .0f, .0f,"g1", "TransparentBox.mesh","",		-6.0f,	8.0f,	0.0f,	0,	6);
-	addActor(.0f, .0f, .0f,"g2", "TransparentBox.mesh","",		-2.0f,	8.0f,	0.0f,	0,	6);
-	addActor(.0f, .0f, .0f,"g3", "TransparentBox.mesh","",		2.0f,	8.0f,	0.0f,	0,	6);
-	addActor(.0f, .0f, .0f,"g4", "TransparentBox.mesh","",		6.0f,	8.0f,	0.0f,	0,	6);
-	addActor(.0f, .0f, .0f,"g5", "TransparentBox.mesh","",		10.0f,	8.0f,	0.0f,	0,	6);
-	////////////////////// */
-	//addActor(1.0f, 1.0f, 1.0f,"rockc6", "RockBox.mesh","",		-7.0f,	14.0f,	7.0f,	1,	3);
-	//addActor(1.0f, 1.0f, 1.0f,"rockd6", "RockBox.mesh","",		14.0f,	6.0f,	4.0f,	1,	3);
-	
-	//addActor(1.0f, 1.0f, 1.0f,"dww", "RockBox.mesh","",			4.0f,	10.0f,		0.0f,	4.0f,	10.0f,		0.0f,1,3);
-	//addActor(1.0f, 1.0f, 1.0f,"d1", "FragileRockBox.mesh","",	-5.0f,	8.0f,	7.0f,	0,	4);
-	//addActor(1.0f, 1.0f, 1.0f,"h", "SolidBox.mesh","",			-2.0f,	8.0f,	-14.0f,	0,	7);
-	
-	//addActor(1.0f, 1.0f, 1.0f,"a", "box01.mesh","",			-7.0f,10.0f,7.0f,-7.0f,10.0f,7.0f,0,2);
-	//addActor(1.0f, 1.0f, 1.0f,"b", "RockBox.mesh","",		0.0f,14.0f,0.0f,0.0f,14.0f,0.0f,1,3);
-	//addActor(1.0f, 1.0f, 1.0f,"c", "RockBox.mesh","",		0.0f,16.0f,0.0f,0.0f,16.0f,0.0f,1,3);
-	//addActor(1.0f, .33f, 1.0f,"f", "SwitchBaseBox.mesh","",		4.0f,6.0f-.66,-10.0f,4.0f,6.0f-.66,-10.0f,0,8);
-	
-	// 1: // Bloque Suelo de Escenario
-	// 2: // Bloque Construccion de Escenario
-	// 3: // Piedra movil
-	// 4: // Bloque fragil
-	// 5: // Interruptor
-	// 6: // Bloque transparente
-	// 7: // Bloque solido
-	// 8: // Meta de escenario
-	// 10:// Nori
-	// test matriz definicion de mundos
-	//int x[15][6][15];
 
 
 
@@ -927,11 +875,6 @@ PlayState::loadWorldEnvironment(int aWorld)
 			break;
 	}
 
-	// [!] Depende del mundo lanzara una u otra.
-	_gameMgr->playMusic();
-
-
-
 	// Luz del escenario.
 	_sceneMgr->setShadowTechnique(aShadowTechnique); // 
 	
@@ -949,6 +892,9 @@ PlayState::loadWorldEnvironment(int aWorld)
 	_sceneMgr->setSkyBox(true, aSkyMap, 100.0F, true);
 	
 	addActor(15.0f, 5.0f, 15.0f,"suelo", floorMeshName,"",		0.0f,	0.0f,	0.0f,	0,	1);
+
+	// [!] Depende del mundo lanzara una u otra.
+	_gameMgr->playMusic();
 
 }
 
