@@ -103,16 +103,6 @@ PauseState::mouseReleased
 {
 }
 
-bool PauseState::axisMoved( const OIS::JoyStickEvent &e, int axis ){
-    return true;
-}
-bool PauseState::buttonPressed( const OIS::JoyStickEvent &e, int button ){
-    return true;
-}
-bool PauseState::buttonReleased( const OIS::JoyStickEvent &e, int button ){
-    return true;
-}
-
 PauseState*
 PauseState::getSingletonPtr ()
 {

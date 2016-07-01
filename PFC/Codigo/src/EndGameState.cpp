@@ -115,17 +115,6 @@ EndGameState::mouseReleased
 {
 }
 
-bool EndGameState::axisMoved( const OIS::JoyStickEvent &e, int axis ){
-    return true;
-}
-bool EndGameState::buttonPressed( const OIS::JoyStickEvent &e, int button ){
-    return true;
-}
-bool EndGameState::buttonReleased( const OIS::JoyStickEvent &e, int button ){
-    return true;
-}
-
-
 EndGameState*
 EndGameState::getSingletonPtr ()
 {

@@ -340,16 +340,6 @@ PlayState::mouseReleased
 
 }
 
-
-bool PlayState::axisMoved( const OIS::JoyStickEvent &e, int axis ){
-    return true;
-}
-bool PlayState::buttonPressed( const OIS::JoyStickEvent &e, int button ){
-    return true;
-}
-bool PlayState::buttonReleased( const OIS::JoyStickEvent &e, int button ){
-    return true;
-}
 // Adding methods -------------------------------------
 
 // CreateInitialWorld

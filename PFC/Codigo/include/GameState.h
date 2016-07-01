@@ -51,10 +51,6 @@ class GameState {
 			     OIS::MouseButtonID id) = 0;
   virtual void mouseReleased (const OIS::MouseEvent &e, 
 			      OIS::MouseButtonID id) = 0;
-    //Gestión del joystick
-    virtual bool axisMoved( const OIS::JoyStickEvent &e, int axis ) = 0;
-    virtual bool buttonPressed( const OIS::JoyStickEvent &e, int button ) = 0;
-    virtual bool buttonReleased( const OIS::JoyStickEvent &e, int button ) = 0;
 
   // Gestión básica para la gestión
   // de eventos antes y después de renderizar un frame.
