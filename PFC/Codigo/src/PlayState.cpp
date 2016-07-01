@@ -211,7 +211,6 @@ PlayState::frameStarted
 	if (_goalCounter<0)
 	{
 		nextStage();
-		changeState(ReplayState::getSingletonPtr());
 	}
 	return true;
 }
@@ -655,8 +654,8 @@ PlayState::colision(btCollisionObject *aObject)
 					colisionesNori = numContacts;
 					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
 					double centroDeMasasB = obB->getCenterOfMassPosition().getY();
-					if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.07) &&
-							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 2.04))
+					if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.10) &&
+							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 1.99))
 					{
 						// Codigo final fase.
 						//changeState(ReplayState::getSingletonPtr());
@@ -697,7 +696,8 @@ PlayState::processActors(double aDeltaT)
 	int lTypeToCreate = 0;
 	Ogre::String lMeshName = "";
 	std::list<Actor *> switchList;
-	
+	bool endgame=false;
+
 	for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
 	{
 		Actor *lActor;
@@ -817,7 +817,10 @@ PlayState::processActors(double aDeltaT)
 				_world->removeRigidBody(lActor->getRigitBody()); // Elimina el cuerpo rigido de los transparentes si existe.
 				activateAllActors(); // activa los elementos posibles que esten encima de el para que actue la física.
 				break;
-			case 8:
+			case 10:
+				
+				if (lActor->getPosition().y < -30)
+					endgame=true;
 				break;
 		}
 
@@ -829,6 +832,9 @@ PlayState::processActors(double aDeltaT)
 		Actor *iteratorDelete=*it;
 		_listOfActors.remove(iteratorDelete);
 	}
+
+	if (endgame)
+		restartStage();
 }
 
 void
@@ -852,9 +858,18 @@ PlayState::nextStage()
 	_gameMgr->updateStage(_currentStage);
 	_overlay = _overlayMgr->getByName("TestOverlay");
 	_overlay->hide();
+	changeState(ReplayState::getSingletonPtr());
 	//
 	// guardado de progreso.
 	// TO-DO
+}
+
+void
+PlayState::restartStage()
+{
+	_overlay = _overlayMgr->getByName("TestOverlay");
+	_overlay->hide();
+	changeState(ReplayState::getSingletonPtr());
 }
 
 void
@@ -880,6 +895,7 @@ PlayState::loadWorldEnvironment(int aWorld)
 			aSkyMap = "sky01Mat";
 			aNameLight = "lightW01";
 			floorMeshName = "World01.mesh";
+			_sceneMgr->setAmbientLight(Ogre::ColourValue(0.7, 0.7, 0.7));
 			break;
 		case 2: // [!] CAMBIA
 			aShadowTechnique = Ogre::SHADOWTYPE_STENCIL_ADDITIVE;
@@ -889,14 +905,17 @@ PlayState::loadWorldEnvironment(int aWorld)
 			aSkyMap = "sky02Mat";
 			aNameLight = "lightW02";
 			floorMeshName = "World02.mesh";
+			_sceneMgr->setAmbientLight(Ogre::ColourValue(0.8, 0.5, 0.3));
 			break;
 		case 3: // [!] CAMBIA
 			aShadowTechnique = Ogre::SHADOWTYPE_STENCIL_ADDITIVE;
 			aLightType = Ogre::Light::LT_DIRECTIONAL;
-			aLightDirection = Ogre::Vector3(0,0,0);
-			aLightPosition = Ogre::Vector3(0,0,0);
+			aLightDirection = Ogre::Vector3(0.80,-1,0.805);
+			aLightPosition = Ogre::Vector3(-15,10,-7);
 			aSkyMap = "sky03Mat";
 			aNameLight = "lightW03";
+			floorMeshName = "World03.mesh";
+			_sceneMgr->setAmbientLight(Ogre::ColourValue(1, 0.7, 1));
 			break;
 		case 4: // [!] CAMBIA
 			aShadowTechnique = Ogre::SHADOWTYPE_STENCIL_ADDITIVE;
