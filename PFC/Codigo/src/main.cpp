@@ -25,7 +25,7 @@
 #include "PlayState.h"
 #include "PauseState.h"
 #include "ReplayState.h"
-
+#include "EndGameState.h"
 #include <iostream>
 
 using namespace std;
@@ -41,12 +41,13 @@ using namespace std;
   PlayState* playState = new PlayState();
   PauseState* pauseState = new PauseState();
   ReplayState* replayState = new ReplayState();
+  EndGameState* endGameState = new EndGameState();
 
   UNUSED_VARIABLE(introState);
   UNUSED_VARIABLE(playState);
   UNUSED_VARIABLE(pauseState);
   UNUSED_VARIABLE(replayState);
-    
+  UNUSED_VARIABLE(endGameState);
   try
     {
       // Inicializa el juego y transición al primer estado.

@@ -1,4 +1,5 @@
 #include "ReplayState.h"
+#include "EndGameState.h"
 #include "PlayState.h"
 #include "PauseState.h"
 #include "MyMotionState.h"
@@ -17,6 +18,7 @@ PlayState::PlayState ()
 {
     _root = 0;
     isStop = false;
+    isLastStage = false;
 
 }
 
@@ -360,7 +362,10 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
 	int lWorld = 1; // [!] a cargar del objeto Stage
     StagesManager * stagesMgr = StagesManager::getSingletonPtr();
 	Stage * s = stagesMgr->getStage(aCurrentStage);
-
+    //Si la stage actual corresponde con la máxima cargada, ponemos isLastStage a true
+    if( aCurrentStage == stagesMgr->getMaxStage() ){
+        isLastStage = true;
+    }
 	_currentWorld = s->world();
 	// Carga de mundo.
 	loadWorldEnvironment(_currentWorld);
@@ -802,11 +807,20 @@ PlayState::activateAllActors()
 void
 PlayState::nextStage()
 {
-	_currentStage++;_currentWorld++;
-	_gameMgr->updateStage(_currentStage);
-	_overlay = _overlayMgr->getByName("TestOverlay");
-	_overlay->hide();
-	changeState(ReplayState::getSingletonPtr());
+    if( !isLastStage )
+    {
+	    _currentStage++;_currentWorld++;
+	    _gameMgr->updateStage(_currentStage);
+	    _overlay = _overlayMgr->getByName("TestOverlay");
+	    _overlay->hide();
+	    changeState(ReplayState::getSingletonPtr());
+    }
+    else
+    {
+        _overlay = _overlayMgr->getByName("TestOverlay");
+        _overlay->hide();
+	    changeState(EndGameState::getSingletonPtr());
+    }
 	//
 	// guardado de progreso.
 	// TO-DO

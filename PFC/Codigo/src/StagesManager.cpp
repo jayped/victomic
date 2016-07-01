@@ -13,6 +13,7 @@ StagesManager::StagesManager(void)
     for( int i = 0; i < NUM_STAGES; i++ ){
         _allStages[i] = 0;
     }
+    _maxStage = 0;
     createStages();
 }
 
@@ -90,6 +91,7 @@ void StagesManager::createStages(){
                         nextItem = getNextItem(ssline);
                         stage->world(stringToNumber( nextItem ) );
                         _allStages[stage->stageID()-1] = stage;
+                        _maxStage = stage->stageID();
                     }
                 }
             }
@@ -124,6 +126,9 @@ Stage * StagesManager::getStage(int stage){
     return _allStages[stage-1];
 }
 
+int StagesManager::getMaxStage(){
+    return _maxStage;
+}
 StagesManager* StagesManager::getSingletonPtr ()
 {
   return msSingleton;

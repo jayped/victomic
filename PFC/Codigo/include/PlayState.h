@@ -125,9 +125,11 @@ private:
   int _currentWorld;
   double _goalCounter; // calcula el tiempo entre fases
   bool _nextStage; // control de acciones para siguiente fase
-  	private:
+
+private:
     bool isInitialMove;
     bool isStop;
+    bool isLastStage;
 
 };
 

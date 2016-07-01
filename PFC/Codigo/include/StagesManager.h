@@ -10,6 +10,7 @@ public:
     StagesManager(void);
     ~StagesManager(void);
     Stage * getStage(int stage);
+    int     getMaxStage();
     static StagesManager& getSingleton ();
     static StagesManager* getSingletonPtr ();
 
@@ -21,5 +22,6 @@ private:
 
 private:
     Stage * _allStages[NUM_STAGES];
+    int     _maxStage;
 };
 #endif

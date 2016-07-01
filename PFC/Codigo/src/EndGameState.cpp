@@ -1,10 +1,10 @@
-#include "ReplayState.h"
+#include "EndGameState.h"
 #include "PlayState.h"
 
-template<> ReplayState* Ogre::Singleton<ReplayState>::msSingleton = 0;
+template<> EndGameState* Ogre::Singleton<EndGameState>::msSingleton = 0;
 
 void
-ReplayState::enter ()
+EndGameState::enter ()
 {
 	bool mapFit=false;
 	if (!_root)
@@ -16,8 +16,8 @@ ReplayState::enter ()
 	  _sceneMgr = _root->getSceneManager("SceneManager");
 	  
 	  _camera = _sceneMgr->getCamera("IntroCamera");
-	  //_viewport = _root->getAutoCreatedWindow()->getViewport(0);
-	  _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
+	  _viewport = _root->getAutoCreatedWindow()->getViewport(0);
+	  //_viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 	  // Nuevo background colour.
 	  //_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 1.0, 1.0));
 	  _overlayMgr = Ogre::OverlayManager::getSingletonPtr();
@@ -41,31 +41,14 @@ ReplayState::enter ()
 		mapOverlay->setPosition(-(mapOverlay->getWidth()/2),-mapOverlay->getHeight()/2);
 
 	}
-	
-/*
-  _ReplayOverlay = _overlayMgr->getOverlayElement("reTitleLabel");
-  _ReplayOverlay->setCaption("Game results:");
-  _ReplayOverlay = _overlayMgr->getOverlayElement("reScoreLabel");
-  _ReplayOverlay->setCaption("Score");
-  _ReplayOverlay = _overlayMgr->getOverlayElement("reScoreDataLabel");
-  _ReplayOverlay->setCaption(Ogre::StringConverter::toString(_gameMgr->_currentStage));
-  _ReplayOverlay = _overlayMgr->getOverlayElement("reHiscoreLabel");
-  _ReplayOverlay->setCaption("HiScore");
-  _ReplayOverlay = _overlayMgr->getOverlayElement("reHiscoreDataLabel");
-  //_ReplayOverlay->setCaption(Ogre::StringConverter::toString(_gameMgr->_hiscore));
-  _ReplayOverlay = _overlayMgr->getOverlayElement("reInfoLabel");
-  _ReplayOverlay->setCaption("PRESS SPACE TO REPLAY...");
-  */
 
   overlay->show();
-  //_ReplayOverlay->show();
-	//_gameMgr->playEnd();
 
   _exitGame = false;
 }
 
 void
-ReplayState::exit ()
+EndGameState::exit ()
 {
   overlay->hide();
   //_ReplayOverlay->hide();
@@ -74,17 +57,17 @@ ReplayState::exit ()
 }
 
 void
-ReplayState::pause ()
+EndGameState::pause ()
 {
 }
 
 void
-ReplayState::resume ()
+EndGameState::resume ()
 {
 }
 
 bool
-ReplayState::frameStarted
+EndGameState::frameStarted
 (const Ogre::FrameEvent& evt)
 {
 
@@ -92,7 +75,7 @@ ReplayState::frameStarted
 }
 
 bool
-ReplayState::frameEnded
+EndGameState::frameEnded
 (const Ogre::FrameEvent& evt)
 {
   if (_exitGame)
@@ -102,59 +85,55 @@ ReplayState::frameEnded
 }
 
 void
-ReplayState::keyPressed
+EndGameState::keyPressed
 (const OIS::KeyEvent &e) {
-  if (e.key == OIS::KC_SPACE) {
-	changeState(PlayState::getSingletonPtr());
-  }
+ 
 }
 
-void
-ReplayState::keyReleased
-(const OIS::KeyEvent &e)
-{
+void EndGameState::keyReleased(const OIS::KeyEvent &e){
+    //Desde este estado no se podrá volver a PlayState
     if (e.key == OIS::KC_ESCAPE) {
         _exitGame = true;
     }
 }
 
 void
-ReplayState::mouseMoved
+EndGameState::mouseMoved
 (const OIS::MouseEvent &e)
 {
 }
 
 void
-ReplayState::mousePressed
+EndGameState::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
 }
 
 void
-ReplayState::mouseReleased
+EndGameState::mouseReleased
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
 }
 
-bool ReplayState::axisMoved( const OIS::JoyStickEvent &e, int axis ){
+bool EndGameState::axisMoved( const OIS::JoyStickEvent &e, int axis ){
     return true;
 }
-bool ReplayState::buttonPressed( const OIS::JoyStickEvent &e, int button ){
+bool EndGameState::buttonPressed( const OIS::JoyStickEvent &e, int button ){
     return true;
 }
-bool ReplayState::buttonReleased( const OIS::JoyStickEvent &e, int button ){
+bool EndGameState::buttonReleased( const OIS::JoyStickEvent &e, int button ){
     return true;
 }
 
 
-ReplayState*
-ReplayState::getSingletonPtr ()
+EndGameState*
+EndGameState::getSingletonPtr ()
 {
 return msSingleton;
 }
 
-ReplayState&
-ReplayState::getSingleton ()
+EndGameState&
+EndGameState::getSingleton ()
 { 
   assert(msSingleton);
   return *msSingleton;
