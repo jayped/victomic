@@ -158,7 +158,19 @@ Stage::Stage()
 
 }
 
-Stage::~Stage(){}
+Stage::~Stage(){
+    _stageID = 0;
+    _world = 0;
+    for (int z=0; z<15; z++)
+    {
+	    for (int y=0; y<6; y++)
+	    {
+		    delete _actors[z][y];
+	    }
+        delete _actors[z];
+    }
+    delete _actors;
+}
 
 int***
 Stage::getActors()

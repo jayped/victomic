@@ -360,13 +360,13 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
 	// Busqueda en std::list Stages la pantalla correspondiente y nos da numero de mundo y matriz con elementos
 	int lWorld = 1; // [!] a cargar del objeto Stage
     StagesManager * stagesMgr = StagesManager::getSingletonPtr();
-	Stage s = stagesMgr->getStage(aCurrentStage);
-    _currentWorld = s.world();
+	Stage * s = stagesMgr->getStage(aCurrentStage);
+    _currentWorld = s->world();
 	// Carga de mundo.
 	loadWorldEnvironment(_currentWorld);
 	
 	int ***textStage;
-	textStage = s.getActors();
+	textStage = s->getActors();
 
 	for (int z=0; z<15; z++)
 		for (int y=0; y<6; y++)

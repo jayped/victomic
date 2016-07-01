@@ -9,7 +9,7 @@ class StagesManager : public Ogre::Singleton<StagesManager>
 public:
     StagesManager(void);
     ~StagesManager(void);
-    Stage getStage(int stage);
+    Stage * getStage(int stage);
     static StagesManager& getSingleton ();
     static StagesManager* getSingletonPtr ();
 
@@ -20,6 +20,6 @@ private:
     std::string getNextItem( std::stringstream &ss);
 
 private:
-    Stage * _allStages;
+    Stage * _allStages[NUM_STAGES];
 };
 #endif

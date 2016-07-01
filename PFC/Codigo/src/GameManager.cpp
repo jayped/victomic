@@ -13,6 +13,7 @@ template<> GameManager* Ogre::Singleton<GameManager>::msSingleton = 0;
 GameManager::GameManager ()
 {
   _root = 0;
+  _stagesMgr = 0;
   _isRightMov = false;
   _isLeftMov = false;
   _isDownMov = false;
@@ -21,13 +22,19 @@ GameManager::GameManager ()
 
 GameManager::~GameManager ()
 {
-  while (!_states.empty()) {
-    _states.top()->exit();
-    _states.pop();
-  }
+    while (!_states.empty()) {
+        _states.top()->exit();
+        _states.pop();
+    }
   
-  if (_root)
-    delete _root;
+    if (_root)
+        delete _root;
+
+    if( _stagesMgr != 0 )
+    {
+        delete _stagesMgr;
+        _stagesMgr = 0;
+    }
 }
 
 void
