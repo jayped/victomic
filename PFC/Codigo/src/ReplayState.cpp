@@ -6,7 +6,7 @@ template<> ReplayState* Ogre::Singleton<ReplayState>::msSingleton = 0;
 void
 ReplayState::enter ()
 {
-	bool mapFit;
+	bool mapFit=false;
 	if (!_root)
 	{
 	  _root = Ogre::Root::getSingletonPtr();

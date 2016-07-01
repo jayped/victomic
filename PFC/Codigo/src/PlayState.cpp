@@ -359,11 +359,12 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
 	
 	// Busqueda en std::list Stages la pantalla correspondiente y nos da numero de mundo y matriz con elementos
 	int lWorld = 1; // [!] a cargar del objeto Stage
-
+    StagesManager * stagesMgr = StagesManager::getSingletonPtr();
+	Stage s = stagesMgr->getStage(aCurrentStage);
+    _currentWorld = s.world();
 	// Carga de mundo.
 	loadWorldEnvironment(_currentWorld);
-	StagesManager * stagesMgr = StagesManager::getSingletonPtr();
-	Stage s = stagesMgr->getStage(aCurrentStage);
+	
 	int ***textStage;
 	textStage = s.getActors();
 
@@ -374,7 +375,22 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
 				switch (textStage[x][y][z])
 				{
 				case 2:
-					addActor(1.0f, 1.0f, 1.0f,"actor", "box01.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+                    switch( _currentWorld )
+                    {
+                        case 1:
+					        addActor(1.0f, 1.0f, 1.0f,"actor", "box01.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+                            break;
+                        case 2:
+                        	addActor(1.0f, 1.0f, 1.0f,"actor", "box02.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+                            break;
+                        case 3:
+					        addActor(1.0f, 1.0f, 1.0f,"actor", "box03.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+                            break;
+                        case 4:
+                        	addActor(1.0f, 1.0f, 1.0f,"actor", "box04.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+                            break;
+                    }
+
 					break;
 				case 3:
 					addActor(1.0f, 1.0f, 1.0f,"actor", "RockBox.mesh","",			-14+(x*2), 16-(y*2), 14-(z*2), 1, 3);
