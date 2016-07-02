@@ -1,23 +1,14 @@
 template element TextArea(MyTemplates/TextTest)
 {
-    font_name Arcade
+    font_name MakeStart
 		metrics_mode pixels
-		char_height 15
-		colour 1.0 1.0 1.0    
+		char_height 35
+		colour 0.0 0.0 0.0    
 }
 
 TestOverlay
 {
     zorder 300
-	container Panel(panelTest) 
-    {
-		metrics_mode pixels
-		top -140
-		width 800
-		height 150
-		vert_align bottom
-		
-
 		container Panel(test) 
 		{
 			  metrics_mode pixels
@@ -27,23 +18,14 @@ TestOverlay
 			height 50
 			vert_align bottom
 			horz_align left
-			material scoremat
-				element TextArea(TextLabel) : MyTemplates/TextTest
-				{
-					  top -20
-					  left -5
-					  horz_align center
-					  vert_align top
-					  alignment center
-				}
+			material stagedisplaymat
 				element TextArea(TestValue) : MyTemplates/TextTest
 				{
-					  top 5
-					  left -5
+					  top -20
+					  left 0
 					  horz_align center
 					  vert_align center
 					  alignment center
 				}
 		}	  
-	}
 }
