@@ -358,8 +358,11 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
         isLastStage = true;
     }
 	_currentWorld = s->world();
+	
 	// Carga de mundo.
+	_gameMgr->world(_currentWorld);
 	loadWorldEnvironment(_currentWorld);
+
 	_overlayMgr->getOverlayElement("TestValue")->setCaption("Stage: " + Ogre::StringConverter::toString(_currentWorld) +"-"+ Ogre::StringConverter::toString(_currentStage));
 
 	int ***textStage;
@@ -378,13 +381,13 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
 					        addActor(1.0f, 1.0f, 1.0f,"actor", "box01.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
                             break;
                         case 2:
-                        	addActor(1.0f, 1.0f, 1.0f,"actor", "box02.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+                        	addActor(1.0f, 1.0f, 1.0f,"actor", "box01.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
                             break;
                         case 3:
-					        addActor(1.0f, 1.0f, 1.0f,"actor", "box03.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+					        addActor(1.0f, 1.0f, 1.0f,"actor", "box01.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
                             break;
                         case 4:
-                        	addActor(1.0f, 1.0f, 1.0f,"actor", "box04.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+                        	addActor(1.0f, 1.0f, 1.0f,"actor", "box01.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
                             break;
                     }
 
@@ -402,7 +405,7 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
 					addActor(.0f, .0f, .0f,"actor", "TransparentBox.mesh","",		-14+(x*2), 16-(y*2), 14-(z*2), 0, 6);
 					break;
 				case 8:
-					addActor(1.0f, .33f, 1.0f,"actor", "Goal.mesh","",		-14+(x*2), 16.0f-.66-(y*2), 14-(z*2), 0, 8);
+					addActor(1.0f, .33f, 1.0f,"actor", "SwitchBaseBox.mesh","",		-14+(x*2), 16.0f-.66-(y*2), 14-(z*2), 0, 8);
 					break;
 				case 10:
 					_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",-14+(x*2), 16-(y*2), 14-(z*2), 1, 10);
@@ -877,13 +880,14 @@ PlayState::loadWorldEnvironment(int aWorld)
 			aLightPosition = Ogre::Vector3(0,10,20);
 			aSkyMap = "sky04Mat";
 			aNameLight = "lightW04";
+			floorMeshName = "World04.mesh";
 			_sceneMgr->setAmbientLight(Ogre::ColourValue(0.8, 0.3, 0.3));
 			
 			/////////////////////
-			Ogre::Plane pl1(Ogre::Vector3::UNIT_Y,-30);
+			Ogre::Plane pl1(Ogre::Vector3::UNIT_Y,-40);
 			Ogre::MeshManager::getSingleton().createPlane("pllava",
 				Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-				pl1,200.1f,200.1f,1,1,true,1,1,1,Ogre::Vector3::UNIT_Z);
+				pl1,280.1f,280.1f,1,1,true,1,1,1,Ogre::Vector3::UNIT_Z);
 		
 			Ogre::SceneNode *nodeG = _sceneMgr->createSceneNode("lava");
 
