@@ -7,13 +7,14 @@ Stage::Stage()
     _stageID = 0;
     _world = 0;
 	// 1: // Bloque Suelo de Escenario
-	// 2: // Bloque Construccion de Escenario
+	// 2: // Bloque Superior Construccion de Escenario
 	// 3: // Piedra movil
 	// 4: // Bloque fragil
 	// 5: // Interruptor
 	// 6: // Bloque transparente
 	// 7: // Bloque solido
 	// 8: // Meta de escenario
+    // 9: // Bloque inferior Construcción de Escenario
 	// 10:// Nori
 
 	// test stage

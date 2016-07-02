@@ -381,13 +381,13 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
 					        addActor(1.0f, 1.0f, 1.0f,"actor", "box01.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
                             break;
                         case 2:
-                        	addActor(1.0f, 1.0f, 1.0f,"actor", "box01.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+                        	addActor(1.0f, 1.0f, 1.0f,"actor", "box02.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
                             break;
                         case 3:
-					        addActor(1.0f, 1.0f, 1.0f,"actor", "box01.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+					        addActor(1.0f, 1.0f, 1.0f,"actor", "box03.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
                             break;
                         case 4:
-                        	addActor(1.0f, 1.0f, 1.0f,"actor", "box01.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+                        	addActor(1.0f, 1.0f, 1.0f,"actor", "box04.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
                             break;
                     }
 
@@ -406,6 +406,24 @@ void PlayState::CreateCurrentWorld(int aCurrentStage) {
 					break;
 				case 8:
 					addActor(1.0f, .33f, 1.0f,"actor", "SwitchBaseBox.mesh","",		-14+(x*2), 16.0f-.66-(y*2), 14-(z*2), 0, 8);
+					break;
+                case 9:
+                    switch( _currentWorld )
+                    {
+                        case 1:
+					        addActor(1.0f, 1.0f, 1.0f,"actor", "box01_i.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+                            break;
+                        case 2:
+                        	addActor(1.0f, 1.0f, 1.0f,"actor", "box02_i.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+                            break;
+                        case 3:
+					        addActor(1.0f, 1.0f, 1.0f,"actor", "box03_i.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+                            break;
+                        case 4:
+                        	addActor(1.0f, 1.0f, 1.0f,"actor", "box04_i.mesh","",				-14+(x*2), 16-(y*2), 14-(z*2), 0, 2);
+                            break;
+                    }
+
 					break;
 				case 10:
 					_player = addActor(1.0f,1.75f,1.0f,"nori","Nori.mesh","walking",-14+(x*2), 16-(y*2), 14-(z*2), 1, 10);
