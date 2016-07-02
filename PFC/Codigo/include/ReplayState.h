@@ -46,6 +46,8 @@ class ReplayState : public Ogre::Singleton<ReplayState>, public GameState
   bool frameStarted (const Ogre::FrameEvent& evt);
   bool frameEnded (const Ogre::FrameEvent& evt);
 
+  void noriToWorld(int aWorld);
+
   // Heredados de Ogre::Singleton.
   static ReplayState& getSingleton ();
   static ReplayState* getSingletonPtr ();
@@ -60,9 +62,16 @@ class ReplayState : public Ogre::Singleton<ReplayState>, public GameState
   Ogre::OverlayElement *_ReplayOverlay;
   Ogre::Real _ReplayCounter;
   GameManager *_gameMgr;
-  
-
+  double _mapWidth;
+  double _mapHeight;
+  Ogre::Overlay *avancePantalla;
+  Ogre::OverlayElement *_noriOverlay;
+  Ogre::OverlayElement *_avanceTest;
+  double _noriX;
+  double _noriY;
+  double _acumulateY;
   bool _exitGame;
+  bool _up;
 };
 
 #endif
