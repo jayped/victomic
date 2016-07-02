@@ -7,6 +7,7 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="600"
@@ -15,11 +16,34 @@
    version="1.1"
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="04tiles.svg"
-   inkscape:export-filename="C:\Users\Pedro\Desktop\makemake\pedro\castillosmall.png"
+   inkscape:export-filename="C:\ogre3D\OgreSDK_vc11_v1-9-0\media\makemake\sky04.png"
    inkscape:export-xdpi="307.20001"
    inkscape:export-ydpi="307.20001">
   <defs
-     id="defs4292" />
+     id="defs4292">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient6227">
+      <stop
+         style="stop-color:#ff0000;stop-opacity:1;"
+         offset="0"
+         id="stop6229" />
+      <stop
+         style="stop-color:#ff0000;stop-opacity:0;"
+         offset="1"
+         id="stop6231" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6227"
+       id="linearGradient6233"
+       x1="369.71582"
+       y1="553.42761"
+       x2="369.71582"
+       y2="496.30453"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1,0,0,1.6495144,0,-467.12943)" />
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -27,16 +51,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="104.87185"
-     inkscape:cy="34.846625"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="-403.44795"
+     inkscape:cy="103.97366"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
      borderlayer="true"
-     inkscape:window-width="1366"
-     inkscape:window-height="716"
-     inkscape:window-x="-8"
+     inkscape:window-width="1920"
+     inkscape:window-height="1028"
+     inkscape:window-x="1358"
      inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
@@ -17360,6 +17384,13 @@
          id="rect4433-0-1-5-5-7-6-2-9"
          style="fill:#9c9c9c;fill-opacity:1;fill-rule:nonzero;stroke:#373737;stroke-width:2.99999976;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
     </g>
+    <rect
+       style="color:#000000;fill:url(#linearGradient6233);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50000000000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect5457"
+       width="837.41644"
+       height="736.48743"
+       x="-78.791901"
+       y="-17.289429" />
   </g>
   <g
      inkscape:label="Capa 1"
