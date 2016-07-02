@@ -58,13 +58,15 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   SoundFXPtr _walkEffect;
   SoundFXPtr _endjumpEffect;
 
-  SoundFXPtr _bonusEffect;
+  SoundFXPtr _mapMusic;
   SoundFXPtr _musicStartEffect;
-  SoundFXPtr _gunEffect;
   SoundFXPtr _endEffect;
   
   // musicas [!] cambiar por la clase Track.cpp
-  SoundFXPtr _world01Music;
+	SoundFXPtr _world01Music;
+	SoundFXPtr _world02Music;
+	SoundFXPtr _world03Music;
+	SoundFXPtr _world04Music;
 
   SoundFXManager* _pSoundFXManager;
 
@@ -101,8 +103,10 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   void playEndJump();
   void stopEndJump();
 
-  void playMusic();
-  void stopMusic();
+  void playMusic(int aWorld);
+  void stopMusic(int aWorld);
+  void playMapMusic();
+  void stopMapMusic();
 
 
   void playMusicStart();
