@@ -37,7 +37,9 @@ IntroState::enter ()
 		_startOverlay = _overlayMgr->getOverlayElement("splashPanel");
 		double width = _viewport->getActualWidth();
 		double height = _viewport->getActualHeight();
-		_startOverlay->setDimensions(width,height);
+		double aspectRatio = _startOverlay->getWidth()/_startOverlay->getHeight();
+		_startOverlay->setDimensions(width,width/aspectRatio);
+		_startOverlay->setPosition(0,(height/2)-(_startOverlay->getHeight()/2));
 		
 
 		_startOverlay = _overlayMgr->getOverlayElement("pressstartLabelS");
