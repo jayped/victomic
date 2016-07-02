@@ -1,0 +1,34 @@
+template element TextArea(MyTemplates/TextPausenori)
+{
+    font_name MakeStart
+		metrics_mode pixels
+		char_height 40
+		colour 0.0 0.0 0.0    
+}
+
+PauseNori
+{
+    zorder 450
+
+    container Panel(pausenori) 
+    {
+	      metrics_mode pixels
+        left -54
+        top -35
+        width 108
+        height 114
+        vert_align center
+        horz_align center
+		material pausenorimat
+		    element TextArea(pauseLabelnori) : MyTemplates/TextPausenori
+		    {
+				  top 11
+				  left 0
+				  vert_align center
+				  horz_align center
+				  alignment center
+		    }
+
+    }	  
+
+}
