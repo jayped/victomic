@@ -51,6 +51,28 @@ void Actor::init(int aType, int aActorID)
 				_animation->setEnabled(false);
 				break;
 		case 1: // Bloque Suelo de Escenario
+			if (_gameMgr->world()==2) // fantasmas
+				{
+					smokeParticle = _sceneMgr->createParticleSystem("HojaParticle"+std::to_string(_actorID), "HojaParticle");
+					particleNode = this->createChildSceneNode("world"+std::to_string(_actorID));
+					smokeParticle->setEmitting(true);
+					particleNode->attachObject(smokeParticle);
+				}	
+			if (_gameMgr->world()==3) // fantasmas
+				{
+					smokeParticle = _sceneMgr->createParticleSystem("PhantoParticle"+std::to_string(_actorID), "PhantoParticle");
+					particleNode = this->createChildSceneNode("world"+std::to_string(_actorID));
+					smokeParticle->setEmitting(true);
+					particleNode->attachObject(smokeParticle);
+				}	
+			if (_gameMgr->world()==4) // lava
+				{
+					smokeParticle = _sceneMgr->createParticleSystem("LavaParticle"+std::to_string(_actorID), "LavaParticle");
+					particleNode = this->createChildSceneNode("world"+std::to_string(_actorID));
+					smokeParticle->setEmitting(true);
+					particleNode->attachObject(smokeParticle);
+				}
+
 			break;
 		case 2: // Bloque Construccion de Escenario
 			break;
