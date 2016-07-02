@@ -1,0 +1,31 @@
+template element TextArea(MyTemplates/AvanceText)
+{
+    font_name MakeStart
+		metrics_mode pixels
+		char_height 60
+		colour 0.0 0.0 0.0    
+}
+
+AvanceStage
+{
+    zorder 5
+		container Panel(avanceTextPanel) 
+		{
+			  metrics_mode pixels
+			left 0
+			top 0
+			width 0
+			height 0
+			vert_align center
+			horz_align center
+			material scoremat
+				element TextArea(AvanceTextLabel) : MyTemplates/AvanceText
+				{
+					  top 0
+					  left 0
+					  horz_align center
+					  vert_align center
+					  alignment center
+				}
+		}	  
+}

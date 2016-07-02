@@ -1,0 +1,24 @@
+material lavamat
+{
+  technique
+  {
+    pass
+    {
+      ambient 1.0 1.0 1.0
+      diffuse 1.0 1.0 1.0
+      specular 1.0 1.0 1.0 9800.0
+      emissive 0.0 0.0 0.0 1
+      texture_unit
+      {
+        rotate_anim 0.01
+        texture lava1.png
+      }
+      texture_unit
+      {
+        texture lava2.png
+        colour_op_ex modulate_x2 src_texture src_current
+        env_map spherical
+      }
+    }
+  }
+}
