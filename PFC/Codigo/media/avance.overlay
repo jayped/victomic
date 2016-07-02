@@ -17,5 +17,18 @@ Avance
 		material avancemat
 
     }	  
+    container Panel(noriState) 
+    {
+	      metrics_mode pixels
+        left 0
+        top 0
+        width 96
+        height 100
+        alignment center
+		vert_align center
+        horz_align center
+		material noriavancemat
+
+    }	  
 
 }
