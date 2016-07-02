@@ -96,7 +96,7 @@ PlayState::exit ()
 {
     _sceneMgr->clearScene();
 	_listOfActors.clear();
-	_gameMgr->stopMusic();
+	_gameMgr->stopMusic(_gameMgr->_currentWorld);
     //_overlay->hide();
 }
 
@@ -938,7 +938,7 @@ PlayState::loadWorldEnvironment(int aWorld)
 	addActor(15.0f, 5.0f, 15.0f,"suelo", floorMeshName,"",		0.0f,	0.0f,	0.0f,	0,	1);
 
 	// [!] Depende del mundo lanzara una u otra.
-	_gameMgr->playMusic();
+	_gameMgr->playMusic(aWorld);
 
 }
 
