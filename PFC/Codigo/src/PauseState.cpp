@@ -15,8 +15,8 @@ PauseState::enter ()
   _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
 
   _overlayMgr = Ogre::OverlayManager::getSingletonPtr();
-  overlay = _overlayMgr->getByName("Pause");
-  _pauseOverlay = _overlayMgr->getOverlayElement("pauseLabel");
+  overlay = _overlayMgr->getByName("PauseNori");
+  _pauseOverlay = _overlayMgr->getOverlayElement("pauseLabelnori");
   _pauseOverlay->setCaption("PAUSE");
   overlay->show();
   _pauseOverlay->show();
