@@ -78,12 +78,16 @@ GameManager::start
   _switchOnEffect = _pSoundFXManager->load("sound_switchOn.wav");
   _switchOffEffect = _pSoundFXManager->load("sound_switchOff.wav");
   _goalEffect = _pSoundFXManager->load("sound_goal.wav");
-  _musicStartEffect = _pSoundFXManager->load("musicstart.wav");
+  _musicStartEffect = _pSoundFXManager->load("music_titles.wav");
   _cameraEffect = _pSoundFXManager->load("sound_camera.wav");
   _endjumpEffect = _pSoundFXManager->load("sound_endjump.wav");
+  _mapMusic = _pSoundFXManager->load("music_avance.wav");
   
   // lista musicas de mundos.
   _world01Music = _pSoundFXManager->load("music_world01.wav");
+  _world02Music = _pSoundFXManager->load("music_world02.wav");
+  _world03Music = _pSoundFXManager->load("music_world03.wav");
+  _world04Music = _pSoundFXManager->load("music_world04.wav");
   
   
 
@@ -278,6 +282,16 @@ GameManager::stopMusicStart()
 {
 	_musicStartEffect->stop();
 }
+void
+GameManager::playMapMusic()
+{
+	_mapMusic->play(-1);
+}
+void
+GameManager::stopMapMusic()
+{
+	_mapMusic->stop();
+}
 
 void
 GameManager::playCamera()
@@ -310,15 +324,44 @@ GameManager::stopEndJump()
 }
 
 void
-GameManager::playMusic()
+GameManager::playMusic(int aWorld)
 {
-	_world01Music->play(-1);
+	switch (aWorld)
+	{
+		case 1:
+			_world01Music->play(-1);
+			break;
+		case 2:
+			_world02Music->play(-1);
+			break;
+		case 3:
+			_world03Music->play(-1);
+			break;
+		case 4:
+			_world04Music->play(-1);
+			break;
+	}
+
 }
 
 void
-GameManager::stopMusic()
+GameManager::stopMusic(int aWorld)
 {
-	_world01Music->stop();
+	switch (aWorld)
+	{
+		case 1:
+			_world01Music->stop();
+			break;
+		case 2:
+			_world02Music->stop();
+			break;
+		case 3:
+			_world03Music->stop();
+			break;
+		case 4:
+			_world04Music->stop();
+			break;
+	}
 }
 
 // End sonidos
