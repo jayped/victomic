@@ -48,7 +48,7 @@ material Box02_i_M
 
             texture_unit 
             {
-                texture world02_i.png
+                texture box02_i.png
                 tex_address_mode wrap
                 scale 1.0 1.0
                 colour_op modulate
