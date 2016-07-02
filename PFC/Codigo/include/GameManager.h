@@ -45,7 +45,8 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
 
   // avance en el juego.
   int _currentStage;
-
+  int _currentWorld;
+  
   //sonidos
   SoundFXPtr _jumpEffect;
   SoundFXPtr _menuEffect;
@@ -106,6 +107,8 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
 
   void playMusicStart();
   void stopMusicStart();
+  int world() const { return _currentWorld; } 
+  void world(int aWorld) { _currentWorld = aWorld; } 
 
     bool isRightMov();
     bool isLeftMov();
