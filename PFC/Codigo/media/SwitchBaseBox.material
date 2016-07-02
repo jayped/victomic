@@ -1,0 +1,36 @@
+material SwitchBaseBox_M
+{
+  technique
+  {
+    pass
+    {
+      ambient 0.5 0.5 0.5
+      diffuse 1.0 1.0 1.0
+      specular 1.0 1.0 1.0 9800.0
+      emissive 0.0 0.0 0.0 1
+      	
+      texture_unit 
+      {
+        texture goal1.png
+         alpha_op_ex 0.80     
+        scroll_anim 0.1 0.0
+      }
+
+      texture_unit
+      {
+        texture goal2.png
+         alpha_op_ex 0.30     
+         colour_op_ex 0.5 0.5 0.5
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
