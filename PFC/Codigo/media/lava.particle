@@ -1,0 +1,43 @@
+// Example particle systems
+
+// Goal
+// Example particle systems
+
+// Goal
+particle_system LavaParticle
+{
+	material        	Smoke
+	particle_width  	5
+	particle_height 	5
+	cull_each       	true
+	quota           	5
+	billboard_type  	point
+	sorted				true
+    
+	// Area emitter
+	emitter Box
+	{
+		position 0 -15 0
+		width 100
+		height 100
+		depth 100
+		angle 10
+		emission_rate 5
+		time_to_live 1
+		direction 0 1 0
+		velocity_min 10
+		velocity_max 15 	
+	}
+	
+	affector ColourImage
+	{
+		image lavacolors.png
+	}
+
+
+   	affector Scaler
+   	{
+       	rate 5
+   	}
+
+}

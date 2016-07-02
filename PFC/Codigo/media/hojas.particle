@@ -1,0 +1,41 @@
+// fantasmas
+particle_system HojaParticle
+{
+	material        	Hojamat
+	particle_width  	0.5
+	particle_height 	0.5
+	cull_each       	true
+	quota           	150
+	billboard_type  	point
+	sorted				true
+    
+	// Area emitter
+	emitter Box
+	{
+		position -30 7 -30
+		width 50
+		height 1
+		depth 50
+		angle 0
+		emission_rate 1
+		time_to_live 5
+		direction 1 0 1
+		velocity_min 5
+		velocity_max 20 	
+	}
+	
+
+   	affector Rotator
+   	{
+		rotation_range_start 0
+		rotation_range_end 360
+		rotation_speed_range_start -60
+		rotation_speed_range_end 200
+   	}
+
+   	affector Scaler
+   	{
+       	rate 0
+   	}
+
+}
