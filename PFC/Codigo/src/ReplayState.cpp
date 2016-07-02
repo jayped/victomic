@@ -87,6 +87,7 @@ ReplayState::enter ()
 	//_gameMgr->playEnd();
   	_sceneMgr->setSkyBox(true, "avancepapelmat", 100.0F, true);
 
+	_gameMgr->playMapMusic();
   _exitGame = false;
 }
 
@@ -96,8 +97,10 @@ ReplayState::exit ()
   overlay->hide();
   avancePantalla->hide();
   //_ReplayOverlay->hide();
+
   	_gameMgr->playMenu();
 
+  	_gameMgr->stopMapMusic();
 }
 
 void
