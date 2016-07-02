@@ -36,7 +36,6 @@ PlayState::enter ()
 		
 		_camera = _sceneMgr->getCamera("IntroCamera");
 		_makeCamera = reinterpret_cast<MakeCamera*>(_camera);
-		_makeCamera->init();
 		_viewport = _root->getAutoCreatedWindow()->getViewport(0);
 		//_viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 		_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 100.0));
@@ -50,6 +49,8 @@ PlayState::enter ()
 		_currentWorld = 1;
 		
 	}
+
+	_makeCamera->init();
 
 	_currentStage = _gameMgr->_currentStage;	
 
@@ -871,11 +872,28 @@ PlayState::loadWorldEnvironment(int aWorld)
 			break;
 		case 4: // [!] CAMBIA
 			aShadowTechnique = Ogre::SHADOWTYPE_STENCIL_ADDITIVE;
-			aLightType = Ogre::Light::LT_DIRECTIONAL;
-			aLightDirection = Ogre::Vector3(0,0,0);
-			aLightPosition = Ogre::Vector3(0,0,0);
+			aLightType = Ogre::Light::LT_POINT;
+			//aLightDirection = Ogre::Vector3(0.80,-1,0.805);
+			aLightPosition = Ogre::Vector3(0,10,20);
 			aSkyMap = "sky04Mat";
 			aNameLight = "lightW04";
+			_sceneMgr->setAmbientLight(Ogre::ColourValue(0.8, 0.3, 0.3));
+			
+			/////////////////////
+			Ogre::Plane pl1(Ogre::Vector3::UNIT_Y,-30);
+			Ogre::MeshManager::getSingleton().createPlane("pllava",
+				Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+				pl1,200.1f,200.1f,1,1,true,1,1,1,Ogre::Vector3::UNIT_Z);
+		
+			Ogre::SceneNode *nodeG = _sceneMgr->createSceneNode("lava");
+
+			Ogre::Entity* grEnt = _sceneMgr->createEntity("pEntf", "pllava");
+			grEnt->setMaterialName("lavamat");
+		
+			nodeG->attachObject(grEnt);
+			_sceneMgr->getRootSceneNode()->addChild(nodeG);
+			//////////////////////
+
 			break;
 	}
 
