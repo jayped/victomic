@@ -67,6 +67,7 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
 	SoundFXPtr _world02Music;
 	SoundFXPtr _world03Music;
 	SoundFXPtr _world04Music;
+	SoundFXPtr _endMusic;
 
   SoundFXManager* _pSoundFXManager;
 
@@ -107,6 +108,8 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   void stopMusic(int aWorld);
   void playMapMusic();
   void stopMapMusic();
+  void playEndMusic();
+  void stopEndMusic();
 
 
   void playMusicStart();
