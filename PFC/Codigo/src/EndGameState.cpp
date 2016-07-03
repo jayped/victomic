@@ -34,7 +34,7 @@ EndGameState::enter ()
 	double aspectRatio = endOverlay->getWidth()/endOverlay->getHeight();
 	endOverlay->setDimensions(width,width/aspectRatio);
 	endOverlay->setPosition(0,(height/2)-(endOverlay->getHeight()/2));
-
+	_gameMgr->playEndMusic();
 
 
 	

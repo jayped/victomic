@@ -88,6 +88,7 @@ GameManager::start
   _world02Music = _pSoundFXManager->load("music_world02.wav");
   _world03Music = _pSoundFXManager->load("music_world03.wav");
   _world04Music = _pSoundFXManager->load("music_world04.wav");
+  _endMusic = _pSoundFXManager->load("music_end.wav");
   
   
 
@@ -291,6 +292,16 @@ void
 GameManager::stopMapMusic()
 {
 	_mapMusic->stop();
+}
+void
+GameManager::playEndMusic()
+{
+	_endMusic->play();
+}
+void
+GameManager::stopEndMusic()
+{
+	_endMusic->stop();
 }
 
 void
