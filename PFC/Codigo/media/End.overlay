@@ -1,0 +1,17 @@
+EndOverlay
+{
+    zorder 0
+
+    container Panel(endPanel) 
+    {
+	      metrics_mode pixels
+        left 0
+        top 0
+        width 1920
+        height 1080
+        vert_align top
+        horz_align left
+        material endmat
+    }	  
+
+}
