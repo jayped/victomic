@@ -238,46 +238,17 @@ PlayState::keyPressed
     pushState(PauseState::getSingletonPtr());
   }
 
-  if (e.key == OIS::KC_LEFT && !_controlBlock) {
+  if (e.key == OIS::KC_Q && !_controlBlock) {
 	  _makeCamera->setMoving(_left);
   }
   
-  if (e.key == OIS::KC_RIGHT && !_controlBlock) {
+  if (e.key == OIS::KC_W && !_controlBlock) {
 	  _makeCamera->setMoving(_right);
 	}
   
   if (e.key == OIS::KC_SPACE && !_controlBlock) {
 	  _player->jump();
 	  
-  }
-
-  /////////////////////////
-  ///// Teclas para pruebas -------------------------
-  /////////////////////////
-
-  if (e.key == OIS::KC_UP) {
-	  Ogre::Vector3 localpos = _camera->getPosition();
-	  localpos.y+=1;
-	  _camera->setPosition(localpos);
-  }
-  if (e.key == OIS::KC_DOWN) {
-	  Ogre::Vector3 localpos = _camera->getPosition();
-	  localpos.y-=1;
-	  _camera->setPosition(localpos);
-  }
-  
-  if (e.key == OIS::KC_A) {
-	  Ogre::Vector3 localpos = _camera->getPosition();
-	  localpos.z-=1;
-	  _makeCamera->setCameraDistance(localpos.z);
-
-	  _camera->setPosition(localpos);
-  }
-  if (e.key == OIS::KC_Z) {
-	  Ogre::Vector3 localpos = _camera->getPosition();
-	  localpos.z+=1;
-	  _makeCamera->setCameraDistance(localpos.z);
-	  _camera->setPosition(localpos);
   }
 
   // Tecla r --> endgame.

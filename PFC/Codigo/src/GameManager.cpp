@@ -400,16 +400,16 @@ bool GameManager::keyPressed (const OIS::KeyEvent &e){
     
     _states.top()->keyPressed(e);
 
-    if (e.key == OIS::KC_K) {
+    if (e.key == OIS::KC_DOWN) {
         _isDownMov = true;
     }
-    if (e.key == OIS::KC_L) {
+    if (e.key == OIS::KC_RIGHT) {
         _isRightMov = true;
     }
-    if (e.key == OIS::KC_J) {
+    if (e.key == OIS::KC_LEFT) {
         _isLeftMov = true;
     }
-    if (e.key == OIS::KC_I) {
+    if (e.key == OIS::KC_UP) {
         _isUpMov = true;
     }
 
@@ -420,16 +420,16 @@ bool GameManager::keyReleased(const OIS::KeyEvent &e){
     
     _states.top()->keyReleased(e);
 
-    if (e.key == OIS::KC_K) {
+    if (e.key == OIS::KC_DOWN) {
         _isDownMov = false;
     }
-    if (e.key == OIS::KC_L) {
+    if (e.key == OIS::KC_RIGHT) {
         _isRightMov = false;
     }
-    if (e.key == OIS::KC_J) {
+    if (e.key == OIS::KC_LEFT) {
         _isLeftMov = false;
     }
-    if (e.key == OIS::KC_I) {
+    if (e.key == OIS::KC_UP) {
         _isUpMov = false;
     }
     
@@ -528,12 +528,12 @@ bool GameManager::buttonPressed( const OIS::JoyStickEvent &e, int button ){
         case 4:
             //Se pulsa L1
             //Si está jugando la cámara girará a la izquierda
-            keyPressed = OIS::KC_LEFT;
+            keyPressed = OIS::KC_Q;
             break;
         case 5:
             //Se pulsa R1
             //Si está jugando la cámara girará a la derecha
-            keyPressed = OIS::KC_RIGHT;
+            keyPressed = OIS::KC_W;
             break;
         case 6:
             //Se pulsa BACK
