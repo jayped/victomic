@@ -507,6 +507,25 @@ PlayState::colision(btCollisionObject *aObject)
 						}
 					}
 				}
+				if ((obA->getFlags() == 4) && (obB->getFlags() == 10))
+				{
+					colisionesNori = numContacts;
+					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
+					double centroDeMasasB = obB->getCenterOfMassPosition().getY();
+					if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.76) &&
+						(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 2.74))
+					{
+						Actor *iteratorDelete;
+						for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
+						{
+							iteratorDelete = *it;
+							if (iteratorDelete->getRigitBody()==obA)
+							{
+								iteratorDelete->setActivated(true); // marcado para eliminar en unos segundos.
+							}
+						}
+					}
+				}
 				// 4.2 Piedra movil
 				if ((obA->getFlags() == 3) && (obB->getFlags() == 4))
 				{
@@ -521,6 +540,25 @@ PlayState::colision(btCollisionObject *aObject)
 						{
 							iteratorDelete = *it;
 							if (iteratorDelete->getRigitBody()==obB)
+							{
+								iteratorDelete->setActivated(true); // marcado para eliminar en unos segundos.
+							}
+						}
+					}
+				}			
+				if ((obA->getFlags() == 4) && (obB->getFlags() == 3))
+				{
+ 					colisionesNori = numContacts;
+					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
+					double centroDeMasasB = obB->getCenterOfMassPosition().getY();
+					if ( (centroDeMasasA-centroDeMasasB < 2.10) &&
+						(centroDeMasasA-centroDeMasasB > 1.10))
+					{
+						Actor *iteratorDelete;
+						for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
+						{
+							iteratorDelete = *it;
+							if (iteratorDelete->getRigitBody()==obA)
 							{
 								iteratorDelete->setActivated(true); // marcado para eliminar en unos segundos.
 							}
@@ -555,6 +593,31 @@ PlayState::colision(btCollisionObject *aObject)
 						}
 					}
 				}				
+				if ((obA->getFlags() == 5) && (obB->getFlags() == 10))
+				{
+					Actor *delActor;
+					Actor *iterActor;
+					std::list<Actor *> delList;
+					std::list<Actor *>::iterator _delIt;
+
+					colisionesNori = numContacts;
+					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
+					double centroDeMasasB = obB->getCenterOfMassPosition().getY();
+					if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.1) &&
+							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 1.9))
+					{
+						Actor *iteratorDelete;
+						for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
+						{
+							iteratorDelete = *it;
+							if (iteratorDelete->getRigitBody() == obA)
+							{
+								// Es un interruptor
+								iteratorDelete->setActivated(true);
+							}
+						}
+					}
+				}				
 
 				// 5.2 piedra
 				if ((obA->getFlags() == 3) && (obB->getFlags() == 5))
@@ -582,6 +645,32 @@ PlayState::colision(btCollisionObject *aObject)
 						}
 					}
 				}				
+				// 5.2 piedra
+				if ((obA->getFlags() == 5) && (obB->getFlags() == 3))
+				{
+					Actor *delActor;
+					Actor *iterActor;
+					std::list<Actor *> delList;
+					std::list<Actor *>::iterator _delIt;
+
+					colisionesNori = numContacts;
+					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
+					double centroDeMasasB = obB->getCenterOfMassPosition().getY();
+					if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 1.4) &&
+							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 1.2))
+					{
+						Actor *iteratorDelete;
+						for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
+						{
+							iteratorDelete = *it;
+							if (iteratorDelete->getRigitBody() == obA)
+							{
+								// Es un interruptor
+								iteratorDelete->setActivated(true);
+							}
+						}
+					}
+				}				
 
 
 				// 8 Meta de escenario
@@ -602,6 +691,35 @@ PlayState::colision(btCollisionObject *aObject)
 							{
 								iteratorDelete = *it;
 								if (iteratorDelete->getRigitBody()==obB)
+								{
+									// lanza acciones de objetivo cumplido para el actor goal
+									iteratorDelete->goal();
+								}
+							}
+							_player->goal();
+							_controlBlock=true;
+							_nextStage = true;
+						}
+					}
+				}				
+				// 8 Meta de escenario
+				if ((obA->getFlags() == 8) && (obB->getFlags() == 10))
+				{
+					colisionesNori = numContacts;
+					double centroDeMasasA = obA->getCenterOfMassPosition().getY();
+					double centroDeMasasB = obB->getCenterOfMassPosition().getY();
+					if ( (Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) < 2.10) &&
+							(Ogre::Math::Abs(centroDeMasasA-centroDeMasasB) > 1.99))
+					{
+						// Codigo final fase.
+						//changeState(ReplayState::getSingletonPtr());
+						if (!_controlBlock)
+						{
+							Actor *iteratorDelete;
+							for (std::list<Actor *>::iterator it=_listOfActors.begin(); it != _listOfActors.end(); ++it)
+							{
+								iteratorDelete = *it;
+								if (iteratorDelete->getRigitBody()==obA)
 								{
 									// lanza acciones de objetivo cumplido para el actor goal
 									iteratorDelete->goal();
