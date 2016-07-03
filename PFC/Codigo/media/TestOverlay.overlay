@@ -21,7 +21,7 @@ TestOverlay
 			material stagedisplaymat
 				element TextArea(TestValue) : MyTemplates/TextTest
 				{
-					  top -20
+					  top -15
 					  left 0
 					  horz_align center
 					  vert_align center
