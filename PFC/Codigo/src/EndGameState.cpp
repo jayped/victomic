@@ -19,29 +19,25 @@ EndGameState::enter ()
 	  _viewport = _root->getAutoCreatedWindow()->getViewport(0);
 	  //_viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
 	  // Nuevo background colour.
-	  //_viewport->setBackgroundColour(Ogre::ColourValue(0.0, 1.0, 1.0));
+	  _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
 	  _overlayMgr = Ogre::OverlayManager::getSingletonPtr();
 
 	  mapFit=false;
 	}
 
 	_overlayMgr = Ogre::OverlayManager::getSingletonPtr();
-	overlay = _overlayMgr->getByName("Avance");
-	Ogre::OverlayElement *mapOverlay = _overlayMgr->getOverlayElement("avance");
+	overlay = _overlayMgr->getByName("EndOverlay");
+	Ogre::OverlayElement *endOverlay = _overlayMgr->getOverlayElement("endPanel");
 
-	if (mapFit==false)
-	{
-		mapFit=true;
-		double width = _viewport->getActualWidth();
-		double height = _viewport->getActualHeight();
-		double aspecRatioPanel = mapOverlay->getWidth()/mapOverlay->getHeight();
-		double reduction = 0.8;
+	double width = _viewport->getActualWidth();
+	double height = _viewport->getActualHeight();
+	double aspectRatio = endOverlay->getWidth()/endOverlay->getHeight();
+	endOverlay->setDimensions(width,width/aspectRatio);
+	endOverlay->setPosition(0,(height/2)-(endOverlay->getHeight()/2));
 
-		mapOverlay->setDimensions(height*aspecRatioPanel*reduction,height*reduction);
-		mapOverlay->setPosition(-(mapOverlay->getWidth()/2),-mapOverlay->getHeight()/2);
 
-	}
 
+	
   overlay->show();
 
   _exitGame = false;
