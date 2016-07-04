@@ -52,14 +52,14 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
      inkscape:cx="-393.45816"
-     inkscape:cy="213.2095"
+     inkscape:cy="327.49521"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
      borderlayer="true"
      inkscape:window-width="1920"
      inkscape:window-height="1028"
-     inkscape:window-x="-8"
+     inkscape:window-x="1358"
      inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
@@ -107,6 +107,15 @@
        height="592"
        x="4"
        y="4" />
+    <path
+       style="color:#000000;fill:#803300;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m -1137.1429,342.85715 -200,-45.71429 L -1285.7143,260 -1368.5714,194.28571 -1257.1429,240 c 0,0 -37.1428,-128.57143 -20,-111.42857 17.1429,17.14286 134.2858,105.71428 134.2858,105.71428 L -1165.7143,105.71429 -1140,134.28571 -1097.1429,20 l 14.2858,117.14286 31.4285,-31.42857 -34.2857,125.71428 88.57144,-74.28571 -11.42854,60 L -880,205.71429 -980,260 l 77.14286,22.85714 -191.42856,62.85714 z"
+       id="path2990"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccscccccccccccccc"
+       inkscape:export-filename="C:\Users\Pedro\Desktop\hojaparticle.png"
+       inkscape:export-xdpi="11.881579"
+       inkscape:export-ydpi="11.881579" />
   </g>
   <g
      inkscape:label="Capa 1"
