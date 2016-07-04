@@ -1,0 +1,16 @@
+material ball/SOLID/TEX/metal3.col.jpg/VertCol
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			ambient 0.75 0.75 0.75
+			diffuse 1 1 1 1
+			texture_unit
+			{
+				texture metal3.col.jpg
+			}
+		}
+	}
+}

@@ -1,0 +1,91 @@
+template element TextArea(MyTemplates/TitleReplay)
+{
+    font_name Arcade
+		metrics_mode pixels
+		char_height 20
+		colour 1.0 1.0 1.0    
+}
+
+template element TextArea(MyTemplates/TextReplay)
+{
+    font_name Arcade
+		metrics_mode pixels
+		char_height 10
+		colour 1.0 1.0 1.0    
+}
+
+template element TextArea(MyTemplates/TextHiScore)
+{
+    font_name Arcade
+		metrics_mode pixels
+		char_height 10
+		colour 1.0 0.0 0.0    
+}
+
+Replay
+{
+    zorder 450
+
+    container Panel(replay) 
+    {
+	      metrics_mode pixels
+        left -200
+        top -150
+        width 400
+        height 300
+        vert_align center
+        horz_align center
+		material replaymat
+		    element TextArea(reTitleLabel) : MyTemplates/TitleReplay
+		    {
+				  top 30
+				  left 0
+				  vert_align top
+				  horz_align center
+				  alignment center
+		    }
+		    element TextArea(reScoreLabel) : MyTemplates/TextReplay
+		    {
+				  top -50
+				  left 30
+				  vert_align center
+				  horz_align left
+				  alignment left
+		    }
+		    element TextArea(reScoreDataLabel) : MyTemplates/TextReplay
+		    {
+				  top -30
+				  left 30
+				  vert_align center
+				  horz_align left
+				  alignment left
+		    }
+		    element TextArea(reHiscoreLabel) : MyTemplates/TextHiScore
+		    {
+				  top 0
+				  left 30
+				  vert_align center
+				  horz_align left
+				  alignment left
+		    }
+
+		    element TextArea(reHiscoreDataLabel) : MyTemplates/TextReplay
+		    {
+				  top 20
+				  left 30
+				  vert_align center
+				  horz_align left
+				  alignment left
+		    }
+		    element TextArea(reInfoLabel) : MyTemplates/TextReplay
+		    {
+				  top -50
+				  left 30
+				  vert_align bottom
+				  horz_align left
+				  alignment left
+		    }
+
+    }	  
+
+}

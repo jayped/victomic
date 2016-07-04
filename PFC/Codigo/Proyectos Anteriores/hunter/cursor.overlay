@@ -1,0 +1,16 @@
+Cursor
+{
+    zorder 500
+
+    container Panel(cursor) 
+    {
+	      metrics_mode pixels
+        left 100
+        top 100
+        width 17
+        height 23
+        vert_align top
+        horz_align left
+        material pointer
+    }	    
+}

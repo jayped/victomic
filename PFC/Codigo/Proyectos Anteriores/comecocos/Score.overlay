@@ -1,0 +1,64 @@
+template element TextArea(MyTemplates/TextScore)
+{
+    font_name Arcade
+		metrics_mode pixels
+		char_height 15
+		colour 1.0 1.0 1.0    
+}
+
+template element TextArea(MyTemplates/TexthiScore)
+{
+    font_name Arcade
+		metrics_mode pixels
+		char_height 12
+		colour 1.0 0.0 0.0    
+}
+
+Score
+{
+    zorder 300
+
+    container Panel(score) 
+    {
+	      metrics_mode pixels
+        left 35
+        top 59
+        width 100
+        height 100
+        vert_align top
+        horz_align left
+        material scoremat
+		    element TextArea(scoreLabel) : MyTemplates/TextScore
+		    {
+				  top 5
+				  left 12
+		    }
+		    element TextArea(scoreValue) : MyTemplates/TextScore
+		    {
+				  top 25
+				  left 12
+		    }
+    }	  
+
+    container Panel(scoreHi) 
+    {
+	      metrics_mode pixels
+        left 35
+        top -100
+        width 100
+        height 100
+        vert_align bottom
+        horz_align left
+        material scoremat
+		    element TextArea(scoreLabelHi) : MyTemplates/TexthiScore
+		    {
+				  top 5
+				  left 6
+		    }
+		    element TextArea(hiscoreValueHi) : MyTemplates/TextScore
+		    {
+				  top 25
+				  left 12
+		    }
+    }	  
+}
